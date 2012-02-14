@@ -1,0 +1,98 @@
+/**
+* 
+* @file     basic_tuple
+* @brief    Copyright (C) 2012  yayanyang All Rights Reserved 
+* @author   yayanyang
+* @version  1.0.0.0  
+* @date     2012/01/16
+*/
+#ifndef LEMON_CXX_UTILITY_TUPLE_HPP
+#define LEMON_CXX_UTILITY_TUPLE_HPP
+
+#include<lemonxx/mpl/nulltype.hpp>
+#include <lemonxx/utility/basic_tuple.hpp>
+
+namespace lemon{
+
+		template<class Tuple,size_t N>
+		inline typename parameter<typename mpl::at<typename Tuple::Seq,N>::type>::type get(const Tuple & tuple)
+		{
+			return ((const typename basic_tuple_cast<typename Tuple::Seq,N>::type&)tuple).Value;
+		}
+
+		template<class Tuple,size_t N>
+		inline void set(Tuple &tuple,typename parameter<typename mpl::at<typename Tuple::Seq,N>::type>::type val)
+		{
+			((typename basic_tuple_cast<typename Tuple::Seq,N>::type&)tuple).Value = val;
+		}
+
+	template<typename A0 = mpl::null$ ,typename A<i> = mpl::null$(1,max)>
+	struct tuple
+	{
+		$
+		typedef typename parameter< A<i> >::type P<i>;
+		$(0,max)
+		typedef typename mpl::make_list<A0$ ,A<i>$(1,max)>::type Seq;
+
+		typedef typename mpl::begin<Seq>::type begin;
+
+		typedef typename mpl::end<Seq>::type end;
+
+		typedef basic_tuple<begin,end> base_type;
+
+		base_type Base;
+		
+		tuple(){}
+		
+		$$
+		
+		tuple(A0 a0$ ,A<i> a<i>$(1,<<i>>))
+		{
+			$
+			set< <i> >(a<i>);
+			$(0,<<i>>)
+		}
+		
+		$$(0,max)
+
+		template<size_t N>
+		typename parameter<typename mpl::at<Seq,N>::type>::type get() const
+		{
+			return ((const typename basic_tuple_cast<Seq,N>::type&)*this).Value;
+		}
+
+		template<size_t N>
+		void set(typename parameter<typename mpl::at<Seq,N>::type>::type val)
+		{
+			((typename basic_tuple_cast<Seq,N>::type&)*this).Value = val;
+		}
+
+		
+		inline void swap(tuple & rhs)
+		{
+			Base.swap(rhs.Base);
+		}
+		
+		inline bool operator == (const tuple & rhs) const
+		{
+			return Base == rhs.Base;
+		}
+		
+		inline bool operator != (const tuple & rhs) const
+		{
+			return !(*this == rhs);
+		}
+	};
+
+	
+	namespace mpl{
+		template<typename A0$ ,typename A<i>$(1,max)>
+		struct size<tuple<A0$ ,A<i>$(1,max)> >
+			:mpl::size_t_<size<typename make_list<A0$ ,A<i>$(1,max)>::type>::value>
+		{
+		};
+	}
+
+}
+
+#endif //LEMON_CXX_UTILITY_TUPLE_HPP

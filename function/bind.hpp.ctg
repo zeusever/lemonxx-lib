@@ -1,0 +1,143 @@
+#ifndef LEMON_CXX_STDEXT_FUNCTION_BIND_HPP
+#define  LEMON_CXX_STDEXT_FUNCTION_BIND_HPP
+#include <lemonxx/function/bind_t.hpp>
+#include <lemonxx/function/function.hpp>
+namespace lemon{
+
+	template
+		<
+		typename R,typename Class
+		>
+	function<R()> bind(R(Class::*f)(),Class * object)
+	{
+		return function<R()>(f,object);
+	}
+	
+	template
+		<
+		typename R,typename Class
+		>
+	function<R()> bind(R(Class::*f)() const,Class * object)
+	{
+		return function<R()>(f,object);
+	}
+	
+	template
+		<
+		typename R,typename Class
+		>
+	function<R()> bind(R(Class::*f)() const,const Class * object)
+	{
+		return function<R()>(f,object);
+	}
+
+}
+
+namespace lemon{
+		$$
+		template
+		<
+		typename R
+		,typename A0$ ,typename A<i>$(1,<<i>>)
+		,typename B0$ ,typename B<i>$(1,<<i>>)
+		>
+		bind_t<
+		tuple<B0$ ,B<i>$(1,<<i>>)>, 
+		R,
+		typename mpl::make_list<A0$ ,A<i>$(1,<<i>>)>::type,
+		R(*)(A0$ ,A<i>$(1,<<i>>))
+		> bind(R(*f)(A0$ ,A<i>$(1,<<i>>)),B0 b0$ ,B<i> b<i>$(1,<<i>>))
+		{
+			typedef tuple<B0$ ,B<i>$(1,<<i>>)> stack_type;
+			
+			typedef typename mpl::make_list<A0$ ,A<i>$(1,<<i>>)>::type args;
+			
+			typedef R(*function_type)(A0$ ,A<i>$(1,<<i>>)) ;
+		
+			typedef bind_t<stack_type,R,args,function_type> result_type;
+			
+			return result_type(stack_type(b0$ ,b<i>$(1,<<i>>)),f);
+		};
+		$$(0,max)
+		
+		
+		$$
+		template
+		<
+		typename R,class Class
+		,typename A0$ ,typename A<i>$(1,<<i>>)
+		,typename B0$ ,typename B<i>$(1,<<i>>)
+		>
+		mem_bind_t<
+		tuple<B0$ ,B<i>$(1,<<i>>)>, 
+		R,
+		typename mpl::make_list<A0$ ,A<i>$(1,<<i>>)>::type,
+		Class,
+		R(Class::*)(A0$ ,A<i>$(1,<<i>>))
+		> bind(R(Class::*f)(A0$ ,A<i>$(1,<<i>>)),Class * object,B0 b0$ ,B<i> b<i>$(1,<<i>>))
+		{
+			typedef tuple<B0$ ,B<i>$(1,<<i>>)> stack_type;
+			
+			typedef typename mpl::make_list<A0$ ,A<i>$(1,<<i>>)>::type args;
+			
+			typedef R(Class::*function_type)(A0$ ,A<i>$(1,<<i>>)) ;
+		
+			typedef mem_bind_t<stack_type,R,args,Class,function_type> result_type;
+			
+			return result_type(object,stack_type(b0$ ,b<i>$(1,<<i>>)),f);
+		};
+		
+		
+		template
+		<
+		typename R,class Class
+		,typename A0$ ,typename A<i>$(1,<<i>>)
+		,typename B0$ ,typename B<i>$(1,<<i>>)
+		>
+		mem_bind_t<
+		tuple<B0$ ,B<i>$(1,<<i>>)>, 
+		R,
+		typename mpl::make_list<A0$ ,A<i>$(1,<<i>>)>::type,
+		Class,
+		R(Class::*)(A0$ ,A<i>$(1,<<i>>)) const
+		> bind(R(Class::*f)(A0$ ,A<i>$(1,<<i>>)) const,Class * object,B0 b0$ ,B<i> b<i>$(1,<<i>>))
+		{
+			typedef tuple<B0$ ,B<i>$(1,<<i>>)> stack_type;
+			
+			typedef typename mpl::make_list<A0$ ,A<i>$(1,<<i>>)>::type args;
+			
+			typedef R(Class::*function_type)(A0$ ,A<i>$(1,<<i>>)) const;
+		
+			typedef mem_bind_t<stack_type,R,args,Class,function_type> result_type;
+			
+			return result_type(object,stack_type(b0$ ,b<i>$(1,<<i>>)),f);
+		};
+		
+		template
+		<
+		typename R,class Class
+		,typename A0$ ,typename A<i>$(1,<<i>>)
+		,typename B0$ ,typename B<i>$(1,<<i>>)
+		>
+		mem_bind_t<
+		tuple<B0$ ,B<i>$(1,<<i>>)>, 
+		R,
+		typename mpl::make_list<A0$ ,A<i>$(1,<<i>>)>::type,
+		const Class,
+		R(Class::*)(A0$ ,A<i>$(1,<<i>>)) const
+		> bind(R(Class::*f)(A0$ ,A<i>$(1,<<i>>)) const,const Class * object,B0 b0$ ,B<i> b<i>$(1,<<i>>))
+		{
+			typedef tuple<B0$ ,B<i>$(1,<<i>>)> stack_type;
+			
+			typedef typename mpl::make_list<A0$ ,A<i>$(1,<<i>>)>::type args;
+			
+			typedef R(Class::*function_type)(A0$ ,A<i>$(1,<<i>>)) const;
+		
+			typedef mem_bind_t<stack_type,R,args,const Class,function_type> result_type;
+			
+			return result_type(object,stack_type(b0$ ,b<i>$(1,<<i>>)),f);
+		};
+		$$(0,max)
+}
+
+#endif // LEMON_CXX_STDEXT_FUNCTION_BIND_HPP

@@ -1,0 +1,111 @@
+/**
+ * 
+ * @file     bind_t
+ * @brief    Copyright (C) 2010  yayanyang All Rights Reserved 
+ * @author   yayanyang
+ * @version  1.0.0.0  
+ * @date     2010/12/09
+ */
+#ifndef LEMON_STDEXT_BIND_BIND_T_HPP
+#define LEMON_STDEXT_BIND_BIND_T_HPP
+#include <memory>
+#include <lemonxx/function/stack.hpp>
+#include <lemonxx/function/function_type.hpp>
+
+namespace lemon{
+	
+	template<class Stack,typename R,typename Args,typename Func> class bind_t;
+	
+	template<class Stack,typename R,typename Args,class Class,typename Func> class mem_bind_t;
+	
+	template<class Stack,typename R,typename Args,typename Func> 
+	class bind_t 
+	{
+	public:
+		
+		typedef Stack 										stack_type;
+		
+		typedef mpl::size_t_<mpl::size<stack_type>::value> 	stack_size;
+		
+		typedef R											return_type;
+		
+		typedef Func										function_type;
+		
+		typedef Args										args;
+		$
+		typedef typename binds::call_parameters<typename stack_type::Seq,args,<i> >::type P<i>;
+		$(0,max)
+		bind_t(const stack_type & stack,function_type func):_stack(stack),_func(func){}
+		
+		inline return_type operator()() const
+		{
+			return invoke_args(tuple<>(),stack_size());
+		}
+		$$
+		inline return_type operator()(P0 p0$ ,P<i> p<i>$(1,<<i>>)) const
+		{
+			return invoke_args(tuple<P0$ ,P<i>$(1,<<i>>)>(p0$ ,p<i>$(1,<<i>>)),stack_size());
+		}
+		$$(0,max)
+		
+	private:
+		$$
+		template<typename S> 
+		inline return_type invoke_args(const S & s,mpl::size_t_< <<i>> + 1 >) const
+		{
+			return _func(binds::unwind<args,0>(_stack,s)$ ,binds::unwind<args,<i> >(_stack,s)$(1,<<i>>));
+		}
+		$$(0,max)
+	
+	private:
+		stack_type 		_stack;
+		function_type 	_func;
+	};
+	
+	
+	template<class Stack,typename R,typename Args,class Class,typename Func>
+	class mem_bind_t 
+	{
+	public:
+		
+		typedef Stack 										stack_type;
+		
+		typedef mpl::size_t_<mpl::size<stack_type>::value> 	stack_size;
+		
+		typedef R											return_type;
+		
+		typedef Func										function_type;
+		
+		typedef Args										args;
+		$
+		typedef typename binds::call_parameters<typename stack_type::Seq,args,<i> >::type P<i>;
+		$(0,max)
+		mem_bind_t(Class *object,const stack_type & stack,function_type func):_object(object),_stack(stack),_func(func){}
+		
+		inline return_type operator()() const
+		{
+			return invoke_args(tuple<>(),stack_size());
+		}
+		$$
+		inline return_type operator()(P0 p0$ ,P<i> p<i>$(1,<<i>>)) const
+		{
+			return invoke_args(tuple<P0$ ,P<i>$(1,<<i>>)>(p0$ ,p<i>$(1,<<i>>)),stack_size());
+		}
+		$$(0,max)
+		
+	private:
+		$$
+		template<typename S>
+		inline return_type invoke_args(const S & s,mpl::size_t_< <<i>> + 1 >) const
+		{
+			return (_object->*_func)(binds::unwind<args,0>(_stack,s)$ ,binds::unwind<args,<i> >(_stack,s)$(1,<<i>>));
+		}
+		$$(0,max)
+	
+	private:
+		Class           *_object;
+		stack_type 		_stack;
+		function_type 	_func;
+	};
+}
+#endif	//LEMON_STDEXT_BIND_BIND_T_HPP

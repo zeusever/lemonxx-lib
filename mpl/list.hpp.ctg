@@ -1,0 +1,38 @@
+/**
+ * this file is auto generate by lua script,do not modify it
+ * @file     list.hpp
+ * @brief    Copyright (C) 2012  yayanyang All Rights Reserved 
+ * @author   yayanyang
+ * @version  1.0.0.0  
+ * @date     2012/01/14
+ */
+#ifndef LEMON_CXX_MPL_LIST_HPP
+#define LEMON_CXX_MPL_LIST_HPP
+#include<lemonxx/mpl/nulltype.hpp>
+namespace lemon{namespace mpl{
+
+   template<class Head,class Tail> struct list
+   {
+      typedef Head head;
+      
+      typedef Tail tail;
+   };
+
+   template<typename T0 = null $,typename T<i> = null$(1,max)>
+   struct make_list;
+
+   template<typename T0 $,typename T<i> $(1,max)>
+   struct make_list
+   {
+     typedef list<T0,typename make_list<T1 $,T<i> $(2,max)>::type> type;
+   };
+
+   template<>
+   struct make_list<null $,null$(1,max)>
+   {
+     typedef list<null,null> type;
+   };
+   
+}}
+
+#endif //LEMON_CXX_MPL_LIST_HPP

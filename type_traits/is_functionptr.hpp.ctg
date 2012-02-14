@@ -1,0 +1,202 @@
+#ifndef LEMON_STDEXT_IS_FUNCTIONPTR_HPP
+#define LEMON_STDEXT_IS_FUNCTIONPTR_HPP
+#include <lemonxx/mpl/inttypes.hpp>
+
+namespace lemon{
+
+	template<class T>
+	struct _is_funptr
+		:public lemon::mpl::false_type
+	{
+	 
+	};
+	
+	template<class T>
+	struct is_function
+		:public lemon::mpl::false_type
+	{
+	 
+	};
+	
+	template<class T>
+	struct _is_memfunptr
+		:public lemon::mpl::false_type
+	{
+		
+	};
+	
+	
+	template<class R>
+	struct _is_funptr<R(*)()>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R>
+	struct _is_funptr<R(*)(...)>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R>
+	struct is_function<R()>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R>
+	struct is_function<R(...)>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R,class Class>
+	struct _is_memfunptr<R(Class::*)()>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R,class Class>
+	struct _is_memfunptr<R(Class::*)(...)>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R,class Class >
+	struct _is_memfunptr<R(Class::*)() const>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R,class Class >
+	struct _is_memfunptr<R(Class::*)(...) const>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R,class Class>
+	struct _is_memfunptr<R(Class::*)() volatile>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R,class Class>
+	struct _is_memfunptr<R(Class::*)(...) volatile>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R,class Class>
+	struct _is_memfunptr<R(Class::*)() const volatile>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R,class Class>
+	struct _is_memfunptr<R(Class::*)(...) const volatile>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+}
+
+namespace lemon{
+	$$
+	template<class R ,typename A0$ , typename A<i>$(1,<<i>>)>
+	struct _is_funptr<R(*)(A0$ ,A<i>$(1,<<i>>))>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R ,typename A0$ , typename A<i>$(1,<<i>>)>
+	struct _is_funptr<R(*)(A0$ ,A<i>$(1,<<i>>),...)>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R ,typename A0$ , typename A<i>$(1,<<i>>)>
+	struct is_function<R(A0$ ,A<i>$(1,<<i>>))>
+	:public lemon::mpl::true_type
+	{
+		 
+	};
+	
+	template<class R ,typename A0$ , typename A<i>$(1,<<i>>)>
+	struct is_function<R(A0$ ,A<i>$(1,<<i>>),...)>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R,class Class ,typename A0$ , typename A<i>$(1,<<i>>)>
+	struct _is_memfunptr<R(Class::*)(A0$ ,A<i>$(1,<<i>>))>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R ,class Class ,typename A0$ , typename A<i>$(1,<<i>>)>
+	struct _is_memfunptr<R(Class::*)(A0$ ,A<i>$(1,<<i>>),...)>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R,class Class ,typename A0$ , typename A<i>$(1,<<i>>)>
+	struct _is_memfunptr<R(Class::*)(A0$ ,A<i>$(1,<<i>>)) const>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R ,class Class ,typename A0$ , typename A<i>$(1,<<i>>)>
+	struct _is_memfunptr<R(Class::*)(A0$ ,A<i>$(1,<<i>>),...) const>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R,class Class ,typename A0$ , typename A<i>$(1,<<i>>)>
+	struct _is_memfunptr<R(Class::*)(A0$ ,A<i>$(1,<<i>>)) volatile>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R ,class Class ,typename A0$ , typename A<i>$(1,<<i>>)>
+	struct _is_memfunptr<R(Class::*)(A0$ ,A<i>$(1,<<i>>),...) volatile>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	
+	template<class R,class Class ,typename A0$ , typename A<i>$(1,<<i>>)>
+	struct _is_memfunptr<R(Class::*)(A0$ ,A<i>$(1,<<i>>)) const volatile>
+	:public lemon::mpl::true_type
+	{
+		 
+	};
+	
+	template<class R ,class Class ,typename A0$ , typename A<i>$(1,<<i>>)>
+	struct _is_memfunptr<R(Class::*)(A0$ ,A<i>$(1,<<i>>),...) const volatile>
+	:public lemon::mpl::true_type
+	{
+		
+	};
+	$$(0,max)
+}
+
+#endif //LEMON_STDEXT_IS_FUNCTIONPTR_HPP

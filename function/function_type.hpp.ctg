@@ -1,0 +1,47 @@
+/**
+ * this file is auto generate by lua script,do not modify it
+ * @file     basic_function.hpp
+ * @brief    Copyright (C) 2012  yayanyang All Rights Reserved 
+ * @author   yayanyang
+ * @version  1.0.0.0  
+ * @date     2012/01/14
+ */
+#ifndef LEMON_CXX_FUNCTION_FUNCTION_TYPE_HPP
+#define LEMON_CXX_FUNCTION_FUNCTION_TYPE_HPP
+
+namespace lemon{
+
+  template<class Signature> class function_type;
+
+  template<typename R>
+    struct function_type<R()>
+    {
+      typedef R result_type;
+
+      typedef function_type<R()> self_type;
+
+      virtual ~function_type(){}
+
+      virtual result_type call() const  = 0; 
+
+      virtual self_type * clone() const = 0;
+    };
+
+  $$
+    template<typename R$ ,typename A<i>$(0,<<i>>)>
+    struct function_type<R(A0$ ,A<i>$(1,<<i>>))>
+    {
+      typedef R result_type;
+
+      typedef function_type<R(A0$ ,A<i>$(1,<<i>>))> self_type;
+
+      virtual ~function_type(){}
+
+      virtual result_type call(A0$,A<i>$(1,<<i>>)) const  = 0; 
+
+      virtual self_type * clone() const = 0;
+    };
+  $$(0,max)
+}
+
+#endif //LEMON_CXX_FUNCTION_FUNCTION_TYPE_HPP

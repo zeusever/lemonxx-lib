@@ -1,0 +1,156 @@
+/**
+ * this file is auto generate by lua script,do not modify it
+ * @file     basic_function.hpp
+ * @brief    Copyright (C) 2012  yayanyang All Rights Reserved 
+ * @author   yayanyang
+ * @version  1.0.0.0  
+ * @date     2012/01/14
+ */
+#ifndef LEMON_CXX_FUNCTION_BASIC_FUNCTION_HPP
+#define LEMON_CXX_FUNCTION_BASIC_FUNCTION_HPP
+#include <algorithm>
+#include <lemonxx/function/function_type.hpp>
+
+namespace lemon{
+
+  template<class Signature> class basic_function;
+
+  template<typename R>
+  class basic_function<R()>
+  {
+  public:
+	  typedef function_type<R()> *wrapper_type;
+
+	  typedef basic_function<R()> self_type;
+
+	  explicit basic_function(wrapper_type wrapper):_wrapper(wrapper){}
+	  
+	  basic_function():_wrapper(0){}
+
+	  basic_function(const basic_function & rhs)
+		  :_wrapper(rhs._wrapper->clone())
+	  {	  
+	  }
+
+	  ~basic_function()
+	  {
+		  if(!empty()) delete _wrapper;
+	  }
+
+	  void swap(basic_function & rhs)
+	  {
+		  std::swap(_wrapper,rhs._wrapper);
+	  }
+
+	  basic_function & operator = (const basic_function & rhs)
+	  {
+		  basic_function tmp(rhs);
+
+		  swap(tmp);
+
+		  return *this;
+	  }
+
+
+	  wrapper_type release()
+	  {
+		  wrapper_type empty = 0;
+
+		  std::swap(empty,_wrapper);
+
+		  return empty;
+	  }
+
+	  wrapper_type reset(wrapper_type p) 
+	  {
+		 std::swap(p,_wrapper);
+
+		 return p;
+	  }
+
+	  bool empty() const
+	  {
+		  return _wrapper == 0;
+	  }
+
+	  R operator()() const
+	  {
+		  return _wrapper->call();
+	  }
+
+  private:
+	  wrapper_type _wrapper;
+  };
+
+ $$
+  template<typename R$ ,typename A<i>$(0,<<i>>)>
+  class basic_function<R(A0$ ,A<i>$(1,<<i>>))>
+  {
+  public:
+
+	  typedef function_type<R(A0$ ,A<i>$(1,<<i>>))> *wrapper_type;
+
+	  typedef basic_function<R(A0$ ,A<i>$(1,<<i>>))> self_type;
+
+	  explicit basic_function(wrapper_type wrapper):_wrapper(wrapper){}
+	  
+	  basic_function():_wrapper(0){}
+
+	  basic_function(const basic_function & rhs)
+		  :_wrapper(rhs._wrapper->clone())
+	  {	  
+	  }
+
+	  ~basic_function()
+	  {
+		  if(!empty()) delete _wrapper;
+	  }
+
+	  void swap(basic_function & rhs)
+	  {
+		  std::swap(_wrapper,rhs._wrapper);
+	  }
+
+	  basic_function & operator = (const basic_function & rhs)
+	  {
+		  basic_function tmp(rhs);
+
+		  swap(tmp);
+
+		  return *this;
+	  }
+
+	  wrapper_type release()
+	  {
+		  wrapper_type empty = 0;
+
+		  std::swap(empty,_wrapper);
+
+		  return empty;
+	  }
+
+	  wrapper_type reset(wrapper_type p) 
+	  {
+		 std::swap(p,_wrapper);
+
+		 return p;
+	  }
+
+	  bool empty() const
+	  {
+		  return _wrapper == 0;
+	  }
+
+	  R operator()(A0 a0$ ,A<i> a<i>$(1,<<i>>)) const
+	  {
+		  return _wrapper->call(a0$ ,a<i>$(1,<<i>>));
+	  }
+
+  private:
+	  wrapper_type _wrapper;
+  };
+ $$(0,max)
+ 
+}
+
+#endif //LEMON_CXX_FUNCTION_BASIC_FUNCTION_HPP

@@ -1,0 +1,66 @@
+/**
+ * this file is auto generate by lua script,do not modify it
+ * @file     basic_function.hpp
+ * @brief    Copyright (C) 2012  yayanyang All Rights Reserved 
+ * @author   yayanyang
+ * @version  1.0.0.0  
+ * @date     2012/01/14
+ */
+#ifndef LEMON_CXX_FUNCTION_HANDLE_HPP
+#define LEMON_CXX_FUNCTION_HANDLE_HPP
+#include <lemonxx/function/function_type.hpp>
+namespace lemon{namespace functions{
+    
+    template<class Sig,class Func> class handle;
+
+    template<typename R,class Func> 
+	class handle<R(),Func> : public function_type<R()>
+	{
+	public:
+
+		typedef function_type<R()> base_type;
+
+		explicit handle(Func fn)
+			:_fn(fn)
+		{
+		}
+
+		base_type * clone() const{return new handle(*this);}
+
+		R call () const {return _fn();}
+
+	private:
+		Func _fn;
+	};
+	
+    $$
+    template<typename R$ ,typename A<i>$(0,<<i>>), class Func> 
+	class handle<R(A0$ ,A<i>$(1,<<i>>)),Func> 
+		: public function_type<R(A0$ ,A<i>$(1,<<i>>))>
+	{
+	public:
+
+		typedef function_type<R(A0$ ,A<i>$(1,<<i>>))> base_type;
+
+		explicit handle(Func fn)
+			:_fn(fn)
+		{
+		}
+
+		base_type * clone() const{return new handle(*this);}
+
+		R call (A0 a0$ ,A<i> a<i>$(1,<<i>>)) const 
+		{
+			return _fn(a0$ ,a<i>$(1,<<i>>));
+		}
+
+	private:
+		Func _fn;
+	}; 
+    $$(0,max)
+
+	
+	
+}}
+
+#endif //LEMON_CXX_FUNCTION_HANDLE_HPP
