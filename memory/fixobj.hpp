@@ -12,7 +12,7 @@
 #include <lemon/memory/fixobj.h>
 #include <lemonxx/utility/utility.hpp>
 
-namespace lemon{namespace memory{
+namespace lemon{namespace memory{namespace fixed{
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// @class	template<size_t N> class fixobject_allocator : private nocopyable
@@ -21,7 +21,7 @@ namespace lemon{namespace memory{
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	template<size_t N>
-	class fixobject_allocator : private nocopyable
+	class allocator : private nocopyable
 	{
 	public:
 
@@ -36,7 +36,7 @@ namespace lemon{namespace memory{
 		/// @exception	Exception	Thrown when . 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		fixobject_allocator()
+		allocator()
 		{
 			LEMON_DECLARE_ERRORINFO(errorCode);
 
@@ -54,7 +54,7 @@ namespace lemon{namespace memory{
 		/// @date	2012/2/14
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		~fixobject_allocator()
+		~allocator()
 		{
 			LemonReleaseFixObjectAllocator(_allocator);
 		}
@@ -92,6 +92,6 @@ namespace lemon{namespace memory{
 		LemonFixObjectAllocator _allocator;
 	};
 
-}}
+}}}
 
 #endif //LEMONXX_MEMORY_FIXOBJ_HPP
