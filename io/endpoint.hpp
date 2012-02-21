@@ -28,16 +28,22 @@ namespace lemon{namespace io{namespace ip{
 				memcpy(this,&rhs,sizeof(rhs));
 			}
 
-			short port() const
+			unsigned short port() const
 			{
 				return ntohs(sockaddr_in::sin_port);
+			}
+
+			endpoint& port(unsigned short val)
+			{
+				sockaddr_in::sin_port = htons(val);
+
+				return *this;
 			}
 
 			v4::address address()
 			{
 				return sockaddr_in::sin_addr;
 			}
-
 
 			inline bool operator == (const endpoint & rhs) const
 			{
@@ -148,9 +154,16 @@ namespace lemon{namespace io{namespace ip{
 				memcpy(this,&rhs,sizeof(rhs));
 			}
 
-			short port() const
+			unsigned short port() const
 			{
 				return ntohs(sockaddr_in6::sin6_port);
+			}
+
+			endpoint& port(unsigned short val)
+			{
+				sockaddr_in6::sin6_port = htons(val);
+
+				return *this;
 			}
 
 			v6::address address()
@@ -258,28 +271,36 @@ namespace lemon{namespace io{namespace ip{
 	class endpoint
 	{
 	public:
-		endpoint(){}
+		endpoint():_length(sizeof(_buffer)){}
 
 		endpoint(const sockaddr* addr)
 		{
 			if(addr->sa_family == AF_INET)
 			{
 				_buffer.v4 = *(sockaddr_in*)addr;
+
+				_length = sizeof(sockaddr_in);
 			}
 			else if(addr->sa_family == AF_INET6)
 			{
 				_buffer.v6 = *(sockaddr_in6*)addr;
+
+				_length = sizeof(sockaddr_in6);
 			}
 		}
 
 		endpoint(const sockaddr_in & rhs)
 		{
 			_buffer.v4 = rhs;
+
+			_length = sizeof(sockaddr_in);
 		}
 
 		endpoint(const sockaddr_in6 & rhs)
 		{
 			_buffer.v6 = rhs;
+
+			_length = sizeof(sockaddr_in6);
 		}
 
 		int af() const
@@ -301,6 +322,38 @@ namespace lemon{namespace io{namespace ip{
 			return _buffer.v6;
 		}
 
+		const sockaddr * ptr() const
+		{
+			return &_buffer.addr;
+		}
+
+		sockaddr * ptr()
+		{
+			return &_buffer.addr;
+		}
+
+		const socklen_t & buffersize() const
+		{
+			return _length;
+		}
+
+		socklen_t & buffersize()
+		{
+			return _length;
+		}
+
+		size_t length() const
+		{
+			if(ipv4()) return sizeof(sockaddr_in);
+
+			else return sizeof(sockaddr_in6);
+		}
+
+		bool operator == (const endpoint & ep) const
+		{
+			return _length == ep._length && memcmp(&_buffer,&ep._buffer,_length) == 0;
+		}
+
 	private:
 
 		union{
@@ -311,6 +364,8 @@ namespace lemon{namespace io{namespace ip{
 			sockaddr_in6	v6;
 
 		} _buffer;
+
+		socklen_t			_length;
 	};
 
 }}}

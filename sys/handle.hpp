@@ -15,32 +15,32 @@
 namespace lemon{
 
 	template<class T,void(*Release)(T)>
-	class handle
+	class handle_wrapper
 	{
 	public:
 		typedef T									handle_type;
 
 		typedef T const								const_handle_type;
 
-		handle():_handle(LEMON_HANDLE_NULL_VALUE){}
+		handle_wrapper():_handle(LEMON_HANDLE_NULL_VALUE){}
 
-		handle(handle_type h):_handle(h){}
+		handle_wrapper(handle_type h):_handle(h){}
 
-		handle(const handle & rhs):_handle(rhs.move()) {}
+		handle_wrapper(const handle_wrapper & rhs):_handle(rhs.move()) {}
 
-		~handle()
+		~handle_wrapper()
 		{
 			if(LEMON_CHECK_HANDLE(_handle)) Release(_handle);
 		}
 
 		operator handle_type ()
 		{
-			return _handle;
+			return move();
 		}
 
 		operator const_handle_type () const
 		{
-			return _handle;
+			return move();
 		}
 
 		handle_type move() const
@@ -52,14 +52,14 @@ namespace lemon{
 			return result;
 		}
 
-		void swap(handle & rhs)
+		void swap(handle_wrapper & rhs)
 		{
 			std::swap(_handle,rhs._handle);
 		}
 
-		handle& operator = ( const handle & rhs)
+		handle_wrapper& operator = ( const handle_wrapper & rhs)
 		{
-			handle(rhs).swap(_handle);
+			handle_wrapper(rhs).swap(*this);
 
 			return *this;
 		}
@@ -76,6 +76,8 @@ namespace lemon{
 		typedef T									handle_type;
 
 		typedef T const								const_handle_type;
+
+		typedef handle_wrapper<T,Release>			wrapper_type;
 
 		basic_handle_object():_handle(LEMON_HANDLE_NULL_VALUE){}
 
@@ -95,6 +97,10 @@ namespace lemon{
 		{
 			return _handle;
 		}
+
+		handle_type native(){return _handle;}
+
+		const_handle_type native() const{return _handle;}
 
 		handle_type release() 
 		{

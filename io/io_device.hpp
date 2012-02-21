@@ -18,6 +18,13 @@ namespace lemon{namespace io{
 
 	typedef lemon::function<void(size_t	numberOfBytesTransferred,const LemonErrorInfo &errorCode)> AsyncIoCallback;
 
+	inline void IoCallback(void *userData,size_t	numberOfBytesTransferred,const LemonErrorInfo * errorCode)
+	{
+		AsyncIoCallback cb(reinterpret_cast<AsyncIoCallback::wrapper_type>(userData));
+
+		cb(numberOfBytesTransferred,*errorCode);
+	}
+
 	class io_device 
 		: public basic_handle_object<LemonIoDevice,LemonReleaseIoDevice>
 	{
@@ -61,18 +68,9 @@ namespace lemon{namespace io{
 
 			LEMON_DECLARE_ERRORINFO(errorCode);	
 
-			LemonPostIoDeviceCompeleteEvent(*this,&io_device::IoCallback,cb.release(),0,&errorCode);
+			LemonPostIoDeviceCompeleteEvent(*this,&IoCallback,cb.release(),0,&errorCode);
 
 			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-		}
-
-	private:
-
-		static void IoCallback(void *userData,size_t	numberOfBytesTransferred,const LemonErrorInfo * errorCode)
-		{
-			AsyncIoCallback cb(reinterpret_cast<AsyncIoCallback::wrapper_type>(userData));
-
-			cb(numberOfBytesTransferred,*errorCode);
 		}
 	};
 }}

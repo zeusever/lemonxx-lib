@@ -75,6 +75,11 @@ namespace lemon{
 
 		operator size_t () const
 		{
+			return next();
+		}
+
+		size_t next() const
+		{
 			LEMON_DECLARE_ERRORINFO(errorinfo);
 
 			size_t result = LemonRandomDeviceNext(_device,&errorinfo);
@@ -83,6 +88,7 @@ namespace lemon{
 
 			return result;
 		}
+
 	private:
 
 		//! the random device. 

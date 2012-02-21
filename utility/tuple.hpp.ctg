@@ -14,13 +14,13 @@
 
 namespace lemon{
 
-		template<class Tuple,size_t N>
+                template<size_t N,class Tuple>
 		inline typename parameter<typename mpl::at<typename Tuple::Seq,N>::type>::type get(const Tuple & tuple)
 		{
 			return ((const typename basic_tuple_cast<typename Tuple::Seq,N>::type&)tuple).Value;
 		}
 
-		template<class Tuple,size_t N>
+		template<size_t N,class Tuple>
 		inline void set(Tuple &tuple,typename parameter<typename mpl::at<typename Tuple::Seq,N>::type>::type val)
 		{
 			((typename basic_tuple_cast<typename Tuple::Seq,N>::type&)tuple).Value = val;

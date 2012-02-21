@@ -12,7 +12,7 @@
 namespace lemon{namespace functions{
     
     template<class Sig,class Func> class handle;
-
+ 
     template<typename R,class Func> 
 	class handle<R(),Func> : public function_type<R()>
 	{

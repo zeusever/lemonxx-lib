@@ -4,4 +4,5 @@
 #include <lemonxx/utility/ref.hpp>
 #include <lemonxx/utility/static-assert.hpp>
 #include <lemonxx/utility/iterator.hpp>
+#include <lemonxx/utility/buffer.hpp>
 
