@@ -7,3 +7,4 @@
 #include <lemonxx/sys/thread.hpp>
 #include <lemonxx/sys/inttypes.hpp>
 #include <lemonxx/sys/handle.hpp>
+#include <lemonxx/sys/errorcode.hpp>

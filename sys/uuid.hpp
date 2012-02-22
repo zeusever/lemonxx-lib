@@ -35,6 +35,12 @@ namespace lemon{
 
 			if(LEMON_FAILED(errorInfo)) throw Exception("call LemonUuidGenerate exception",errorInfo);
 		}
+		
+		uuid_t(const LemonUuid & rhs)
+		{
+			memcpy(this,&rhs,sizeof(LemonUuid));
+		}
+
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// @fn	uuid_t(const char * source)
