@@ -127,6 +127,17 @@ namespace lemon{
 		LemonTls _tls;
 	};
 
+	inline lemon_thread_id_t current_thread_id()
+	{
+		LEMON_DECLARE_ERRORINFO(errorinfo);
+
+		lemon_thread_id_t id = LemonGetCurrentThreadId(&errorinfo);
+
+		if(LEMON_FAILED(errorinfo)) throw Exception(errorinfo);
+
+		return id;
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// @class	thread_t
 	///
@@ -210,6 +221,11 @@ namespace lemon{
 				LemonThreadJoin(_thread,&errorinfo);
 				if(LEMON_FAILED(errorinfo)) throw Exception("LemonCreateThread exception",errorinfo);
 			}
+		}
+
+		lemon_thread_id_t id()
+		{
+			return LemonGetThreadId(_thread);
 		}
 
 	private:
