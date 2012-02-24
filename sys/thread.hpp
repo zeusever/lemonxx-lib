@@ -208,6 +208,13 @@ namespace lemon{
 			}
 		}
 
+		void reset()
+		{
+			join();
+
+			_thread = LEMON_HANDLE_NULL_VALUE;
+		}
+
 		bool empty() const
 		{
 			return !LEMON_CHECK_HANDLE(_thread);
@@ -218,13 +225,17 @@ namespace lemon{
 			if(!empty())
 			{
 				LEMON_DECLARE_ERRORINFO(errorinfo);
+				
 				LemonThreadJoin(_thread,&errorinfo);
+
 				if(LEMON_FAILED(errorinfo)) throw Exception("LemonCreateThread exception",errorinfo);
 			}
 		}
 
 		lemon_thread_id_t id()
 		{
+			if(empty()) return 0;
+
 			return LemonGetThreadId(_thread);
 		}
 
