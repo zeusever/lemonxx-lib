@@ -113,9 +113,9 @@ namespace lemon{namespace io{
 	{
 		LemonErrorInfo errorCode;
 
-		char buffer[MAX_PATH];
+		char buffer[LEMON_MAX_PATH];
 
-		LemonGetCurrentDirectory(buffer,MAX_PATH,&errorCode);
+		LemonGetCurrentDirectory(buffer,LEMON_MAX_PATH,&errorCode);
 
 		if(LEMON_FAILED(errorCode)) throw lemon::Exception(errorCode);
 	
