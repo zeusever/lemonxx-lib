@@ -37,7 +37,7 @@ namespace lemon{
 
 		template<class Func>
 		function(Func fn)
-			:basic_function<Signature>(create_handle(fn,is_same<Func,function<Signature> >::type()))
+			:basic_function<Signature>(create_handle(fn,typename is_same<Func,function<Signature> >::type()))
 		{
 
 		}

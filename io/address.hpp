@@ -157,13 +157,13 @@ namespace lemon{namespace io{namespace ip{
 
 	namespace v6{
 
-		class address : public in_addr6
+		class address : public in6_addr
 		{
 		public:
 
 			address(){}
 
-			address(const in_addr6 & rhs)
+			address(const in6_addr & rhs)
 			{
 				memcpy(this,&rhs,sizeof(rhs));
 			}
@@ -187,7 +187,7 @@ namespace lemon{namespace io{namespace ip{
 
 				char buffer[sizeof("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255")];
 
-				LemonAddressToString(AF_INET6,(void*)this,sizeof(in_addr6),buffer,sizeof(buffer),&errorCode);
+				LemonAddressToString(AF_INET6,(void*)this,sizeof(in6_addr),buffer,sizeof(buffer),&errorCode);
 
 				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
 
@@ -226,65 +226,65 @@ namespace lemon{namespace io{namespace ip{
 				return memcmp(this,&rhs,sizeof(rhs)) <= 0;
 			}
 
-			inline bool operator == (const in_addr6 & rhs) const
+			inline bool operator == (const in6_addr & rhs) const
 			{
 				return memcmp(this,&rhs,sizeof(rhs)) == 0;
 			}
 
-			inline bool operator != (const in_addr6 & rhs) const
+			inline bool operator != (const in6_addr & rhs) const
 			{
 				return memcmp(this,&rhs,sizeof(rhs)) != 0;
 			}
 
-			inline bool operator > (const in_addr6 & rhs) const
+			inline bool operator > (const in6_addr & rhs) const
 			{
 				return memcmp(this,&rhs,sizeof(rhs)) > 0;
 			}
 
-			inline bool operator < (const in_addr6 & rhs) const
+			inline bool operator < (const in6_addr & rhs) const
 			{
 				return memcmp(this,&rhs,sizeof(rhs)) < 0;
 			}
 
 
-			inline bool operator >= (const in_addr6 & rhs) const
+			inline bool operator >= (const in6_addr & rhs) const
 			{
 				return memcmp(this,&rhs,sizeof(rhs)) >= 0;
 			}
 
-			inline bool operator <= (const in_addr6 & rhs) const
+			inline bool operator <= (const in6_addr & rhs) const
 			{
 				return memcmp(this,&rhs,sizeof(rhs)) <= 0;
 			}
 		};
 
-		inline bool operator == (const in_addr6 & lhs,const address & rhs)
+		inline bool operator == (const in6_addr & lhs,const address & rhs)
 		{
 			return memcmp(&lhs,&rhs,sizeof(rhs)) == 0;
 		}
 
-		inline bool operator != (const in_addr6 & lhs,const address & rhs)
+		inline bool operator != (const in6_addr & lhs,const address & rhs)
 		{
 			return memcmp(&lhs,&rhs,sizeof(rhs)) != 0;
 		}
 
-		inline bool operator > (const in_addr6 & lhs,const address & rhs)
+		inline bool operator > (const in6_addr & lhs,const address & rhs)
 		{
 			return memcmp(&lhs,&rhs,sizeof(rhs)) > 0;
 		}
 
-		inline bool operator < (const in_addr6 & lhs,const address & rhs)
+		inline bool operator < (const in6_addr & lhs,const address & rhs)
 		{
 			return memcmp(&lhs,&rhs,sizeof(rhs)) < 0;
 		}
 
 
-		inline bool operator >= (const in_addr6 & lhs,const address & rhs)
+		inline bool operator >= (const in6_addr & lhs,const address & rhs)
 		{
 			return memcmp(&lhs,&rhs,sizeof(rhs)) >= 0;
 		}
 
-		inline bool operator <= (const in_addr6 & lhs,const address & rhs)
+		inline bool operator <= (const in6_addr & lhs,const address & rhs)
 		{
 			return memcmp(&lhs,&rhs,sizeof(rhs)) <= 0;
 		}
@@ -297,7 +297,7 @@ namespace lemon{namespace io{namespace ip{
 	public:
 		address(){}
 
-		address(const in_addr6 & addr)
+		address(const in6_addr & addr)
 			:_af(AF_INET6)
 		{
 			_buffer.v6 = addr;
@@ -334,7 +334,7 @@ namespace lemon{namespace io{namespace ip{
 
 			in_addr v4;
 
-			in_addr6 v6;
+			in6_addr v6;
 
 		} _buffer;
 

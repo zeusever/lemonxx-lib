@@ -25,16 +25,16 @@ namespace lemon{namespace io{
 
 	public:
 
-		basic_object(handle_type h):base_type(h){}
+	        basic_object(typename base_type::handle_type h):base_type(h){}
 
 		operator LemonIo()
 		{
-			return (LemonIo)native();
+		  return (LemonIo) base_type::native();
 		}
 
 		operator const LemonIo() const
 		{
-			return (const LemonIo)native();
+		  return (const LemonIo) base_type::native();
 		}
 
 		template<class ConstBuffer>
