@@ -15,7 +15,7 @@
 #include <lemonxx/sys/inttypes.hpp>
 namespace lemon{
 
-	typedef int64_t time_duration;
+	typedef LemonTimeDuration time_duration;
 
 	class time_t : public LemonTime
 	{
