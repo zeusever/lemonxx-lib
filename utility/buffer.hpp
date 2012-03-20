@@ -59,6 +59,12 @@ namespace lemon{
 		return const_buffer(source,N);
 	}
 
+	template<size_t N>
+	inline mutable_buffer buf(char (&source) [N])
+	{
+		return mutable_buffer((byte_t*)source,N);
+	}
+
 	inline const_buffer cbuf(const char * message)
 	{
 		return const_buffer((const byte_t*)message,strlen(message));
