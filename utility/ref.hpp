@@ -40,7 +40,7 @@ namespace lemon{
 		}
 
 	private:
-		T * _t;
+		mutable T * _t;
 	};
 
 	template<typename T>
