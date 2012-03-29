@@ -234,7 +234,7 @@ namespace lemon{
 			}
 		}
 
-		lemon_thread_id_t id()
+		lemon_thread_id_t id() const
 		{
 			if(empty()) return 0;
 
