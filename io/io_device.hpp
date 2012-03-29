@@ -50,15 +50,13 @@ namespace lemon{namespace io{
 			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
 		}
 
-		size_t stop()
+		void stop()
 		{
 			LEMON_DECLARE_ERRORINFO(errorCode);
 
-			size_t result = LemonStopAllIoDeviceWorkThread(*this,&errorCode);
+			LemonStopAllIoDeviceWorkThread(*this,&errorCode);
 
 			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-
-			return result;
 		}
 
 		template<typename Handle>

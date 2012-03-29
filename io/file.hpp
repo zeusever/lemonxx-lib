@@ -10,101 +10,11 @@
 #define LEMONXX_IO_FILE_HPP
 #include <string>
 #include <stack>
-#include <lemon/io/file.h>
+#include <lemon/io/filesystem.h>
 #include <lemonxx/io/io_device.hpp>
 #include <lemonxx/io/object.hpp>
 #include <lemonxx/sys/sys.hpp>
 #include <lemonxx/utility/utility.hpp>
-
-namespace lemon{namespace io{
-
-	class file : public basic_object<LemonFile,&LemonCloseFile>
-	{
-	public:
-		typedef basic_object<LemonFile,&LemonCloseFile> base_type;
-
-		file(
-			const char * name,
-			LemonFileDesiredAccess desiredAccess,
-			LemonFileShareMode shareMode,
-			LemonFileCreationDisposition createionDisposition)
-			:base_type(Create(name,desiredAccess,shareMode,createionDisposition,LEMON_HANDLE_NULL_VALUE))
-		{
-
-		}
-
-		file(
-			const char * name,
-			LemonFileDesiredAccess desiredAccess,
-			LemonFileCreationDisposition createionDisposition)
-			:base_type(Create(name,desiredAccess,(LemonFileShareMode)0,createionDisposition,LEMON_HANDLE_NULL_VALUE))
-		{
-
-		}
-
-		file(const char * name,LemonFileCreationDisposition createionDisposition)
-			:base_type(Create(name,LEMON_FILE_ALL,(LemonFileShareMode)0,createionDisposition,LEMON_HANDLE_NULL_VALUE))
-		{
-
-		}
-
-		file(const char * name)
-			:base_type(Create(name,LEMON_FILE_ALL,(LemonFileShareMode)0,LEMON_FILE_OPEN_EXISTING,LEMON_HANDLE_NULL_VALUE))
-		{
-
-		}
-
-
-		file(
-			const char * name,
-			LemonFileDesiredAccess desiredAccess,
-			LemonFileShareMode shareMode,
-			LemonFileCreationDisposition createionDisposition,io_device & device)
-			:base_type(Create(name,desiredAccess,shareMode,createionDisposition,device))
-		{
-
-		}
-
-		file(
-			const char * name,
-			LemonFileDesiredAccess desiredAccess,
-			LemonFileCreationDisposition createionDisposition,io_device & device)
-			:base_type(Create(name,desiredAccess,(LemonFileShareMode)0,createionDisposition,device))
-		{
-
-		}
-
-		file(const char * name,LemonFileCreationDisposition createionDisposition,io_device & device)
-			:base_type(Create(name,LEMON_FILE_ALL,(LemonFileShareMode)0,createionDisposition,device))
-		{
-
-		}
-
-		file(const char * name,io_device & device)
-			:base_type(Create(name,LEMON_FILE_ALL,(LemonFileShareMode)0,LEMON_FILE_OPEN_EXISTING,device))
-		{
-
-		}
-
-
-	private:
-		static LemonFile Create(
-			const char * name,
-			LemonFileDesiredAccess desiredAccess,
-			LemonFileShareMode shareMode,
-			LemonFileCreationDisposition createionDisposition,
-			LemonIoDevice device)
-		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
-
-			LemonFile file = LemonCreateFile(name,desiredAccess,shareMode,createionDisposition,device,&errorCode);
-
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-
-			return file;
-		}
-	};
-}}
 
 namespace lemon{namespace io{
 
