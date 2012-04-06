@@ -191,7 +191,7 @@ namespace lemon{
 
 		~thread_t()
 		{
-			if(LEMON_CHECK_HANDLE(_thread)) LemonReleaseThread(_thread);
+			reset();
 		}
 
 		void start(const proc_type & proc)
@@ -211,6 +211,8 @@ namespace lemon{
 		void reset()
 		{
 			join();
+
+			if(LEMON_CHECK_HANDLE(_thread)) LemonReleaseThread(_thread);
 
 			_thread = LEMON_HANDLE_NULL_VALUE;
 		}
@@ -232,7 +234,7 @@ namespace lemon{
 			}
 		}
 
-		lemon_thread_id_t id()
+		lemon_thread_id_t id() const
 		{
 			if(empty()) return 0;
 
