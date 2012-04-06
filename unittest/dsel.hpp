@@ -289,6 +289,6 @@ void TestCaseName::Run()
 
 #define LEMON_UNITTEST_CHECK(condition) lemon::unittest::cxx::Check((bool)(condition),"condition check error --> "#condition,__FILE__,__LINE__)
 
-#define LEMON_UNITTEST_EXPECT_EXCEPTION(exp,Exception) try{(exp);lemon::unittest::cxx::Check(false,"expect exception failed"#Exception,__FILE__,__LINE__);}catch(const Exception&){}
+#define LEMON_UNITTEST_EXPECT_EXCEPTION(exp,Expression) try{(exp);lemon::unittest::cxx::Check(false,"expect exception failed"#Expression,__FILE__,__LINE__);}catch(const Expression&){}
 
 #endif //LEMON_CXX_UNITTEST_DESL_HPP

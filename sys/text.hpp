@@ -15,6 +15,10 @@
 
 namespace lemon{
 
+	typedef std::string utf8string;
+
+	typedef std::basic_string<utf16_t> utf16string;
+
 	inline std::string to_utf8(const std::string & source)
 	{
 		if(source.empty()) return source;
