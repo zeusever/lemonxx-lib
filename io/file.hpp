@@ -19,11 +19,11 @@
 namespace lemon{namespace io{
 
 
-	inline std::string current_directory()
+	inline systring current_directory()
 	{
 		LemonErrorInfo errorCode;
 
-		char buffer[LEMON_MAX_PATH];
+		lemon_syschar_t buffer[LEMON_MAX_PATH];
 
 		LemonGetCurrentDirectory(buffer,LEMON_MAX_PATH,&errorCode);
 
@@ -32,7 +32,7 @@ namespace lemon{namespace io{
 		return buffer;
 	}
 
-	inline void current_directory(const std::string& current)
+	inline void current_directory(const systring& current)
 	{
 		LemonErrorInfo errorCode;
 
@@ -41,7 +41,7 @@ namespace lemon{namespace io{
 		if(LEMON_FAILED(errorCode)) throw lemon::Exception(errorCode);
 	}
 
-	inline void remove_directory(const std::string& dir)
+	inline void remove_directory(const systring& dir)
 	{
 		LemonErrorInfo errorCode;
 
@@ -51,7 +51,7 @@ namespace lemon{namespace io{
 	
 	}
 
-	inline void create_directory(const std::string& dir)
+	inline void create_directory(const systring& dir)
 	{
 		LemonErrorInfo errorCode;
 
@@ -60,7 +60,7 @@ namespace lemon{namespace io{
 		if(LEMON_FAILED(errorCode)) throw lemon::Exception(errorCode);
 	}
 
-	inline bool is_directory(const std::string & dir)
+	inline bool is_directory(const systring & dir)
 	{
 		LemonErrorInfo errorCode;
 
@@ -71,7 +71,7 @@ namespace lemon{namespace io{
 		return result?true:false;
 	}
 
-	inline bool exists(const std::string & current)
+	inline bool exists(const systring & current)
 	{
 		LemonErrorInfo errorCode;
 
@@ -82,7 +82,7 @@ namespace lemon{namespace io{
 		return result?true:false;
 	}
 
-	inline void remove_file(const std::string & file)
+	inline void remove_file(const systring & file)
 	{
 		LemonErrorInfo errorCode;
 
@@ -91,7 +91,7 @@ namespace lemon{namespace io{
 		if(!LEMON_SUCCESS(errorCode)) throw lemon::Exception(errorCode);
 	}
 
-	inline void move(const std::string & source,const std::string & target)
+	inline void move(const systring & source,const systring & target)
 	{
 		LemonErrorInfo errorCode;
 
@@ -101,7 +101,7 @@ namespace lemon{namespace io{
 	}
 
 	class directory_iteartor_t 
-		: public iterator_t<directory_iteartor_t,const std::string,ptrdiff_t> 
+		: public iterator_t<directory_iteartor_t,const systring,ptrdiff_t> 
 		, lemon::nocopyable
 	{
 	public:
@@ -111,7 +111,7 @@ namespace lemon{namespace io{
 
 		}
 
-		directory_iteartor_t(const std::string& directory)
+		directory_iteartor_t(const systring& directory)
 		{
 			LemonErrorInfo errorCode;
 
@@ -132,12 +132,12 @@ namespace lemon{namespace io{
 			return _enumerator == rhs._enumerator;
 		}
 
-		const std::string& dereference() const
+		const systring& dereference() const
 		{
 			return _current;
 		}
 
-		const std::string * ptr()
+		const systring * ptr()
 		{
 			return &_current;
 		}
@@ -146,7 +146,7 @@ namespace lemon{namespace io{
 		{
 			LemonErrorInfo errorCode;
 
-			const char * next  = LemonDirectoryEnumeratorNext(_enumerator,&errorCode);
+			const lemon_syschar_t * next  = LemonDirectoryEnumeratorNext(_enumerator,&errorCode);
 
 			if(!LEMON_SUCCESS(errorCode)) throw lemon::Exception(errorCode);
 
@@ -165,20 +165,20 @@ namespace lemon{namespace io{
 
 	private:
 
-		std::string				_current;
+		systring				_current;
 
 		LemonDirectoryEnumerator _enumerator;
 	};
 
-	inline bool is_empty(const std::string& dir)
+	inline bool is_empty(const systring& dir)
 	{
 		directory_iteartor_t iter(dir.c_str()),end;
 
 		for(;iter != end; ++ iter)
 		{
-			if("." == *iter) continue;
+			if(LEMON_TEXT(".") == *iter) continue;
 
-			if(".." == *iter) continue;
+			if(LEMON_TEXT("..") == *iter) continue;
 
 			return false;
 		}
@@ -187,15 +187,15 @@ namespace lemon{namespace io{
 	}
 
 
-	inline void remove_directories(const std::string& dir)
+	inline void remove_directories(const systring& dir)
 	{
-		std::stack<std::string> directories;
+		std::stack<systring> directories;
 
 		directories.push(dir);
 
 		while(!directories.empty())
 		{
-			std::string	current = directories.top();
+			systring	current = directories.top();
 
 			if(is_empty(current))
 			{
@@ -210,11 +210,11 @@ namespace lemon{namespace io{
 
 			for(;iter != end; ++ iter)
 			{
-				if("." == *iter) continue;
+				if(LEMON_TEXT(".") == *iter) continue;
 
-				if(".." == *iter) continue;
+				if(LEMON_TEXT("..") == *iter) continue;
 
-				std::string path = current + "/" + *iter;
+				systring path = current + LEMON_TEXT("/") + *iter;
 
 				if(is_directory(path))
 				{
