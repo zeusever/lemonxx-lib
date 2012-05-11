@@ -20,7 +20,22 @@ namespace lemon{namespace io{
 	public:
 		resolver_iterator():_resolver(LEMON_HANDLE_NULL_VALUE){}
 
+		resolver_iterator(const std::string &nodeName,const std::string & serverName)
+		{
+			create(nodeName.c_str(),serverName.c_str());
+		}
+
 		resolver_iterator(const char * nodeName,const char * serverName)
+		{
+			create(nodeName,serverName);
+		}
+
+		~resolver_iterator()
+		{
+			reset();
+		}
+
+		void create(const char * nodeName,const char * serverName)
 		{
 			LEMON_DECLARE_ERRORINFO(errorCode);
 
@@ -29,11 +44,6 @@ namespace lemon{namespace io{
 			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
 
 			increment();
-		}
-
-		~resolver_iterator()
-		{
-			reset();
 		}
 
 		void reset()

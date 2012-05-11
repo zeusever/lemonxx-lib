@@ -91,6 +91,15 @@ namespace lemon{namespace io{
 		if(!LEMON_SUCCESS(errorCode)) throw lemon::Exception(errorCode);
 	}
 
+	inline void copy(const String & source,const String & target)
+	{
+		LemonErrorInfo errorCode;
+
+		LemonCopyFile(source.c_str(),target.c_str(),&errorCode);
+
+		if(!LEMON_SUCCESS(errorCode)) throw lemon::Exception(errorCode);
+	}
+
 	inline void move(const String & source,const String & target)
 	{
 		LemonErrorInfo errorCode;

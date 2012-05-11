@@ -20,7 +20,7 @@ namespace lemon{
 
 		 stream << "\terror code :" << errorCode.Error.Code << std::endl;
 
-		 stream << "\terror catalog :" << uuid_t(*errorCode.Error.Catalog).tostring() << std::endl;
+		 stream << "\terror catalog :" << lemon::uuid_t(*errorCode.Error.Catalog).tostring() << std::endl;
 
 		 stream << "\traise file :" << errorCode.File << "(" << errorCode.Lines << ")" <<std::endl;
 

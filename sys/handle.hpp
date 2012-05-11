@@ -118,6 +118,8 @@ namespace lemon{
 			return val;
 		}
 
+		bool empty() const {return !LEMON_CHECK_HANDLE(_handle);}
+
 	private:
 
 		handle_type _handle;

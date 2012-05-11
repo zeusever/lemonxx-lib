@@ -46,7 +46,12 @@ namespace lemon{namespace io{
 		{
 			LemonTimer handle = release();
 
-			if(LEMON_CHECK_HANDLE(handle)) LemonCloseTimer(handle);
+			if(LEMON_CHECK_HANDLE(handle))
+			{
+				LemonCloseTimer(handle);
+
+				handle = LEMON_HANDLE_NULL_VALUE;
+			}
 		}
 
 	private:

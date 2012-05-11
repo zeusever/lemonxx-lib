@@ -12,6 +12,7 @@
 #include <lemon/io/socket.h>
 #include <lemonxx/sys/sys.hpp>
 #include <lemonxx/utility/utility.hpp>
+#include <lemonxx/io/io_device.hpp>
 
 namespace lemon{namespace io{
 
