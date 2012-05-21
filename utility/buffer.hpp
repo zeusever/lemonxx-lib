@@ -53,6 +53,11 @@ namespace lemon{
 		return const_buffer(source,length);
 	}
 
+	inline const_buffer cbuf(void * source,size_t length)
+	{
+		return const_buffer((byte_t*)source,length);
+	}
+
 	template<size_t N>
 	inline const_buffer cbuf(const byte_t (&source) [N])
 	{
