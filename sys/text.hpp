@@ -34,6 +34,21 @@ namespace lemon{
 
 		return &buffer[0];
 	}
+
+	inline String from_ascii(const std::string & source)
+	{
+		LEMON_DECLARE_ERRORINFO(errorCode);
+
+		if(source.empty()) return LEMON_TEXT("");
+
+		std::vector<lemon_char_t> buffer(source.length() * 6 + 1);
+
+		LemonFromASCII((const lemon::byte_t*)source.c_str(),source.length() + 1,&buffer[0],buffer.size(),&errorCode);
+
+		if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+
+		return &buffer[0];
+	}
 }
 
 #endif  //LEMON_CXX_SYS_TEXT_HPP
