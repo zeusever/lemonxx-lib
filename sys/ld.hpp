@@ -11,6 +11,7 @@
 #include <string>
 #include <lemon/sys/ld.h>
 #include <lemonxx/utility/nocopyable.hpp>
+#include <lemonxx/sys/text.hpp>
 
 namespace lemon{
 	class sharedlibrary : private nocopyable
@@ -19,9 +20,9 @@ namespace lemon{
 
 		sharedlibrary():_lib(LEMON_HANDLE_NULL_VALUE){}
 
-		sharedlibrary(const std::string & path)
+		sharedlibrary(const lemon::String & path)
 		{
-			load(path);
+			load(path.c_str());
 		}
 
 		~sharedlibrary()
@@ -43,7 +44,7 @@ namespace lemon{
 			return reinterpret_cast<Func>(address);
 		}
 
-		void load(const char * path)
+		void load(const lemon_char_t * path)
 		{
 			LEMON_DECLARE_ERRORINFO(errorCode);
 
