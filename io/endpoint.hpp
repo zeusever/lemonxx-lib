@@ -312,14 +312,24 @@ namespace lemon{namespace io{namespace ip{
 
 		bool ipv6() const{return af() == AF_INET6;}
 
-		v4::endpoint v4() const
+		const v4::endpoint v4() const
 		{
 			return _buffer.v4;
 		}
 
-		v6::endpoint v6() const
+		const v6::endpoint v6() const
 		{
 			return _buffer.v6;
+		}
+
+		v4::endpoint& v4()
+		{
+			return *(v4::endpoint*)&_buffer.v4;
+		}
+
+		v6::endpoint& v6()
+		{
+			return *(v6::endpoint*)&_buffer.v6;
 		}
 
 		const sockaddr * ptr() const
