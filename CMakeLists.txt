@@ -6,4 +6,4 @@ lemonxx_ctg_files(CTGS)
 
 lemon_library_project(lemonxx ${SRC} ${CTGS})
 
-target_link_libraries(lemonxx lemon-sys lemon-memory)
+target_link_libraries(lemonxx lemon-sys lemon-memory lemon-io)
