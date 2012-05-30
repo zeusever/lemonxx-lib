@@ -10,6 +10,7 @@
 #define LEMON_CXX_SYS_TEXT_HPP
 #include <vector>
 #include <sstream>
+#include <fstream>
 #include <lemon/sys/text.h>
 #include <lemonxx/sys/exception.hpp>
 #include <lemonxx/utility/utility.hpp>
@@ -19,6 +20,8 @@ namespace lemon{
 	typedef std::basic_string<lemon_char_t> String;
 
 	typedef std::basic_stringstream<lemon_char_t> StringStream;
+
+	typedef std::basic_fstream<lemon_char_t> FileStream;
 
 	inline std::string to_ascii(const String & source)
 	{
