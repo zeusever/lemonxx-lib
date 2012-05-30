@@ -16,7 +16,7 @@
 
 #include <lemon/sys/filesystem.h>
 
-namespace lemon{
+namespace lemon{namespace fs{
 	inline String current_directory()
 	{
 		LemonErrorInfo errorCode;
@@ -237,6 +237,6 @@ namespace lemon{
 		}
 	}
 
-}
+}}
 
 #endif //LEMONXX_SYS_FILESYSTEM_HPP

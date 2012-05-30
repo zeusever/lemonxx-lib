@@ -8,3 +8,4 @@
 #include <lemonxx/sys/inttypes.hpp>
 #include <lemonxx/sys/handle.hpp>
 #include <lemonxx/sys/errorcode.hpp>
+#include <lemonxx/sys/filesystem.hpp>
