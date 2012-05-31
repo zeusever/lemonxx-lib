@@ -284,6 +284,8 @@ namespace lemon{
 
 		typedef thread_t::proc_type proc_type;
 
+		~thread_group() {reset();}
+
 		template<typename Handle>
 		void start(Handle handle)
 		{
@@ -325,6 +327,20 @@ namespace lemon{
 
 				if(LEMON_FAILED(errorinfo)) throw Exception("LemonCreateThread exception",errorinfo);
 			}
+		}
+
+		void reset()
+		{
+			join();
+
+			Threads::const_iterator iter,end = _group.end();
+
+			for(iter = _group.begin() ; iter != end; ++ iter)
+			{
+				LemonReleaseThread(*iter);
+			}
+
+			_group.clear();
 		}
 
 	private:
