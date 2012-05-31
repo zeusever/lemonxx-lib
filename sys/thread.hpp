@@ -387,6 +387,10 @@ namespace lemon{
 	/// @author	Yuki
 	/// @date	2012/1/20
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+
+	template<typename Mutex> class basic_scope_unlock;
 
 	class mutex_t
 	{
@@ -494,6 +498,8 @@ namespace lemon{
 
 	typedef mutex_t mutex;
 
+	template<typename Mutex> class basic_scope_unlock;
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// @class	basic_scope_lock
 	///
@@ -507,6 +513,8 @@ namespace lemon{
 	class basic_scope_lock : private nocopyable
 	{
 	public:
+
+		typedef basic_scope_unlock< basic_scope_lock<Mutex> > scope_unlock;
 
 		basic_scope_lock(Mutex & mutex):_mutex(mutex){ lock();}
 
@@ -543,6 +551,9 @@ namespace lemon{
 	class basic_scope_trylock : private nocopyable
 	{
 	public:
+
+		typedef basic_scope_unlock< basic_scope_lock<Mutex> > scope_unlock;
+
 		basic_scope_trylock(Mutex & mutex):_mutex(mutex){ _locked = trylock();}
 
 		~basic_scope_trylock(){ unlock();}
@@ -550,6 +561,11 @@ namespace lemon{
 		bool trylock()
 		{
 			return _mutex.trylock();
+		}
+
+		void lock()
+		{
+			_mutex.lock();
 		}
 
 		void unlock()
@@ -572,6 +588,19 @@ namespace lemon{
 		Mutex &_mutex;
 	};
 
+
+	template<typename Mutex>
+	class basic_scope_unlock : private nocopyable
+	{
+	public:
+
+		basic_scope_unlock(Mutex & mutex):_mutex(mutex){ _mutex.unlock();}
+
+		~basic_scope_unlock(){ _mutex.lock();}
+
+	private:
+		Mutex	 &_mutex;
+	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// @class	atomic_t
