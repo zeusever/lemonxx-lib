@@ -8,7 +8,7 @@
 */
 #ifndef LEMON_CXX_SYS_THREAD_HPP
 #define LEMON_CXX_SYS_THREAD_HPP
-
+#include <vector>
 #include <lemon/sys/thread.h>
 #include <lemonxx/sys/exception.hpp>
 #include <lemonxx/utility/utility.hpp>
@@ -182,29 +182,36 @@ namespace lemon{
 		///
 		/// @exception	Exception	Thrown when . 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		thread_t(const proc_type & proc)
+		template<typename Handle>
+		thread_t(Handle handle)
 			:_thread(LEMON_HANDLE_NULL_VALUE)
 		{
-			start(proc);
+			start(handle);
 		}
 
 		~thread_t()
 		{
 			reset();
 		}
-
-		void start(const proc_type & proc)
+		template<typename Handle>
+		void start(Handle handle)
 		{
 			if(empty())
 			{
-				_proc = proc;
+				proc_type cb = handle;
+
+				proc_type::wrapper_type data = cb.release();
 
 				LEMON_DECLARE_ERRORINFO(errorinfo);
 
-				_thread = LemonCreateThread(&thread_t::Proc,this,&errorinfo);
+				_thread = LemonCreateThread(&thread_t::Proc,data,&errorinfo);
 
-				if(LEMON_FAILED(errorinfo)) throw Exception("LemonCreateThread exception",errorinfo);
+				if(LEMON_FAILED(errorinfo))
+				{
+					cb = data;
+
+					throw Exception("LemonCreateThread exception",errorinfo);
+				}
 			}
 		}
 
@@ -256,14 +263,82 @@ namespace lemon{
 
 		static void Proc(void * data)
 		{
-			reinterpret_cast<thread_t*>(data)->_proc();
+			proc_type cb = reinterpret_cast<proc_type::wrapper_type>(data);
+
+			cb();
 		}
 
 	private:
 
-		proc_type	_proc;
-
 		LemonThread _thread;
+	};
+
+	/*
+	 *
+	 */
+	class thread_group : private nocopyable
+	{
+	public:
+
+		typedef std::vector<LemonThread> Threads;
+
+		typedef thread_t::proc_type proc_type;
+
+		template<typename Handle>
+		void start(Handle handle)
+		{
+			proc_type cb = handle;
+
+			proc_type::wrapper_type data = cb.release();
+
+			LEMON_DECLARE_ERRORINFO(errorinfo);
+
+			LemonThread t = LemonCreateThread(&thread_group::Proc,data,&errorinfo);
+
+			if(LEMON_FAILED(errorinfo))
+			{
+				cb = data;
+
+				throw Exception("LemonCreateThread exception",errorinfo);
+			}
+
+			_group.push_back(t);
+		}
+
+		template<typename Handle>
+		void start(Handle handle,size_t number)
+		{
+			while(number-- > 0) start(handle);
+		}
+
+		size_t size() const {return _group.size();}
+
+		void join() const
+		{
+			Threads::const_iterator iter,end = _group.end();
+
+			for(iter = _group.begin() ; iter != end; ++ iter)
+			{
+				LEMON_DECLARE_ERRORINFO(errorinfo);
+
+				LemonThreadJoin(*iter,&errorinfo);
+
+				if(LEMON_FAILED(errorinfo)) throw Exception("LemonCreateThread exception",errorinfo);
+			}
+		}
+
+	private:
+
+		static void Proc(void * data)
+		{
+			proc_type cb = reinterpret_cast<proc_type::wrapper_type>(data);
+
+			cb();
+		}
+
+	private:
+
+		Threads		_group;
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
