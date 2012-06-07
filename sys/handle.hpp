@@ -85,7 +85,7 @@ namespace lemon{
 
 		~basic_handle_object()
 		{
-			if(LEMON_CHECK_HANDLE(_handle)) Release(_handle);
+			close();
 		}
 
 		operator handle_type ()
@@ -96,6 +96,16 @@ namespace lemon{
 		operator const_handle_type () const
 		{
 			return _handle;
+		}
+
+		void close()
+		{
+			if(LEMON_CHECK_HANDLE(_handle))
+			{
+				Release(_handle);
+
+				_handle = LEMON_HANDLE_NULL_VALUE;
+			}
 		}
 
 		handle_type native(){return _handle;}

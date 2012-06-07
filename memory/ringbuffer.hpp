@@ -14,15 +14,15 @@
 
 namespace lemon{namespace memory{namespace ringbuffer{
 
-	template<size_t BlockSize,size_t Blocks = 1024,size_t BlocksPerPage = Blocks>
+	template<size_t BlockSize,size_t BlocksPerPage = 1024 * 1024 / BlockSize>
 	class allocator : private nocopyable
 	{
 	public:
-		allocator()
+		allocator(size_t blocks)
 		{
 			LEMON_DECLARE_ERRORINFO(errorCode);
 
-			_allocator = LemonCreateRingBuffer(Blocks,BlockSize,BlocksPerPage,&errorCode);
+			_allocator = LemonCreateRingBuffer(blocks,BlockSize,BlocksPerPage,&errorCode);
 
 			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
 		}
@@ -57,6 +57,16 @@ namespace lemon{namespace memory{namespace ringbuffer{
 		void direct_write(void * block,void * data,size_t dataLength)
 		{
 			LemonRingBufferDirectWrite(block,data,dataLength);
+		}
+
+		void * pop_front()
+		{
+			return LemonRingBufferReadFront(_allocator);
+		}
+
+		void * pop_back()
+		{
+			return LemonRingBufferReadBack(_allocator);
 		}
 
 	private:
