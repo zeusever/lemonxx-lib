@@ -28,7 +28,7 @@ namespace lemon{
 
 		typedef const lemon::remove_const<pointer> const_pointer;
 		
-		typedef ValueT& reference;
+		typedef typename lemon::add_lvalue_reference<ValueT>::type reference;
 
 		typedef const lemon::remove_const<reference> const_reference;
 

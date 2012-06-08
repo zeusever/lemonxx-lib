@@ -11,12 +11,91 @@
 #include <lemonxx/sys/sys.hpp>
 #include <lemon/memory/ringbuffer.h>
 #include <lemonxx/utility/utility.hpp>
-
+#include <lemonxx/type_traits/type_traits.hpp>
 namespace lemon{namespace memory{namespace ringbuffer{
+
+
+
+	template<bool Const>
+	class basic_iterator 
+		: public lemon::iterator_t<
+		basic_iterator<Const>,
+		typename lemon::conditional<Const,const void*,void*>::type,
+		ptrdiff_t>
+	{
+	public:
+
+		typedef typename lemon::conditional<Const,
+			const void*,void*>::type							value_type;
+
+		typedef std::forward_iterator_tag						iterator_category;
+
+		basic_iterator()
+			:_iter(LEMON_HANDLE_NULL_VALUE),_buffer(LEMON_HANDLE_NULL_VALUE)
+		{}
+
+		template<bool C1>
+		basic_iterator(const basic_iterator<C1> & rhs)
+			:_iter(rhs.handle()),_buffer(rhs.buffer())
+		{
+
+		}
+
+		basic_iterator(LemonRingBuffer buffer,LemonRingBufferIterator iter)
+			:_iter(iter),_buffer(buffer)
+		{}
+
+		bool equal(const basic_iterator & rhs) const
+		{
+			return _iter == rhs._iter;
+		}
+
+		value_type dereference() const
+		{
+			return LemonRingBufferIteratorDereference(_iter);
+		}
+
+
+		void increment()
+		{
+			_iter = LemonRingBufferIteratorIncrement(_iter);
+		}
+
+		void decrement()
+		{
+			_iter = LemonRingBufferIteratorDecrement(_iter);
+		}
+
+		LemonRingBufferIterator handle() const {return _iter;}
+
+		LemonRingBuffer buffer() const {return _buffer;}
+
+	private:
+
+		LemonRingBufferIterator			_iter;
+
+		LemonRingBuffer					_buffer;
+	};
+
+
 
 	template<size_t BlockSize,size_t BlocksPerPage = 1024 * 1024 / BlockSize>
 	class allocator : private nocopyable
 	{
+	public:
+		typedef basic_iterator<true>					const_iterator;
+
+		typedef basic_iterator<false>					iterator;
+	public:
+
+		const_iterator front() const { return const_iterator(_allocator,LemonRingBufferFront(_allocator)); }
+
+		const_iterator back() const { return const_iterator(_allocator,LemonRingBufferBack(_allocator)); }
+
+		iterator front() { return iterator(_allocator,LemonRingBufferFront(_allocator)); }
+
+		iterator back() { return iterator(_allocator,LemonRingBufferBack(_allocator)); }
+
 	public:
 		allocator(size_t blocks)
 		{

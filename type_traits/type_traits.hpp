@@ -179,6 +179,11 @@ namespace lemon{
 	{
 		typedef T* & type;
 	};
+
+	template<> struct add_lvalue_reference<void*>
+	{
+		typedef void* type;
+	};
 #ifdef LEMON_COMPILER_SUPPORT_RVALUE
 	template<class T> struct add_lvalue_reference<T&&>
 	{
