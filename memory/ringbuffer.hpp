@@ -96,6 +96,10 @@ namespace lemon{namespace memory{namespace ringbuffer{
 
 		iterator back() { return iterator(_allocator,LemonRingBufferBack(_allocator)); }
 
+		const_iterator end() const { return const_iterator(_allocator,LemonRingBufferEnd(_allocator)); }
+
+		iterator end() { return iterator(_allocator,LemonRingBufferEnd(_allocator)); }
+
 	public:
 		allocator(size_t blocks)
 		{

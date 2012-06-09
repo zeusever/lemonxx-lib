@@ -90,7 +90,7 @@ namespace lemon{
 
 		Derived operator ++ (int)
 		{
-			Derived temp(*this);
+			Derived temp(derived());
 
 			derived().increment();
 
@@ -106,7 +106,7 @@ namespace lemon{
 
 		Derived operator -- (int)
 		{
-			Derived temp(*this);
+			Derived temp(derived());
 
 			derived().decrement();
 
