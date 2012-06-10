@@ -127,6 +127,8 @@ namespace lemon{namespace memory{namespace ringbuffer{
 
 		bool empty() const {return 0 == capacity();}
 
+		bool full() const {return length() == capacity();}
+
 		void * push_front(void * data,size_t dataLength)
 		{
 			return LemonRingBufferWriteFront(_allocator,data,dataLength);
