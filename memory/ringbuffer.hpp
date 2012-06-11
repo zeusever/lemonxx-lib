@@ -31,23 +31,23 @@ namespace lemon{namespace memory{namespace ringbuffer{
 		typedef std::forward_iterator_tag						iterator_category;
 
 		basic_iterator()
-			:_iter(LEMON_HANDLE_NULL_VALUE),_buffer(LEMON_HANDLE_NULL_VALUE)
+			:_length(0),_iter(LEMON_HANDLE_NULL_VALUE),_buffer(LEMON_HANDLE_NULL_VALUE)
 		{}
 
 		template<bool C1>
 		basic_iterator(const basic_iterator<C1> & rhs)
-			:_iter(rhs.handle()),_buffer(rhs.buffer())
+			:_length(rhs.length()),iter(rhs.handle()),_buffer(rhs.buffer())
 		{
 
 		}
 
-		basic_iterator(LemonRingBuffer buffer,LemonRingBufferIterator iter)
-			:_iter(iter),_buffer(buffer)
+		basic_iterator(size_t length,LemonRingBuffer buffer,LemonRingBufferIterator iter)
+			:_length(length),_iter(iter),_buffer(buffer)
 		{}
 
 		bool equal(const basic_iterator & rhs) const
 		{
-			return _iter == rhs._iter;
+			return _length == rhs._length;
 		}
 
 		value_type dereference() const
@@ -59,18 +59,26 @@ namespace lemon{namespace memory{namespace ringbuffer{
 		void increment()
 		{
 			_iter = LemonRingBufferIteratorIncrement(_iter);
+
+			-- _length;
 		}
 
 		void decrement()
 		{
 			_iter = LemonRingBufferIteratorDecrement(_iter);
+
+			++ _length;
 		}
 
 		LemonRingBufferIterator handle() const {return _iter;}
 
 		LemonRingBuffer buffer() const {return _buffer;}
 
+		size_t	length() const { return _length; }
+
 	private:
+
+		size_t							_length;
 
 		LemonRingBufferIterator			_iter;
 
@@ -88,17 +96,17 @@ namespace lemon{namespace memory{namespace ringbuffer{
 		typedef basic_iterator<false>					iterator;
 	public:
 
-		const_iterator front() const { return const_iterator(_allocator,LemonRingBufferFront(_allocator)); }
+		const_iterator front() const { return const_iterator(LemonRingBufferLength(_allocator),_allocator,LemonRingBufferFront(_allocator)); }
 
-		const_iterator back() const { return const_iterator(_allocator,LemonRingBufferBack(_allocator)); }
+		const_iterator back() const { return const_iterator(1,_allocator,LemonRingBufferBack(_allocator)); }
 
-		iterator front() { return iterator(_allocator,LemonRingBufferFront(_allocator)); }
+		iterator front() { return iterator(LemonRingBufferLength(_allocator),_allocator,LemonRingBufferFront(_allocator)); }
 
-		iterator back() { return iterator(_allocator,LemonRingBufferBack(_allocator)); }
+		iterator back() { return iterator(1,_allocator,LemonRingBufferBack(_allocator)); }
 
-		const_iterator end() const { return const_iterator(_allocator,LemonRingBufferEnd(_allocator)); }
+		const_iterator end() const { return const_iterator(); }
 
-		iterator end() { return iterator(_allocator,LemonRingBufferEnd(_allocator)); }
+		iterator end() { return iterator(); }
 
 	public:
 		allocator(size_t blocks)
