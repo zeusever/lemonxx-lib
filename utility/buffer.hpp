@@ -9,6 +9,7 @@
 #ifndef LEMONXX_UTILITY_BUFFER_HPP
 #define LEMONXX_UTILITY_BUFFER_HPP
 #include <vector>
+#include <string>
 #include <lemonxx/configure.h>
 #include <lemonxx/sys/inttypes.hpp>
 #include <lemonxx/type_traits/type_traits.hpp>
@@ -73,6 +74,10 @@ namespace lemon{
 	inline const_buffer cbuf(const char * message)
 	{
 		return const_buffer((const byte_t*)message,strlen(message));
+	}
+	inline const_buffer cbuf(const std::string &message)
+	{
+		return const_buffer((const byte_t*)message.c_str(),message.length());
 	}
 }
 #endif //LEMONXX_UTILITY_BUFFER_HPP

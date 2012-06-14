@@ -138,6 +138,11 @@ namespace lemon{
 		return id;
 	}
 
+	inline void sleep(size_t milliseconds)
+	{
+		LemonSleep(milliseconds);
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// @class	thread_t
 	///
@@ -644,6 +649,11 @@ namespace lemon{
 		}
 
 		operator int32_t()
+		{
+			return _value;
+		}
+
+		operator int32_t() const
 		{
 			return _value;
 		}

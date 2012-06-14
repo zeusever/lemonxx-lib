@@ -29,7 +29,7 @@ namespace lemon{namespace io{
 		template<typename Handle>
 		timer(io_device & device,size_t milliseconds,Handle handle)
 		{
-			start(milliseconds,handle);
+			start(device,milliseconds,handle);
 		}
 
 		template<typename Handle>

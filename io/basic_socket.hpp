@@ -37,6 +37,8 @@ namespace lemon{namespace io{
 
 		typedef base_type::wrapper_type								handle_type;
 
+		basic_socket(){}
+
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// @fn	basic_socket(LemonSocket handle)
 		///
@@ -133,6 +135,8 @@ namespace lemon{namespace io{
 			LemonGetSockName(*this,(sockaddr*)buffer,&length,&errorCode);
 
 			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+
+			return (const sockaddr*)buffer;
 		}
 
 		void bind(const endpoint_type & ep)
@@ -142,6 +146,16 @@ namespace lemon{namespace io{
 			LemonBind(*this,ep.ptr(),(socklen_t)ep.length(),&errorCode);
 
 			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+		}
+
+		void create(int af,LemonIoDevice device)
+		{
+			if(empty()) reset(Create(af,device));
+		}
+
+		void create(int af)
+		{
+			if(empty()) reset(Create(af,LEMON_HANDLE_NULL_VALUE));
 		}
 
 	private:

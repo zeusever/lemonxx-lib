@@ -271,7 +271,7 @@ namespace lemon{namespace io{namespace ip{
 	class endpoint
 	{
 	public:
-		endpoint():_length(sizeof(_buffer)){}
+		endpoint():_length(sizeof(_buffer)){_buffer.addr.sa_family = AF_UNSPEC;}
 
 		endpoint(const sockaddr* addr)
 		{
@@ -363,6 +363,8 @@ namespace lemon{namespace io{namespace ip{
 		{
 			return _length == ep._length && memcmp(&_buffer,&ep._buffer,_length) == 0;
 		}
+
+		bool empty() const { return AF_UNSPEC == _buffer.addr.sa_family; }
 
 	private:
 

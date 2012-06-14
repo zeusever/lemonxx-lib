@@ -21,6 +21,8 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 
 		typedef basic_socket<SOCK_DGRAM,IPPROTO_UDP,endpoint> base_type;
 
+		socket(){}
+
 		socket(LemonSocket handle) :base_type(handle){}
 
 		socket(int af) :base_type(af){}
