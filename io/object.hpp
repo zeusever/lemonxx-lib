@@ -25,7 +25,7 @@ namespace lemon{namespace io{
 
 	public:
 
-	        basic_object(typename base_type::handle_type h):base_type(h){}
+	    basic_object(typename base_type::handle_type h):base_type(h){}
 
 		operator LemonIo()
 		{
