@@ -56,9 +56,16 @@ namespace lemon{namespace io{
 
 			LEMON_DECLARE_ERRORINFO(errorCode);
 
-			LemonIoAsyncWrite(*this,buffer.Data,buffer.Length,0,buffer.Length,&IoCallback,cb.release(),&errorCode);
+			AsyncIoCallback::wrapper_type data = cb.release();
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			LemonIoAsyncWrite(*this,buffer.Data,buffer.Length,0,buffer.Length,&IoCallback,data,&errorCode);
+
+			if(LEMON_FAILED(errorCode))
+			{
+				cb = data;
+
+				throw Exception(errorCode);
+			}
 		}
 
 		template<class MutableBuffer>
@@ -81,9 +88,16 @@ namespace lemon{namespace io{
 
 			LEMON_DECLARE_ERRORINFO(errorCode);
 
-			LemonIoAsyncRead(*this,buffer.Data,buffer.Length,0,buffer.Length,&IoCallback,cb.release(),&errorCode);
+			AsyncIoCallback::wrapper_type data = cb.release();
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			LemonIoAsyncRead(*this,buffer.Data,buffer.Length,0,buffer.Length,&IoCallback,data,&errorCode);
+
+			if(LEMON_FAILED(errorCode)) throw Exception(errorCode)
+			{
+				cb = data;
+
+				throw Exception(errorCode);
+			}
 		}
 	};
 

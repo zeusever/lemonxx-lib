@@ -30,6 +30,16 @@ namespace lemon{namespace concurrency{
 
 		}
 
+		~play()
+		{
+			if(!empty())
+			{
+				stop();
+
+				join();
+			}
+		}
+
 		void join()
 		{
 			LEMON_DECLARE_ERRORINFO(errorCode);

@@ -15,6 +15,14 @@
 #include <lemonxx/sys/exception.hpp>
 #include <lemonxx/utility/utility.hpp>
 
+#include <vector>
+
+#include <string>
+
+#include <locale>
+
+#include <algorithm>
+
 namespace lemon{
 
 	typedef std::basic_string<lemon_char_t> String;
@@ -51,6 +59,93 @@ namespace lemon{
 		if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
 
 		return &buffer[0];
+	}
+
+	namespace string_algorithm{
+
+		template<typename CharType>
+		struct to_lowerF
+		{
+			to_lowerF(const std::locale& Loc ) : _locale(&Loc) {}
+
+			CharType operator ()( CharType Ch ) const
+			{
+				return std::tolower<CharType>(Ch, *_locale);
+			}
+		private:
+			const std::locale *_locale;
+		};
+
+		template<typename CharType>
+		struct to_upperF
+		{
+			to_upperF(const std::locale& Loc ) : _locale(&Loc) {}
+
+			CharType operator ()( CharType Ch ) const
+			{
+				return std::toupper<CharType>(Ch, *_locale);
+			}
+		private:
+			const std::locale *_locale;
+		};
+	}
+
+
+	template<typename CharType>
+	inline std::basic_string<CharType> string_toupper(const CharType* rhs)
+	{
+		std::locale loc;
+
+		std::basic_string<CharType> result = rhs;
+
+		std::transform(result.begin(),result.end(),result.begin(),string_algorithm::to_upperF<CharType>(loc));
+
+		return result;
+	}
+
+	template<typename CharType>
+	inline std::basic_string<CharType> string_toupper(const std::basic_string<CharType> & rhs)
+	{
+		std::locale loc;
+
+		std::basic_string<CharType> result(rhs.begin(),rhs.end());
+
+		std::transform(result.begin(),result.end(),result.begin(),string_algorithm::to_upperF<CharType>(loc));
+
+		return result;
+	}
+
+	template<typename CharType>
+	inline std::basic_string<CharType> string_tolower(const std::basic_string<CharType> & rhs)
+	{
+		std::locale loc;
+
+		std::basic_string<CharType> result(rhs.begin(),rhs.end());
+
+		std::transform(result.begin(),result.end(),result.begin(),string_algorithm::to_lowerF<CharType>(loc));
+
+		return result;
+	}
+
+
+	template<typename CharType>
+	inline std::basic_string<CharType> string_replaceall
+		(
+		const std::basic_string<CharType> & source,
+		const std::basic_string<CharType> & match,
+		const std::basic_string<CharType> & replace
+		)
+	{
+		typename std::basic_string<CharType>::size_type pos;
+
+		std::basic_string<CharType> result = source;
+
+		while(std::basic_string<CharType>::npos != (pos = result.find(match)))
+		{
+			result.replace(pos,match.size(),replace);
+		}
+
+		return result;
 	}
 }
 
