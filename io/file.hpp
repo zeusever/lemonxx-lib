@@ -47,6 +47,30 @@ namespace lemon{namespace io{
 
 			return io;
 		}
+
+		template<class MutableBuffer>
+		size_t read(MutableBuffer buffer,size_t timeout)
+		{
+			LEMON_DECLARE_ERRORINFO(errorCode);
+
+			size_t length = LemonReadFileTimeout(*this,buffer.Data,buffer.Length,0,buffer.Length,timeout,&errorCode);
+
+			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+
+			return length;
+		}
+
+		template<class ConstBuffer>
+		size_t write(ConstBuffer buffer,size_t timeout)
+		{
+			LEMON_DECLARE_ERRORINFO(errorCode);
+
+			size_t length = LemonWriteFileTimeout(*this,buffer.Data,buffer.Length,0,buffer.Length,timeout,&errorCode);
+
+			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+
+			return length;
+		}
 	};
 
 }}
