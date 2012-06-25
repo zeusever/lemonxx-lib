@@ -17,6 +17,7 @@ namespace lemon{
 	class Exception : public std::runtime_error
 	{
 	public:
+
 		Exception(const LemonErrorInfo & ec)
 			:std::runtime_error("lemon exception"),_ec(ec)
 		{
