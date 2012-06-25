@@ -12,6 +12,7 @@
 #include <lemon/memory/ringbuffer.h>
 #include <lemonxx/utility/utility.hpp>
 #include <lemonxx/type_traits/type_traits.hpp>
+#include <lemonxx/mpl/inttypes.hpp>
 namespace lemon{namespace memory{namespace ringbuffer{
 
 
@@ -94,6 +95,8 @@ namespace lemon{namespace memory{namespace ringbuffer{
 		typedef basic_iterator<true>					const_iterator;
 
 		typedef basic_iterator<false>					iterator;
+
+		typedef lemon::mpl::size_t_<BlockSize>			block_size;
 	public:
 
 		const_iterator front() const { return const_iterator(LemonRingBufferLength(_allocator),_allocator,LemonRingBufferFront(_allocator)); }
@@ -133,23 +136,48 @@ namespace lemon{namespace memory{namespace ringbuffer{
 			return LemonRingBufferLength(_allocator);
 		}
 
-		bool empty() const {return 0 == capacity();}
+		bool empty() const {return 0 == length();}
 
 		bool full() const {return length() == capacity();}
 
+		void * push_front(bool &used)
+		{
+			used = full();
+
+			return LemonRingBufferWriteFront(_allocator);
+		}
+
 		void * push_front(void * data,size_t dataLength)
 		{
-			return LemonRingBufferWriteFront(_allocator,data,dataLength);
+			bool used = full();
+
+			void * target = LemonRingBufferWriteFront(_allocator);
+
+			if(used) return target;
+
+			memcpy(target,data,dataLength);
+
+			return NULL;
+		}
+
+		void * push_back(bool &used)
+		{
+			used = full();
+
+			return LemonRingBufferWriteBack(_allocator);
 		}
 
 		void * push_back(void * data,size_t dataLength)
 		{
-			return LemonRingBufferWriteBack(_allocator,data,dataLength);
-		}
+			bool used = full();
 
-		void direct_write(void * block,void * data,size_t dataLength)
-		{
-			LemonRingBufferDirectWrite(block,data,dataLength);
+			void * target = LemonRingBufferWriteBack(_allocator);
+
+			if(used) return target;
+
+			memcpy(target,data,dataLength);
+
+			return NULL;
 		}
 
 		void * pop_front()

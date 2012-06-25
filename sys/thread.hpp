@@ -318,7 +318,9 @@ namespace lemon{
 			while(number-- > 0) start(handle);
 		}
 
-		size_t size() const {return _group.size();}
+		size_t size() const { return _group.size();}
+
+		bool empty() const { return  0 == size(); }
 
 		void join() const
 		{
