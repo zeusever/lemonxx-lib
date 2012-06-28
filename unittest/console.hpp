@@ -13,6 +13,7 @@
 #include <lemonxx/assembly.h>
 #include <lemonxx/unittest/dsel.hpp>
 #include <lemonxx/sys/exception.hpp>
+#include <lemonxx/sys/errorcode.hpp>
 
 namespace lemon{namespace unittest{namespace cxx{
 
@@ -77,11 +78,9 @@ namespace lemon{namespace unittest{namespace cxx{
 			}
 			catch(const lemon::Exception & e)
 			{
-				std::cerr << "error!!! catch lemon::Exception:" << e.what() << std::endl;
+				std::cerr << "error!!!" << e.what() << std::endl;
 
-				std::cerr << "\tfile:" << e.ErrorInfo().File << std::endl;
-
-				std::cerr << "\tlins:" << e.ErrorInfo().Lines << std::endl;
+				std::cerr << e.ErrorInfo() << std::endl;
 
 				return 3;
 			}

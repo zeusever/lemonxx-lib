@@ -220,9 +220,16 @@ namespace lemon{namespace io{namespace ip{
 
 				LEMON_DECLARE_ERRORINFO(errorCode);
 
-				LemonAsyncAccept(*this,conn,ep.ptr(),&ep.buffersize(),&IoCallback,cb.release(),&errorCode);
+				AsyncIoCallback::wrapper_type data = cb.release();
 
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+				LemonAsyncAccept(*this,conn,ep.ptr(),&ep.buffersize(),&IoCallback,data,&errorCode);
+
+				if(LEMON_FAILED(errorCode))
+				{
+					cb = data;
+
+					throw Exception(errorCode);
+				}
 			}
 		};
 
