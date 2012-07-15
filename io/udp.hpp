@@ -48,9 +48,21 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		}
 
 		template<class ConstBuffer>
+		size_t sendto(ConstBuffer buffer,int flags,const endpoint & ep,LemonErrorInfo & errorCode)
+		{
+			return LemonSendTo(*this,buffer.Data,buffer.Length,flags,ep.ptr(),(socklen_t)ep.length(),&errorCode);
+		}
+
+		template<class ConstBuffer>
 		size_t sendto(ConstBuffer buffer,const endpoint & ep)
 		{
 			return sendto(buffer,0,ep);
+		}
+
+		template<class ConstBuffer>
+		size_t sendto(ConstBuffer buffer,const endpoint & ep,LemonErrorInfo & errorCode)
+		{
+			return sendto(buffer,0,ep,errorCode);
 		}
 
 		template<class ConstBuffer,typename Handle>
