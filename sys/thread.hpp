@@ -289,6 +289,20 @@ namespace lemon{
 
 		typedef thread_t::proc_type proc_type;
 
+		thread_group(){}
+
+		template<typename Handle>
+		thread_group(Handle handle)
+		{
+			start(handle);
+		}
+
+		template<typename Handle>
+		thread_group(Handle handle,size_t number)
+		{
+			start(handle,number);
+		}
+
 		~thread_group() {reset();}
 
 		template<typename Handle>
