@@ -9,11 +9,13 @@
 #ifndef LEMON_CXX_UNITTEST_CONSOLE_HPP
 #define LEMON_CXX_UNITTEST_CONSOLE_HPP
 #include <string>
+#include <iomanip>
 #include <iostream>
 #include <lemonxx/assembly.h>
 #include <lemonxx/unittest/dsel.hpp>
 #include <lemonxx/sys/exception.hpp>
 #include <lemonxx/sys/errorcode.hpp>
+#include <lemonxx/sys/datetime.hpp>
 
 namespace lemon{namespace unittest{namespace cxx{
 
@@ -126,9 +128,17 @@ namespace lemon{namespace unittest{namespace cxx{
 					for(iter1 = iter->second->Children().begin(); iter1 != end1; ++ iter1)
 					{
 						std::cout << "run test case @@" << (*iter1)->Name() << std::endl;
+
+						time_duration duration;
+
+
 						try
 						{
+							timer_t timer;
+
 							(*iter1)->Run(context);
+
+							duration = timer.duration();
 						}
 						catch(...)
 						{
@@ -138,7 +148,13 @@ namespace lemon{namespace unittest{namespace cxx{
 						}
 						
 
-						std::cout << "run test case @@" << (*iter1)->Name() << " -- success" << std::endl;
+						std::cout << "run test case @@" << (*iter1)->Name() 
+							
+							<< " -- success(" << duration / 10000000 << "." 
+							
+							<< std::setw(6) << std::setfill('0') <<(duration % 10000000) / 10 
+							
+							<< " s)" << std::endl;
 					}
 				}
 				catch(...)

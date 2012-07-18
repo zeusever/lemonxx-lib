@@ -40,6 +40,15 @@ namespace lemon{
 
 		void error_msg(const lemon::String & message) { _message = message; }
 
+		operator LemonErrorInfo * () { return this; }
+
+		operator const LemonErrorInfo * () const { return this; }
+
+		void check_throw()
+		{
+			if(LEMON_FAILED(*this)) throw *this;
+		}
+
 	private:
 
 		lemon::String				_message;
