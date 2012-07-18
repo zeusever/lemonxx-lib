@@ -11,6 +11,7 @@
 #include <sstream>
 #include <lemon/sys/abi.h>
 #include <lemonxx/sys/uuid.hpp>
+#include <lemonxx/sys/text.hpp>
 
 namespace lemon{
 
@@ -26,6 +27,23 @@ namespace lemon{
 
 		 return stream;
 	}
+
+	class error_info : public LemonErrorInfo
+	{
+	public:
+
+		error_info() { reset(); }
+
+		void reset() { LEMON_RESET_ERRORINFO(*this); _message.clear(); }
+
+		const lemon::String & error_msg() const { return _message; }
+
+		void error_msg(const lemon::String & message) { _message = message; }
+
+	private:
+
+		lemon::String				_message;
+	};
 
 }
 
