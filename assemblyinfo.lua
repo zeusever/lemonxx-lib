@@ -7,14 +7,16 @@ assembly =
 
    errorcode=
       {
-		
 		{
-			name = "LUA_NEWSTATE_ERROR";
+			name = "OPEN_LUA_ERROR";
+		};
+
+		{
+			name = "LUA_PCALL_ERROR";
 		};
 
 		{
 			name = "LUA_DOFILE_ERROR";
 		};
-
 	  };
    }

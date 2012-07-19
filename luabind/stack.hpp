@@ -11,7 +11,7 @@
 
 #include <lemon/lua/lua.hpp>
 #include <lemonxx/sys/sys.hpp>
-#include <lemonxx/luabind/state.hpp>
+#include <lemonxx/luabind/lstate.hpp>
 #include <lemonxx/utility/utility.hpp>
 
 namespace lemon{namespace luabind{
@@ -20,9 +20,9 @@ namespace lemon{namespace luabind{
 	{
 	public:
 
-		auto_pop_stack(state & L) :_L(L),_top(lua_gettop(_L.ptr())) {}
+		auto_pop_stack(state & L) :_L(L),_top(lua_gettop(_L)) {}
 
-		~auto_pop_stack() { lua_settop(_L.ptr(),_top); }
+		~auto_pop_stack() { lua_settop(_L,_top); }
 
 	private:
 

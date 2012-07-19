@@ -78,6 +78,8 @@ namespace lemon{
 		typedef typename lemon::basic_tuple<I,E> type;
 
 		typedef typename type::value_type value_type;
+
+		typedef typename type::origin_type origin_type;
 	};
 }
 
