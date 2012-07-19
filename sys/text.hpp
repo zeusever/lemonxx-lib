@@ -13,7 +13,6 @@
 #include <fstream>
 #include <lemon/sys/text.h>
 #include <lemonxx/sys/exception.hpp>
-#include <lemonxx/utility/utility.hpp>
 
 #include <vector>
 

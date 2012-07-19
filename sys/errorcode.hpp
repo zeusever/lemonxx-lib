@@ -11,7 +11,7 @@
 #include <sstream>
 #include <lemon/sys/abi.h>
 #include <lemonxx/sys/uuid.hpp>
-
+#include <lemonxx/sys/text.hpp>
 namespace lemon{
 
 	inline std::ostream & operator << (std::ostream & stream,const LemonErrorInfo & errorCode)
@@ -27,6 +27,28 @@ namespace lemon{
 		 return stream;
 	}
 
+	class error_info : public LemonErrorInfo
+	{
+	public:
+
+		error_info(){ reset(); }
+
+		void reset() { LEMON_RESET_ERRORINFO(*this); _message.clear(); }
+
+		void error_message(const lemon_char_t * message) { _message = message; }
+		
+		void error_message(const lemon::String & message) { _message = message; }
+
+		const lemon::String & error_message() const { return _message; }
+
+		operator LemonErrorInfo * () { return this; }
+
+		operator const LemonErrorInfo * () const { return this; }
+
+	private:
+
+		lemon::String		_message;
+	};
 }
 
 #endif //LEMONXX_SYS_ERRORCODE_HPP

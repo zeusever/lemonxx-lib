@@ -37,7 +37,7 @@ namespace lemon{namespace memory{namespace ringbuffer{
 
 		template<bool C1>
 		basic_iterator(const basic_iterator<C1> & rhs)
-			:_length(rhs.length()),iter(rhs.handle()),_buffer(rhs.buffer())
+			:_length(rhs.length()),_iter(rhs.handle()),_buffer(rhs.buffer())
 		{
 
 		}
