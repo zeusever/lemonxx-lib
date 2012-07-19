@@ -40,6 +40,12 @@ namespace lemon{namespace luabind{
 
 	public:
 
+		void dofile(const char * file);
+
+		void dofile(const std::string & file) { dofile(file.c_str()); }
+
+	public:
+
 		operator lua_State * () { return _L; }
 
 	private:
@@ -88,6 +94,20 @@ namespace lemon{namespace luabind{
 	inline void state::free(void * data)
 	{
 		LemonFixObjectFree(_allocator,data);
+	}
+
+	inline void state::dofile(const char * file)
+	{
+		error_info errorCode;
+
+		if(0 != luaL_dofile(_L,file))
+		{
+			LEMON_USER_ERROR(errorCode,LEMONXX_LUA_DOFILE_ERROR);
+
+			errorCode.error_msg(lemon::from_utf8(lua_tostring(_L,-1)));
+
+			throw errorCode;
+		}
 	}
 }}
 

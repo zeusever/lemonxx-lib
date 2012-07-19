@@ -92,6 +92,12 @@ namespace lemon{namespace unittest{namespace cxx{
 
 				return 2;
 			}
+			catch(const error_info & e)
+			{
+				std::cerr << e << std::endl;
+
+				return 4;
+			}
 
 			
 		}

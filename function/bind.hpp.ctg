@@ -8,7 +8,7 @@ namespace lemon{
 		<
 		typename R,typename Class
 		>
-	function<R()> bind(R(Class::*f)(),Class * object)
+	inline function<R()> bind(R(Class::*f)(),Class * object)
 	{
 		return function<R()>(f,object);
 	}
@@ -17,7 +17,7 @@ namespace lemon{
 		<
 		typename R,typename Class
 		>
-	function<R()> bind(R(Class::*f)() const,Class * object)
+	inline function<R()> bind(R(Class::*f)() const,Class * object)
 	{
 		return function<R()>(f,object);
 	}
@@ -26,7 +26,7 @@ namespace lemon{
 		<
 		typename R,typename Class
 		>
-	function<R()> bind(R(Class::*f)() const,const Class * object)
+	inline function<R()> bind(R(Class::*f)() const,const Class * object)
 	{
 		return function<R()>(f,object);
 	}
@@ -41,7 +41,7 @@ namespace lemon{
 		,typename A0$ ,typename A<i>$(1,<<i>>)
 		,typename B0$ ,typename B<i>$(1,<<i>>)
 		>
-		bind_t<
+		inline bind_t<
 		tuple<B0$ ,B<i>$(1,<<i>>)>, 
 		R,
 		typename mpl::make_list<A0$ ,A<i>$(1,<<i>>)>::type,
@@ -68,7 +68,7 @@ namespace lemon{
 		,typename A0$ ,typename A<i>$(1,<<i>>)
 		,typename B0$ ,typename B<i>$(1,<<i>>)
 		>
-		mem_bind_t<
+		inline mem_bind_t<
 		tuple<B0$ ,B<i>$(1,<<i>>)>, 
 		R,
 		typename mpl::make_list<A0$ ,A<i>$(1,<<i>>)>::type,
@@ -94,7 +94,7 @@ namespace lemon{
 		,typename A0$ ,typename A<i>$(1,<<i>>)
 		,typename B0$ ,typename B<i>$(1,<<i>>)
 		>
-		mem_bind_t<
+		inline mem_bind_t<
 		tuple<B0$ ,B<i>$(1,<<i>>)>, 
 		R,
 		typename mpl::make_list<A0$ ,A<i>$(1,<<i>>)>::type,
@@ -119,7 +119,7 @@ namespace lemon{
 		,typename A0$ ,typename A<i>$(1,<<i>>)
 		,typename B0$ ,typename B<i>$(1,<<i>>)
 		>
-		mem_bind_t<
+		inline mem_bind_t<
 		tuple<B0$ ,B<i>$(1,<<i>>)>, 
 		R,
 		typename mpl::make_list<A0$ ,A<i>$(1,<<i>>)>::type,

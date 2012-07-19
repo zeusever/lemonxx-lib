@@ -1,0 +1,26 @@
+
+namespace lemon{namespace luabind{
+
+template<typename A0$ ,typename A<i>$(1,max)>
+struct type_trait< tuple<A0$ ,A<i>$(1,max)> >
+{
+	typedef tuple<A0$ ,A<i>$(1,max)> value_type;
+
+	typedef mpl::inttypes_<int,mpl::size<typename value_type::Seq>::value> nresults;
+
+	static value_type from_lua(state & L)
+	{
+		value_type result;
+
+		tupe_getter<value_type>(L,result);
+
+		return result;
+	}
+
+	static void to_lua(state & L,const value_type & val)
+	{
+		tupe_setter<value_type>(L,val);
+	}
+};
+
+}}

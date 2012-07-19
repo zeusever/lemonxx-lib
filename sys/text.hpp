@@ -31,7 +31,7 @@ namespace lemon{
 
 	typedef std::basic_fstream<lemon_char_t> FileStream;
 
-	inline std::string to_ascii(const String & source)
+	inline std::string to_locale(const String & source)
 	{
 		LEMON_DECLARE_ERRORINFO(errorCode);
 
@@ -39,14 +39,14 @@ namespace lemon{
 
 		std::vector<char> buffer(source.length() * 6 + 1);
 
-		LemonToASCII(source.c_str(),source.length() + 1,(lemon::byte_t*)&buffer[0],buffer.size(),&errorCode);
+		LemonToLocale(source.c_str(),source.length() + 1,(lemon::byte_t*)&buffer[0],buffer.size(),&errorCode);
 
 		if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
 
 		return &buffer[0];
 	}
 
-	inline String from_ascii(const std::string & source)
+	inline String from_locale(const std::string & source)
 	{
 		LEMON_DECLARE_ERRORINFO(errorCode);
 
@@ -54,7 +54,7 @@ namespace lemon{
 
 		std::vector<lemon_char_t> buffer(source.length() * 6 + 1);
 
-		LemonFromASCII((const lemon::byte_t*)source.c_str(),source.length() + 1,&buffer[0],buffer.size(),&errorCode);
+		LemonFromLocale((const lemon::byte_t*)source.c_str(),source.length() + 1,&buffer[0],buffer.size(),&errorCode);
 
 		if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
 
