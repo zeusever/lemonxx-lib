@@ -14,6 +14,7 @@
 #include <lemonxx/luabind/lstate.hpp>
 
 namespace lemon{namespace luabind{
+
 	inline void call_function(state & L, const char * name,int nargs, int nresults)
 	{
 		error_info errorCode;
@@ -41,6 +42,25 @@ namespace lemon{namespace luabind{
 
 			errorCode.check_throw();
 		}
+	}
+
+	inline void dofile(state & L,const char * file)
+	{
+		error_info errorCode;
+
+		if(0 != luaL_dofile(L,file))
+		{
+			LEMON_USER_ERROR(errorCode,LEMONXX_LUA_DOFILE_ERROR);
+
+			errorCode.error_msg(lemon::from_utf8(lua_tostring(L,-1)));
+
+			throw errorCode;
+		}
+	}
+
+	inline void dofile(state & L,const std::string & file) 
+	{
+		dofile(L,file.c_str()); 
 	}
 }}
 #endif //LEMONXX_LUABIND_FUNCTION_HPP
