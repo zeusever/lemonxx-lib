@@ -18,5 +18,9 @@ assembly =
 		{
 			name = "LUA_DOFILE_ERROR";
 		};
+
+		{
+			name = "LUA_DUMPLICATE_CLASS_FUNCTION_DEF";
+		};
 	  };
    }

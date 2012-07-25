@@ -8,8 +8,11 @@
 */
 #ifndef LEMONXX_LUABIND_LUAPI_HPP
 #define LEMONXX_LUABIND_LUAPI_HPP
+
+#include <lemonxx/errorcode.h>
 #include <lemonxx/luabind/stack.hpp>
 #include <lemonxx/luabind/lstate.hpp>
+
 
 namespace lemon{namespace luabind{
 	//
@@ -30,5 +33,18 @@ namespace lemon{namespace luabind{
 		return s;
 	}
 
+	inline void dofile(lua_State * L,const char * file)
+	{
+		error_info errorCode;
+
+		if(luaL_dofile(L,file))
+		{
+			LEMON_USER_ERROR(errorCode,LEMONXX_LUA_DOFILE_ERROR);
+
+			errorCode.error_msg(lemon::from_utf8(lua_tostring(L,-1)));
+
+			errorCode.check_throw();
+		}
+	}
 }}
 #endif //LEMONXX_LUABIND_LUAPI_HPP
