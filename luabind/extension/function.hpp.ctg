@@ -112,7 +112,7 @@ namespace lemon{namespace luabind{
 			$
 			typedef typename remove_cv<typename remove_reference< A<i> >::type>::type B<i>;
 
-			B<i> a<i> = lua_cast<B<i>>::from(L,-1 - <i>);
+			B<i> a<i> = lua_cast<B<i>>::from(L,-<<i>> - 1 + <i> );
 			$(0,<<i>>)
 
 			ptr(a0$ ,a<i>$(1,<<i>>));
@@ -125,7 +125,7 @@ namespace lemon{namespace luabind{
 			$
 			typedef typename remove_cv<typename remove_reference< A<i> >::type>::type B<i>;
 
-			B<i> a<i> = lua_cast<B<i>>::from(L,-1 - <i>);
+			B<i> a<i> = lua_cast<B<i>>::from(L,-<<i>> - 1 + <i>);
 			$(0,<<i>>)
 
 			R r = ptr(a0$ ,a<i>$(1,<<i>>));

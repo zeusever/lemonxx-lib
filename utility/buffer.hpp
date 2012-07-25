@@ -75,6 +75,12 @@ namespace lemon{
 	{
 		return const_buffer((const byte_t*)message,strlen(message));
 	}
+
+	inline const_buffer cbuf(const char * message,size_t length)
+	{
+		return const_buffer((const byte_t*)message,length);
+	}
+
 	inline const_buffer cbuf(const std::string &message)
 	{
 		return const_buffer((const byte_t*)message.c_str(),message.length());

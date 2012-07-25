@@ -98,8 +98,35 @@ namespace lemon{namespace luabind{
 
 	template<typename Signature> struct classfunction;
 
+	template<typename Class,typename R> 
+	struct classfunction<R(Class::*)()> : public mem_handle
+	{
+		typedef										R(Class::*raw_type)();
 
-	template<typename Class> struct classfunction<void(Class::*)()> : public mem_handle
+		raw_type									_ptr;
+
+		classfunction(const char * name,raw_type ptr)
+			:mem_handle(name),_ptr(ptr)
+		{}
+
+		int call(lua_State * L) 
+		{
+			typedef typename remove_cv<typename remove_reference<R>::type>::type result_type;
+
+			assert(lua_islightuserdata(L,lua_upvalueindex(1)));
+
+			Class* obj = (Class*)lua_touserdata(L,lua_upvalueindex(1));
+
+			R r = (obj->*_ptr)();
+
+			lua_cast<result_type>::to(L,r);
+
+			return result_args<result_type>::value;
+		}
+	};
+
+	template<typename Class> 
+	struct classfunction<void(Class::*)()> : public mem_handle
 	{
 		typedef										void(Class::*raw_type)();
 
@@ -115,10 +142,47 @@ namespace lemon{namespace luabind{
 
 			Class* obj = (Class*)lua_touserdata(L,lua_upvalueindex(1));
 
-			(obj->*_ptr)(); 
+			(obj->*_ptr)();
 
 			return 0;
 		}
 	};
+
+	$$
+	template<typename Class,typename R$ ,typename A<i>$(0,<<i>>)> 
+	struct classfunction<R(Class::*)(A0$ ,A<i>$(1,<<i>>))> : public mem_handle
+	{
+		typedef										R(Class::*raw_type)(A0$ ,A<i>$(1,<<i>>));
+
+		raw_type									_ptr;
+
+		classfunction(const char * name,raw_type ptr)
+			:mem_handle(name),_ptr(ptr)
+		{}
+
+		int call(lua_State * L) 
+		{
+			typedef typename remove_cv<typename remove_reference<R>::type>::type result_type;
+
+			assert(lua_islightuserdata(L,lua_upvalueindex(1)));
+
+			Class* obj = (Class*)lua_touserdata(L,lua_upvalueindex(1));
+
+			$
+
+			typedef typename remove_cv<typename remove_reference< A<i> >::type>::type B<i>;
+
+			B<i> a<i> = lua_cast<B<i>>::from(L,-<<i>> - 1 + <i> );
+
+			$(0,<<i>>)
+
+			R r = (obj->*_ptr)(a0$ ,a<i>$(1,<<i>>));
+
+			lua_cast<result_type>::to(L,r);
+
+			return result_args<result_type>::value;
+		}
+	};
+	$$(0,max)
 }}
 #endif //LEMONXX_LUABIND_MEM_FUNCTION_HPP

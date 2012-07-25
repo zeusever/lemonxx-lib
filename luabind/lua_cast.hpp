@@ -20,6 +20,7 @@
 	\
 	static T from(lua_State *L,int index)\
 	{\
+	luaL_checknumber(L,index);\
 	return (T)lua_tonumber(L,index);\
 	}\
 	\
@@ -62,14 +63,20 @@ namespace lemon{namespace luabind{
 
 		static T * from(lua_State *L,int index)
 		{
-			const char * name = context(L)->register_class(typeid(T));
+			
 
-			if(name)
+			const mem_function_table * calltable = context(L)->register_class(typeid(T));
+
+			if(calltable)
 			{
+				luaL_checktype(L,index,LUA_TUSERDATA);
+
 				return *(T**)lua_touserdata(L,index);
 			}
 			else
 			{
+				luaL_checktype(L,index,LUA_TLIGHTUSERDATA);
+
 				return (T*)lua_touserdata(L,index);
 			}
 		}
@@ -86,6 +93,8 @@ namespace lemon{namespace luabind{
 
 		static std::string from(lua_State *L,int index)
 		{
+			luaL_checktype(L,index,LUA_TSTRING);
+
 			return lua_tostring(L,index);
 		}
 	};
@@ -100,6 +109,27 @@ namespace lemon{namespace luabind{
 		}
 	};
 
+	template<> struct lua_cast<lemon::const_buffer>
+	{
+		static void to(lua_State *L,const lemon::const_buffer &buffer)
+		{
+			lua_checkstack(L,1);
+
+			lua_pushlstring(L,(const char*)buffer.Data,buffer.Length);
+		}
+
+		static lemon::const_buffer from(lua_State *L,int index)
+		{
+			luaL_checktype(L,index,LUA_TSTRING);
+
+			size_t length = 0;
+
+			const char * buffer = lua_tolstring(L,index,&length);
+
+			return lemon::cbuf(buffer,length);
+		}
+	};
+
 	template<> struct lua_cast<const char*>
 	{
 		static void to(lua_State *L,const char* val)
@@ -111,6 +141,8 @@ namespace lemon{namespace luabind{
 
 		static const char* from(lua_State *L,int index)
 		{
+			luaL_checktype(L,index,LUA_TSTRING);
+
 			return lua_tostring(L,index);
 		}
 	};
@@ -126,6 +158,8 @@ namespace lemon{namespace luabind{
 
 		static bool from(lua_State *L,int index)
 		{
+			luaL_checktype(L,index,LUA_TBOOLEAN);
+
 			return lua_toboolean(L,index) ? true : false;
 		}
 	};
