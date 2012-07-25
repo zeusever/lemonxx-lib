@@ -1,0 +1,92 @@
+/**
+* 
+* @file     lua_tuple_cast
+* @brief    Copyright (C) 2012  yayanyang All Rights Reserved 
+* @author   yayanyang
+* @version  1.0.0.0  
+* @date     2012/07/24
+*/
+
+#ifndef LEMONXX_LUABIND_TUPLE_CAST_HPP
+#define LEMONXX_LUABIND_TUPLE_CAST_HPP
+
+namespace lemon{namespace luabind{
+
+	template<
+		typename Tuple,
+		size_t Index = 1,
+		bool flag = (mpl::size<Tuple>::value == Index)
+	> 
+	struct tupe_getter;
+
+
+	template<
+		typename Tuple,
+		size_t Index = 1,
+		bool flag = (mpl::size<Tuple>::value == Index)
+	> 
+	struct tupe_setter;
+
+	template<typename Tuple,size_t Index,bool flag> 
+	struct tupe_setter : public tupe_setter<Tuple,Index + 1>
+	{
+		typedef Tuple tuple_type;
+
+		typedef mpl::size_t_<Index - 1> current_index;
+
+		typedef typename basic_tuple_cast<typename Tuple::Seq,current_index::value>::origin_type value_type;
+
+		typedef tupe_setter<Tuple,Index + 1> base_type;
+
+		tupe_setter(lua_State * L,tuple_type & result) : base_type(L,result)
+		{
+			result.set<current_index::value>(lua_cast<value_type>::from(L,-1));
+
+			lua_pop(L,1);
+		}
+	};
+
+	template<typename Tuple,size_t Index> 
+	struct tupe_setter<Tuple,Index,true>
+	{
+		typedef Tuple tuple_type;
+
+		typedef mpl::size_t_<Index - 1> current_index;
+
+		typedef typename basic_tuple_cast<typename Tuple::Seq,current_index::value>::origin_type value_type;
+
+		tupe_setter(lua_State * L,tuple_type & result)
+		{
+			result.set<current_index::value>(lua_cast<value_type>::from(L,-1));
+
+			lua_pop(L,1);
+		}
+	};
+
+	template<size_t Index,bool flag>
+	struct tupe_setter<tuple<>,Index,flag>
+	{
+		tupe_setter(lua_State * ,tuple<> &){}
+	};
+
+
+	template<typename A0$ ,typename A<i>$(1,max)>
+	struct lua_cast< tuple<A0$ ,A<i>$(1,max)> >
+	{
+	typedef tuple<A0$ ,A<i>$(1,max)> value_type;
+
+	typedef mpl::inttypes_<int,mpl::size<typename value_type::Seq>::value> nresults;
+
+	static value_type from(lua_State * L,int)
+	{
+		value_type result;
+
+		tupe_setter<value_type>(L,result);
+
+		return result;
+	}
+};
+
+}}
+
+#endif //LEMONXX_LUABIND_TUPLE_CAST_HPP

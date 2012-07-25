@@ -1,0 +1,31 @@
+/**
+* 
+* @file     result_args
+* @brief    Copyright (C) 2012  yayanyang All Rights Reserved 
+* @author   yayanyang
+* @version  1.0.0.0  
+* @date     2012/07/24
+*/
+#ifndef LEMONXX_LUABIND_RESULT_ARGS_HPP
+#define LEMONXX_LUABIND_RESULT_ARGS_HPP
+#include <lemonxx/sys/sys.hpp>
+#include <lemonxx/mpl/inttypes.hpp>
+#include <lemonxx/mpl/algorithm.hpp>
+#include <lemonxx/utility/utility.hpp>
+#include <lemonxx/type_traits/type_traits.hpp>
+
+namespace lemon{namespace luabind{
+
+	template<typename T> struct result_args : mpl::size_t_<1> {};
+
+	template<> struct result_args<void> : mpl::size_t_<0> {};
+
+	template<typename A0$ ,typename A<i>$(1,max)>
+	struct result_args<tuple<A0$ ,A<i>$(1,max)> >
+		:mpl::size_t_<mpl::size<typename mpl::make_list<A0$ ,A<i>$(1,max)>::type>::value>
+	{
+
+	};
+
+}}
+#endif //LEMONXX_LUABIND_RESULT_ARGS_HPP

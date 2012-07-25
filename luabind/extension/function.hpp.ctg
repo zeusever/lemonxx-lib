@@ -1,0 +1,147 @@
+/**
+* 
+* @file     extension-function
+* @brief    Copyright (C) 2012  yayanyang All Rights Reserved 
+* @author   yayanyang
+* @version  1.0.0.0  
+* @date     2012/07/24
+*/
+#ifndef LEMONXX_LUABIND_EXTENSION_FUNCTION_HPP
+#define LEMONXX_LUABIND_EXTENSION_FUNCTION_HPP
+#include <cassert>
+#include <lemonxx/luabind/lua_cast.hpp>
+#include <lemonxx/luabind/extension.hpp>
+#include <lemonxx/luabind/result_args.hpp>
+#include <lemonxx/type_traits/type_traits.hpp>
+
+namespace lemon{namespace luabind{
+
+	template<typename Signature	> struct cfunction;
+
+
+	template<typename R> struct cfunction<R(*)()>
+	{
+		typedef							R(*sig_type)();
+
+		typedef cfunction<sig_type>		self_type;
+
+		std::string						_name;
+
+		sig_type						_ptr;
+
+		cfunction(const char * name,R(*ptr)()):_name(name),_ptr(ptr) {}
+
+		void call(module_ & module) const
+		{
+			struct luaL_Reg reg[] = 
+			{
+				{_name.c_str(),&self_type::__function},
+
+				{ NULL, NULL }
+			};
+
+			lua_pushlightuserdata(module,_ptr);
+
+			luaL_setfuncs(module,reg,1);
+		}
+
+		static int __function(lua_State * L)
+		{
+			assert(lua_islightuserdata(L,lua_upvalueindex(1)));
+
+			sig_type ptr = (sig_type)lua_touserdata(L,lua_upvalueindex(1));
+
+			return __function_call(L,ptr,is_same<void,R>::type());
+		}
+
+		static int __function_call(lua_State *,R(*ptr)(),mpl::true_type)
+		{
+			ptr();
+
+			return 0;
+		}
+
+		static int __function_call(lua_State *,R(*ptr)(),mpl::false_type)
+		{
+			R r = ptr();
+
+			lua_cast<R>::to(r);
+
+			return result_args<R>::value;
+		}
+	};
+
+	$$
+	template<typename R$ ,typename A<i>$(0,<<i>>)> struct cfunction<R(*)(A0$ ,A<i>$(1,<<i>>))>
+	{
+		typedef							R(*sig_type)(A0$ ,A<i>$(1,<<i>>));
+
+		typedef cfunction<sig_type>		self_type;
+
+		std::string						_name;
+
+		sig_type						_ptr;
+
+		cfunction(const char * name,sig_type ptr):_name(name),_ptr(ptr) {}
+
+		void call(module_ & module) const
+		{
+			struct luaL_Reg reg[] = 
+			{
+				{_name.c_str(),&self_type::__function},
+
+				{ NULL, NULL }
+			};
+
+			lua_pushlightuserdata(module,_ptr);
+
+			luaL_setfuncs(module,reg,1);
+		}
+
+		static int __function(lua_State * L)
+		{
+			assert(lua_islightuserdata(L,lua_upvalueindex(1)));
+
+			sig_type ptr = (sig_type)lua_touserdata(L,lua_upvalueindex(1));
+
+			return __function_call(L,ptr,is_same<void,R>::type());
+		}
+
+		static int __function_call(lua_State * L,sig_type ptr,mpl::true_type)
+		{
+			$
+			typedef typename remove_cv<typename remove_reference< A<i> >::type>::type B<i>;
+
+			B<i> a<i> = lua_cast<B<i>>::from(L,-1 - <i>);
+			$(0,<<i>>)
+
+			ptr(a0$ ,a<i>$(1,<<i>>));
+
+			return 0;
+		}
+
+		static int __function_call(lua_State *L,sig_type ptr,mpl::false_type)
+		{
+			$
+			typedef typename remove_cv<typename remove_reference< A<i> >::type>::type B<i>;
+
+			B<i> a<i> = lua_cast<B<i>>::from(L,-1 - <i>);
+			$(0,<<i>>)
+
+			R r = ptr(a0$ ,a<i>$(1,<<i>>));
+
+			lua_cast<typename remove_cv<typename remove_reference<R>::type>::type>::to(L,r);
+
+			return result_args<R>::value;
+		}
+	};
+	$$(0,max)
+
+	template<typename Signature>
+	inline cfunction<Signature> def(const char * name, Signature sig)
+	{
+		return cfunction<Signature>(name,sig);
+	}
+}}
+
+#endif //LEMONXX_LUABIND_EXTENSION_FUNCTION_HPP

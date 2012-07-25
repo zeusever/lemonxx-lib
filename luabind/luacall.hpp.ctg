@@ -1,0 +1,85 @@
+/**
+* 
+* @file     luacall
+* @brief    Copyright (C) 2012  yayanyang All Rights Reserved 
+* @author   yayanyang
+* @version  1.0.0.0  
+* @date     2012/07/24
+*/
+#ifndef LEMONXX_LUABIND_LUACALL_HPP
+#define LEMONXX_LUABIND_LUACALL_HPP
+
+#include <lemonxx/luabind/luapi.hpp>
+#include <lemonxx/luabind/lua_cast.hpp>
+#include <lemonxx/luabind/result_args.hpp>
+#include <lemonxx/luabind/lua_tuple_cast.hpp>
+
+namespace lemon{namespace luabind{
+
+	inline void __call(lua_State *L, const char * name,int nargs, int nresults)
+	{
+		error_info errorCode;
+
+		if(!lua_isfunction(L,-1 - nargs))
+		{
+			LEMON_USER_ERROR(errorCode,LEMONXX_LUA_PCALL_ERROR);
+
+			std::stringstream stream;
+
+			stream << "expect function(" << name << ") ,got " << lua_typename(L,-1);
+
+			errorCode.error_msg(lemon::from_locale(stream.str()));
+
+			errorCode.check_throw();
+		}
+
+		int c = lua_pcall(L,nargs,nresults,0);
+
+		if(c != LUA_OK)
+		{
+			LEMON_USER_ERROR(errorCode,LEMONXX_LUA_PCALL_ERROR);
+
+			if(c == LUA_ERRRUN || c == LUA_ERRGCMM) errorCode.error_msg(lemon::from_utf8(lua_tostring(L,-1)));
+
+			errorCode.check_throw();
+		}
+	}
+
+	template<typename R>
+	inline R call(lua_State *L,const char * name)
+	{
+		typedef typename remove_cv<R>::type result_type;
+
+		assert(name && "luacall expects a function name");
+
+		pop_stack stack(L);
+
+		lua_getglobal(L,name);
+		
+		__call(L,name,0,result_args<result_type>::value);
+
+		return lua_cast<result_type>::from(L,-1);
+	}
+
+	$$
+	template<typename R$ ,typename A<i>$(0,<<i>>)>
+	inline R call(lua_State *L,const char * name$ ,A<i> a<i>$(0,<<i>>))
+	{
+		typedef typename remove_cv<R>::type result_type;
+
+		assert(name && "luacall expects a function name");
+
+		pop_stack stack(L);
+
+		lua_getglobal(L,name);
+		$
+		lua_cast<typename remove_cv< A<i> >::type>::to(L,a<i>);
+		$(0,<<i>>)
+		__call(L,name,<<i>> + 1,result_args<result_type>::value);
+
+		return lua_cast<result_type>::from(L,-1);
+	}
+	$$(0,max)
+
+}}
+#endif //LEMONXX_LUABIND_LUACALL_HPP
