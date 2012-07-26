@@ -134,6 +134,7 @@ namespace lemon{namespace luabind{
 
 			return result_args<R>::value;
 		}
+
 	};
 	$$(0,max)
 
