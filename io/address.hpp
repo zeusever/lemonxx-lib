@@ -341,6 +341,16 @@ namespace lemon{namespace io{namespace ip{
 		int _af;
 	};
 
+	inline bool operator < (const address & lhs,const address & rhs)
+	{
+		return memcmp(&lhs,&rhs,sizeof(rhs)) < 0;
+	}
+
+	inline bool operator == (const address & lhs,const address & rhs)
+	{
+		return (lhs.ipv4() == lhs.ipv4()) && (memcmp(&lhs,&rhs,sizeof(rhs)) <= 0);
+	}
+
 }}}
 
 #endif //LEMONXX_IO_ADDRESS_HPP

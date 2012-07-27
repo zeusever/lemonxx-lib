@@ -342,6 +342,18 @@ namespace lemon{namespace io{namespace ip{
 			return &_buffer.addr;
 		}
 
+		ip::address address() const
+		{
+			if(ipv4())
+			{
+				return _buffer.v4.sin_addr;
+			}
+			else
+			{
+				return _buffer.v6.sin6_addr;
+			}
+		}
+
 		const socklen_t & buffersize() const
 		{
 			return _length;
