@@ -328,6 +328,13 @@ namespace lemon{namespace io{namespace ip{
 			return _buffer.v6;
 		}
 
+		size_t length() const
+		{
+			if(ipv4()) return sizeof(in_addr);
+
+			else return sizeof(in6_addr);
+		}
+
 	private:
 
 		union{
@@ -343,12 +350,21 @@ namespace lemon{namespace io{namespace ip{
 
 	inline bool operator < (const address & lhs,const address & rhs)
 	{
-		return memcmp(&lhs,&rhs,sizeof(rhs)) < 0;
+		if(lhs.length() != rhs.length())
+		{
+			return lhs.length() < rhs.length();
+		}
+		else
+		{
+			return memcmp(&lhs,&rhs,lhs.length()) < 0;
+		}
+
+		
 	}
 
 	inline bool operator == (const address & lhs,const address & rhs)
 	{
-		return (lhs.ipv4() == lhs.ipv4()) && (memcmp(&lhs,&rhs,sizeof(rhs)) <= 0);
+		return (lhs.ipv4() == lhs.ipv4()) && (memcmp(&lhs,&rhs,lhs.length()) == 0);
 	}
 
 }}}
