@@ -13,6 +13,7 @@
 #include <lemonxx/errorcode.h>
 #include <lemonxx/luabind/lstate.hpp>
 #include <lemonxx/luabind/extension.hpp>
+#include <lemonxx/type_traits/type_traits.hpp>
 
 namespace lemon{namespace luabind{
 
@@ -111,6 +112,11 @@ namespace lemon{namespace luabind{
 
 		int call(lua_State * L) 
 		{
+			return call(L,is_same<void,R>::type());
+		}
+
+		int call(lua_State * L,mpl::false_type)
+		{
 			typedef typename remove_cv<typename remove_reference<R>::type>::type result_type;
 
 			assert(lua_islightuserdata(L,lua_upvalueindex(1)));
@@ -123,9 +129,22 @@ namespace lemon{namespace luabind{
 
 			return result_args<result_type>::value;
 		}
+
+		int call(lua_State * L,mpl::true_type)
+		{
+			typedef typename remove_cv<typename remove_reference<R>::type>::type result_type;
+
+			assert(lua_islightuserdata(L,lua_upvalueindex(1)));
+
+			Class* obj = (Class*)lua_touserdata(L,lua_upvalueindex(1));
+
+			(obj->*_ptr)();
+
+			return 0;
+		}
 	};
 
-	template<typename Class> 
+	/*template<typename Class> 
 	struct classfunction<void(Class::*)()> : public mem_handle
 	{
 		typedef										void(Class::*raw_type)();
@@ -146,7 +165,7 @@ namespace lemon{namespace luabind{
 
 			return 0;
 		}
-	};
+	};*/
 
 	$$
 	template<typename Class,typename R$ ,typename A<i>$(0,<<i>>)> 
@@ -161,6 +180,11 @@ namespace lemon{namespace luabind{
 		{}
 
 		int call(lua_State * L) 
+		{
+			return call(L,is_same<void,R>::type());
+		}
+
+		int call(lua_State * L,mpl::false_type)
 		{
 			typedef typename remove_cv<typename remove_reference<R>::type>::type result_type;
 
@@ -181,6 +205,27 @@ namespace lemon{namespace luabind{
 			lua_cast<result_type>::to(L,r);
 
 			return result_args<result_type>::value;
+		}
+
+		int call(lua_State * L,mpl::true_type)
+		{
+			typedef typename remove_cv<typename remove_reference<R>::type>::type result_type;
+
+			assert(lua_islightuserdata(L,lua_upvalueindex(1)));
+
+			Class* obj = (Class*)lua_touserdata(L,lua_upvalueindex(1));
+
+			$
+
+			typedef typename remove_cv<typename remove_reference< A<i> >::type>::type B<i>;
+
+			B<i> a<i> = lua_cast<B<i>>::from(L,-<<i>> - 1 + <i> );
+
+			$(0,<<i>>)
+
+			(obj->*_ptr)(a0$ ,a<i>$(1,<<i>>));
+
+			return 0;
 		}
 	};
 	$$(0,max)

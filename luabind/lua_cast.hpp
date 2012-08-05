@@ -47,11 +47,11 @@ namespace lemon{namespace luabind{
 
 			if(calltable)
 			{
-				//calltable->wrapper(L,t);
+				calltable->wrapper(L,t);
 
-				(T**)lua_newuserdata(L,sizeof(T*));
+				/**(T**)lua_newuserdata(L,sizeof(T*)) = t;
 
-				luaL_setmetatable(L,calltable->name().c_str());
+				luaL_setmetatable(L,calltable->name().c_str());*/
 			}
 			else
 			{
