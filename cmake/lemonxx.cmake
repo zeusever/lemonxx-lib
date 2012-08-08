@@ -6,7 +6,13 @@ lemon_option(
   )
 
 function(lemonxx_ctg_files OUTPUT)
-  lemon_scan_files(FILES "Source Files" ${CMAKE_CURRENT_SOURCE_DIR} PATTERNS  *.ctg)
+  lemon_parse_arguments(
+    lemon_c_cxx_files
+    FILES 
+    LEMON_ONE_VALUE_KEY DIR
+    LEMON_INPUT_ARGS ${ARGN})
+
+  lemon_scan_files(FILES "Source Files\\${FILES_DIR}" ${PROJECT_SOURCE_DIR}/sources/lemonxx/ PATTERNS  *.ctg)
 
   set(COMPILER ${PROJECT_SOURCE_DIR}/sources/lemonxx/cmake/compiler.lua)
 
@@ -19,7 +25,7 @@ function(lemonxx_ctg_files OUTPUT)
     if(NOT EXISTS ${DIR})
       file(MAKE_DIRECTORY ${DIR})
     endif()
-    lemon_file_source_group("Include Files" ${PROJECT_BINARY_DIR}/build/sources/lemonxx ${PATH})
+    lemon_file_source_group("Include Files\\${FILES_DIR}" ${PROJECT_BINARY_DIR}/build/sources/lemonxx ${PATH})
     
     add_custom_command(
       OUTPUT ${PATH}

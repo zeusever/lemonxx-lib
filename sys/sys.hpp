@@ -10,3 +10,4 @@
 #include <lemonxx/sys/errorcode.hpp>
 #include <lemonxx/sys/filesystem.hpp>
 #include <lemonxx/sys/environment.hpp>
+#include <lemonxx/sys/resource.hpp>

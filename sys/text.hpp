@@ -22,7 +22,19 @@
 
 #include <algorithm>
 
+#ifdef WIN32
+
+#define LEMON_COUT std::wcout
+
+#else
+
+#define LEMON_COUT std::cout
+
+#endif
+
 namespace lemon{
+
+	typedef lemon_char_t char_t;
 
 	typedef std::basic_string<lemon_char_t> String;
 

@@ -49,6 +49,16 @@ namespace lemon{
 			if(LEMON_FAILED(*this)) throw *this;
 		}
 
+		void check_throw(const lemon::char_t * errormessage)
+		{
+			if(LEMON_FAILED(*this))
+			{
+				error_msg(errormessage);
+
+				throw *this;
+			}
+		}
+
 	private:
 
 		lemon::String				_message;

@@ -787,6 +787,16 @@ namespace lemon{
 
 	};
 
+	template<class T> struct is_const : public mpl::false_type
+	{
+
+	};
+
+	template<class T> struct is_const <T const>: public mpl::true_type
+	{
+
+	};
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// @struct	remove_all_extents;
 	///
