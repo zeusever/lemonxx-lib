@@ -8,6 +8,7 @@
 */
 #ifndef LEMONXX_SYS_RESOURCE_HPP
 #define LEMONXX_SYS_RESOURCE_HPP
+#include <ostream>
 #include <lemon/sys/resource.h>
 #include <lemonxx/sys/inttypes.hpp>
 #include <lemonxx/sys/handle.hpp>
@@ -330,7 +331,27 @@ namespace lemon{
 			return *LemonResourceUuid(*this);
 		}
 
+		void write(std::ostream & stream)
+		{
+			error_info errorCode;
+
+			LemonIoWriter writer = {&stream,&resource::Write};
+
+			LemonResourceWrite(*this,writer,&errorCode);
+		}
+
 	private:
+
+		static size_t Write(void * userdata,const lemon_byte_t * source,size_t length,LemonErrorInfo *errorCode)
+		{
+			LEMON_RESET_ERRORINFO(*errorCode);
+
+			std::ostream & stream = *(std::ostream*)userdata;
+
+			stream.write((const char*)source,length);
+
+			return length;
+		}
 		
 
 		void add(const resource_errorinfo & val,mpl::type2type<resource_errorinfo>)
