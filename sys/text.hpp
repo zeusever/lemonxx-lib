@@ -24,6 +24,8 @@
 
 namespace lemon{
 
+	typedef lemon_char_t char_t;
+
 	typedef std::basic_string<lemon_char_t> String;
 
 	typedef std::basic_stringstream<lemon_char_t> StringStream;
