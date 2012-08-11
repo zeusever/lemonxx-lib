@@ -112,7 +112,14 @@ namespace lemon{namespace memory{namespace ringbuffer{
 		iterator end() { return iterator(); }
 
 	public:
+		allocator():_allocator(LEMON_HANDLE_NULL_VALUE) {}
+
 		allocator(size_t blocks)
+		{
+			create(blocks);
+		}
+
+		void create(size_t blocks)
 		{
 			LEMON_DECLARE_ERRORINFO(errorCode);
 
