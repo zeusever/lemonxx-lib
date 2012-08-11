@@ -14,7 +14,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <lemon/sys/abi.h>
-#include <lemon/sys/errorcode.h>
+#include <lemon/sys/assembly.h>
 #include <lemonxx/utility/utility.hpp>
 
 namespace lemon{namespace unittest{namespace cxx{

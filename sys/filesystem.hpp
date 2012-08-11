@@ -9,12 +9,18 @@
 #ifndef LEMONXX_SYS_FILESYSTEM_HPP
 #define LEMONXX_SYS_FILESYSTEM_HPP
 
+#include <list>
 #include <stack>
 #include <string>
-#include <lemonxx/sys/sys.hpp>
-#include <lemonxx/utility/utility.hpp>
+#include <sstream>
+#include <algorithm>
 
 #include <lemon/sys/filesystem.h>
+
+#include <lemonxx/sys/sys.hpp>
+#include <lemonxx/utility/utility.hpp>
+#include <lemonxx/sys/text.hpp>
+
 
 namespace lemon{namespace fs{
 	inline String current_directory()
@@ -237,6 +243,215 @@ namespace lemon{namespace fs{
 		}
 	}
 
+
+	//////////////////////////////////////////////////////////////////////////
+
+	class path
+	{
+	public:
+
+		typedef std::list<lemon::String>			nodes_type;
+
+		typedef nodes_type::iterator				iterator;
+
+		typedef nodes_type::const_iterator			const_iterator;
+
+		path() {}
+		
+		explicit path(const lemon::String & source)
+		{
+			lemon::String newsource = string_replaceall<lemon::char_t>(source,LEMON_TEXT("\\"),LEMON_TEXT("/"));
+
+			lemon::String::size_type offset = 0,start;
+
+			offset = newsource.find(LEMON_TEXT('/'),offset);
+
+			if(offset != 0) _root = newsource.substr(0,offset);
+
+			start = offset + 1;
+
+			while(start < newsource.length() && (offset = newsource.find(LEMON_TEXT('/'),start)) != lemon::String::npos)
+			{
+				_nodes.push_back(newsource.substr(start ,offset - start));
+
+				start = offset + 1;
+			}
+
+			if(start < newsource.length())
+			{
+				_nodes.push_back(newsource.substr(start));
+			}
+		}
+
+		template<typename Iterator>
+		path(Iterator begin,Iterator end) :_nodes(begin,end) {}
+
+		template<typename Iterator>
+		path(const lemon::String & root,Iterator begin,Iterator end) :_root(root),_nodes(begin,end) {}
+
+		const lemon::String & root() const { return _root; }
+
+		void root(const lemon::String & val) {_root = val;}
+
+		const lemon::String leaf() const 
+		{
+			if(has_leaf()) return _nodes.back();
+
+			return lemon::String();
+		}
+
+		bool has_leaf() const { return !_nodes.empty(); }
+
+		bool relative_path() const { return _root == LEMON_TEXT(".") || _root == LEMON_TEXT(".."); }
+
+		iterator begin() { return _nodes.begin(); }
+
+		iterator end() { return _nodes.end(); }
+
+		const_iterator begin() const { return _nodes.begin(); }
+
+		const_iterator end() const { return _nodes.end(); }
+
+		lemon::String native() const
+		{
+#ifdef WIN32
+			return tostring(LEMON_TEXT('\\'));
+#else
+			return tostring(LEMON_TEXT('/'));
+#endif //WIN32
+		}
+
+		lemon::String string() const
+		{
+			return tostring(LEMON_TEXT('/'));
+		}
+
+		void compress()
+		{
+			const_iterator iter,end = _nodes.end();
+
+			for(iter = _nodes.begin(); iter != end;)
+			{
+				if(*iter == LEMON_TEXT("..") && iter != _nodes.begin())
+				{
+					const_iterator begin = iter;
+
+					iter = _nodes.erase(-- begin,++ iter);
+
+					continue;
+				}
+				else if(*iter == LEMON_TEXT("."))
+				{
+					iter = _nodes.erase(iter);
+
+					continue;
+				}
+
+
+				++ iter;
+			}
+
+		}
+
+		bool empty() const {return _root.empty() && _nodes.empty(); }
+
+		path & operator / (const lemon::char_t * node)
+		{
+			_nodes.push_back(node);
+
+			return *this;
+		}
+
+		path & operator / (const path & rhs)
+		{
+			_nodes.insert(_nodes.end(),rhs.begin(),rhs.end());
+
+			return *this;
+		}
+
+		bool operator == (const fs::path & rhs) const
+		{
+			return _root == rhs._root && _nodes ==  rhs._nodes;
+		}
+
+	private:
+
+		lemon::String tostring(lemon::char_t splitchar) const
+		{
+			lemon::StringStream stream;
+
+			stream << _root;
+
+			const_iterator iter,end = _nodes.end();
+
+			for(iter = _nodes.begin(); iter != end; ++ iter) stream << splitchar << *iter;
+
+			return stream.str();
+		}
+
+	private:
+
+		lemon::String		_root;
+
+		nodes_type			_nodes;
+	};
+
+	inline lemon::String extension(const fs::path & source)
+	{
+		if(!source.has_leaf()) return lemon::String();
+
+		lemon::String leaf = source.leaf();
+
+		lemon::String::size_type offset = leaf.rfind(LEMON_TEXT('.')) + 1;
+
+		if(offset < leaf.length())
+		{
+			return leaf.substr(offset);
+		}
+		else
+		{
+			return LEMON_TEXT("");
+		}
+	}
+
+	inline lemon::String extension(const lemon::String & source)
+	{
+		return extension(path(source));
+	}
+
+	inline fs::path relative(fs::path lhs,fs::path rhs)
+	{
+		lhs.compress();rhs.compress();
+
+		if(lhs.relative_path() || lhs.relative_path()) return fs::path();
+
+		if(lhs.root() !=  rhs.root()) return fs::path();
+
+		fs::path::const_iterator iter1 = lhs.begin(),iter2 = rhs.begin(),end1 = lhs.end(),end2 = rhs.end();
+
+		for(;iter1 != end1 && iter2 != end2; ++ iter1,++ iter2) if(*iter1 != *iter2) break;
+		
+		size_t counter = std::distance(iter1,end1);
+
+		fs::path result;
+
+		if(counter > 0)
+		{
+			result.root(LEMON_TEXT(".."));
+
+			-- counter;
+
+			for(size_t i = 0 ; i < counter ; ++ i) result / LEMON_TEXT("..");
+		}
+		else
+		{
+			result.root(LEMON_TEXT("."));
+		}
+
+
+		return result / fs::path(iter2,end2);
+
+	}
 }}
 
 #endif //LEMONXX_SYS_FILESYSTEM_HPP

@@ -43,11 +43,11 @@ namespace lemon{namespace luabind{
 		{
 			lua_checkstack(L,1);
 
-			const mem_function_table * calltable = context(L)->register_class(typeid(T));
+			const mem_function_table * calltable = context(L)->register_class(typeid(typename remove_cv<T>::type));
 
 			if(calltable)
 			{
-				calltable->wrapper(L,t);
+				calltable->wrapper(L,(void*)t);
 
 				/**(T**)lua_newuserdata(L,sizeof(T*)) = t;
 
@@ -55,7 +55,7 @@ namespace lemon{namespace luabind{
 			}
 			else
 			{
-				lua_pushlightuserdata(L,t);
+				lua_pushlightuserdata(L,(void*)t);
 			}
 		}
 
@@ -63,7 +63,7 @@ namespace lemon{namespace luabind{
 		{
 			
 
-			const mem_function_table * calltable = context(L)->register_class(typeid(T));
+			const mem_function_table * calltable = context(L)->register_class(typeid(typename remove_cv<T>::type));
 
 			if(calltable)
 			{

@@ -12,7 +12,7 @@
 #include <map>
 #include <cassert>
 #include <lemon/lua/lua.hpp>
-#include <lemonxx/errorcode.h>
+#include <lemonxx/assembly.h>
 #include <lemonxx/sys/sys.hpp>
 #include <lemonxx/utility/utility.hpp>
 

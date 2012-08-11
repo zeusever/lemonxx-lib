@@ -9,7 +9,7 @@
 #ifndef LEMONXX_LUABIND_LUAPI_HPP
 #define LEMONXX_LUABIND_LUAPI_HPP
 
-#include <lemonxx/errorcode.h>
+#include <lemonxx/assembly.h>
 #include <lemonxx/luabind/stack.hpp>
 #include <lemonxx/luabind/lstate.hpp>
 #include <lemonxx/luabind/lua_cast.hpp>
