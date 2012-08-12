@@ -328,7 +328,7 @@ namespace lemon{
 
 		lemon::uuid_t guid() const
 		{
-			return *LemonResourceUuid(*this);
+			return lemon::uuid_t(*LemonResourceUuid(*this));
 		}
 
 		void write(std::ostream & stream)

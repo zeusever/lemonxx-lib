@@ -17,7 +17,7 @@ namespace lemon{
 	template<bool> struct CompileTimeError;
 	template<> struct CompileTimeError<true> {};
 }
-#	define	LEMON_STATIC_ASSERT(expression_t,message) { lemon::CompileTimeError<((expression_t) != false)> ERROR_; (void)ERROR_; } 
+#	define	LEMON_STATIC_ASSERT(expression_t,commit_message) { lemon::CompileTimeError<((expression_t) != false)> ERROR_; (void)ERROR_; } 
 #else
 #	define  LEMON_STATIC_ASSERT(exp,msg)  static_assert(exp,msg);
 #endif //LEMON_HAS_STATIC_ASSERT

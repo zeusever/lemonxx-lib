@@ -16,7 +16,7 @@
 #include <lemonxx/sys/sys.hpp>
 #include <lemonxx/utility/utility.hpp>
 
-LUA_API const void * LEMON_LUABIND_REGISTRY_KEY_VALUE;
+LEMONXX_API const void * LEMON_LUABIND_REGISTRY_KEY_VALUE;
 
 #define LEMON_LUABIND_REGISTRY_KEY &LEMON_LUABIND_REGISTRY_KEY_VALUE
 

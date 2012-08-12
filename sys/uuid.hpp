@@ -36,9 +36,16 @@ namespace lemon{
 			if(LEMON_FAILED(errorInfo)) throw Exception("call LemonUuidGenerate exception",errorInfo);
 		}
 		
-		uuid_t(const LemonUuid & rhs)
+		explicit uuid_t(const LemonUuid & rhs)
 		{
 			memcpy(this,&rhs,sizeof(LemonUuid));
+		}
+
+		uuid_t & operator = (const LemonUuid & rhs)
+		{
+			memcpy(this,&rhs,sizeof(LemonUuid));
+
+			return *this;
 		}
 
 
