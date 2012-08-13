@@ -8,10 +8,12 @@
 */
 #ifndef LEMONXX_LUABIND_LUA_CAST_HPP
 #define LEMONXX_LUABIND_LUA_CAST_HPP
+#include <typeinfo>
 #include <lemonxx/sys/sys.hpp>
 #include <lemonxx/utility/utility.hpp>
 #include <lemonxx/type_traits/type_traits.hpp>
-#include <lemonxx/luabind/extension/mem_function.hpp>
+#include <lemonxx/luabind/lstate.hpp>
+#include <lemonxx/luabind/extension/mem_function_table.hpp>
 
 #define LEMON_LUABIND_INTEGER_TYPE_CAST(T) \
 	template<> struct lua_cast<T>\
@@ -167,9 +169,9 @@ namespace lemon{namespace luabind{
 
 	LEMON_LUABIND_INTEGER_TYPE_CAST(unsigned int);
 
-	LEMON_LUABIND_INTEGER_TYPE_CAST(long);
+	//LEMON_LUABIND_INTEGER_TYPE_CAST(long);
 
-	LEMON_LUABIND_INTEGER_TYPE_CAST(unsigned long);
+	//LEMON_LUABIND_INTEGER_TYPE_CAST(unsigned long);
 
 	LEMON_LUABIND_INTEGER_TYPE_CAST(float);
 
