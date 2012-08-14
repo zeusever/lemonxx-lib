@@ -326,13 +326,13 @@ namespace lemon{namespace fs{
 
 		void compress()
 		{
-			const_iterator iter,end = _nodes.end();
+			iterator iter,end = _nodes.end();
 
 			for(iter = _nodes.begin(); iter != end;)
 			{
 				if(*iter == LEMON_TEXT("..") && iter != _nodes.begin())
 				{
-					const_iterator begin = iter;
+					iterator begin = iter;
 
 					iter = _nodes.erase(-- begin,++ iter);
 

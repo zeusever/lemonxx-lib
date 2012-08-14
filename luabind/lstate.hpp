@@ -124,6 +124,24 @@ namespace lemon{namespace luabind{
 	{
 		_classes[&id] = table;
 	}
+
+	//
+	// get the register lua_state object.
+	// 
+	inline lua_state * context(lua_State * L)
+	{
+		pop_stack stack(L);
+
+		lua_pushlightuserdata(L,LEMON_LUABIND_REGISTRY_KEY);
+
+		lua_gettable(L,LUA_REGISTRYINDEX);
+
+		if(!lua_islightuserdata(L,-1)) assert(false && "the L is not register for luabind");
+
+		lua_state * s = (lua_state *)lua_touserdata(L,-1);
+
+		return s;
+	}
 }}
 
 
