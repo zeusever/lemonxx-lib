@@ -16,8 +16,6 @@
 #include <algorithm>
 
 #include <lemon/sys/filesystem.h>
-
-#include <lemonxx/sys/sys.hpp>
 #include <lemonxx/utility/utility.hpp>
 #include <lemonxx/sys/text.hpp>
 
@@ -351,6 +349,18 @@ namespace lemon{namespace fs{
 				++ iter;
 			}
 
+		}
+
+		path parent() const
+		{
+			if(empty()) return path();
+
+			else
+			{
+				if(_nodes.empty()) return path(_root);
+
+				return path(_root,_nodes.begin(),-- _nodes.end());
+			}
 		}
 
 		bool empty() const {return _root.empty() && _nodes.empty(); }

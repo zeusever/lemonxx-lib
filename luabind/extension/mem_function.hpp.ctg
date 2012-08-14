@@ -10,7 +10,6 @@
 #define LEMONXX_LUABIND_MEM_FUNCTION_HPP
 #include <map>
 #include <cassert>
-#include <lemonxx/assembly.h>
 #include <lemonxx/luabind/lstate.hpp>
 #include <lemonxx/luabind/extension.hpp>
 #include <lemonxx/type_traits/type_traits.hpp>

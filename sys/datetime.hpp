@@ -22,7 +22,7 @@ namespace lemon{
 	public:
 		time_t()
 		{
-			*this = now();
+			//*this = now();
 		}
 		time_t(time_duration duration)
 		{
@@ -116,14 +116,12 @@ namespace lemon{
 	private:
 		time_duration toduration() const
 		{
-			return Seconds * 10000000 + Microseconds * 10;
+			return LEMON_TIME_TO_INT64(*this);
 		}
 
 		void fromduration(time_duration duration)
 		{
-			Seconds = duration / 10000000 ;
-
-			Microseconds = (duration % 10000000) / 10;
+			LEMON_TIME_FROM_INT64(*this,duration);
 		}
 	};
 
@@ -232,9 +230,9 @@ namespace lemon{
 	public:
 		timer_t(){reset();}
 
-		void reset(){_start = time_t();}
+		void reset(){_start = time_t::now();}
 
-		time_duration duration() const { return time_t() - _start;}
+		time_duration duration() const { return time_t::now() - _start;}
 
 	private:
 		time_t _start;

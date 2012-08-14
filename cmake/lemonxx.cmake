@@ -9,6 +9,7 @@ function(lemonxx_ctg_files OUTPUT)
   lemon_parse_arguments(
     lemon_c_cxx_files
     FILES 
+    LEMON_OPTION_ARGS BOOTSTRAP
     LEMON_ONE_VALUE_KEY DIR
     LEMON_INPUT_ARGS ${ARGN})
 
@@ -18,7 +19,11 @@ function(lemonxx_ctg_files OUTPUT)
 
   foreach(FILE ${FILES})
     file(RELATIVE_PATH PATH ${PROJECT_SOURCE_DIR}/sources/lemonxx/ ${FILE})
-    set(PATH ${PROJECT_BINARY_DIR}/build/sources/lemonxx/${PATH})
+    if(FILES_BOOTSTRAP)
+      set(PATH ${PROJECT_BINARY_DIR}/build/sources/lemonxx/${PATH})
+    else()
+      set(PATH ${PROJECT_BINARY_DIR}/bootstrap/sources/lemonxx/${PATH})
+    endif()
     string(REPLACE ".ctg" "" PATH ${PATH})
     get_filename_component(NAME ${PATH} NAME)
     string(REPLACE "${NAME}" "" DIR ${PATH})

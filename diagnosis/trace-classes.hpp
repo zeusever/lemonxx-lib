@@ -14,6 +14,8 @@
 #include <lemonxx/sys/sys.hpp>
 #include <lemonxx/utility/utility.hpp>
 #include <lemonxx/function/bind.hpp>
+#include <lemonxx/io/endpoint.hpp>
+
 namespace lemon{namespace dtrace{
 
 	class service : public basic_handle_object<LemonDTraceService,&LemonCloseDTraceService>
@@ -125,6 +127,14 @@ namespace lemon{namespace dtrace{
 			errorCode.check_throw();
 		}
 
+		void write_errorinfo(const LemonErrorInfo * e)
+		{
+			error_info errorCode;
+
+			LemonTraceWriteErrorInfo(_event,e,errorCode);
+
+			errorCode.check_throw();
+		}
 
 		void write_boolean(bool val)
 		{
@@ -140,6 +150,24 @@ namespace lemon{namespace dtrace{
 			error_info errorCode;
 
 			LemonTraceWriteUTF8String(_event,utf8.c_str(),errorCode);
+
+			errorCode.check_throw();
+		}
+
+		void write_utf8_string(const char* utf8)
+		{
+			error_info errorCode;
+
+			LemonTraceWriteUTF8String(_event,utf8,errorCode);
+
+			errorCode.check_throw();
+		}
+
+		void write_endpoint(const lemon::io::ip::endpoint & ep)
+		{
+			error_info errorCode;
+
+			LemonTraceWriteSockAddr(_event,ep.ptr(),ep.length(),errorCode);
 
 			errorCode.check_throw();
 		}
@@ -218,6 +246,11 @@ namespace lemon{namespace dtrace{
 			errorCode.check_throw();
 		}
 
+		const lemon::time_t & timestamp() const
+		{
+			return *(const lemon::time_t*)LemonTraceTimeStamp(_event);
+		}
+
 		const LemonUuid * provider() const
 		{
 			return LemonGetTraceProvider(_event);
@@ -250,7 +283,7 @@ namespace lemon{namespace dtrace{
 			return length;
 		}
 
-		lemon::uint32_t read_integer() const
+		lemon::uint32_t read_number() const
 		{
 			error_info errorCode;
 
@@ -270,6 +303,25 @@ namespace lemon{namespace dtrace{
 			errorCode.check_throw();
 
 			return val ? true : false;
+		}
+
+		template<typename Buffer>
+		void read_errorinfo(LemonErrorInfo *e, Buffer buffer) const
+		{
+			error_info errorCode;
+
+			LemonTraceReadErrorInfo(_event,buffer.Data,buffer.Length,e,errorCode);
+
+			errorCode.check_throw();
+		}
+
+		void read_endpoint(lemon::io::ip::endpoint & ep) const
+		{
+			error_info errorCode;
+
+			LemonTraceReadSockAddr(_event,ep.ptr(),ep.buffersize(),errorCode);
+
+			errorCode.check_throw();
 		}
 
 		std::string read_utf8_string() const
@@ -322,6 +374,18 @@ namespace lemon{namespace dtrace{
 			return val;
 		}
 
+		template<typename Buffer>
+		size_t dump(Buffer buffer) const
+		{
+			error_info errorCode;
+
+			size_t length = LemonTraceDump(_event,buffer.Data,buffer.Length,errorCode);
+
+			errorCode.check_throw();
+
+			return length;
+		}
+
 	private:
 
 		LemonDTraceEvent _event;
@@ -335,10 +399,27 @@ namespace lemon{namespace dtrace{
 
 		typedef basic_handle_object<LemonDTraceConsumer,&LemonCloseDTraceConsumer> base_type;
 
+		consumer(){}
+
 		template<typename Handle>
 		consumer(controller & c,Handle handle)
-			:_handle(handle)
 		{
+			start(c,handle);
+		}
+
+		~consumer()
+		{
+			//must release LemonDTraceConsumer first, then release _handle.
+			base_type::close();
+		}
+
+		template<typename Handle>
+		void start(controller & c,Handle handle)
+		{
+			if(!empty()) return;
+
+			_handle = handle;
+
 			error_info errorCode;
 
 			base_type::reset(LemonCreateDTraceConsumer(c,this,&consumer::Call,&errorCode));
