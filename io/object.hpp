@@ -92,7 +92,7 @@ namespace lemon{namespace io{
 
 			LemonIoAsyncRead(*this,buffer.Data,buffer.Length,0,buffer.Length,&IoCallback,data,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode)
+			if(LEMON_FAILED(errorCode))
 			{
 				cb = data;
 

@@ -40,7 +40,7 @@ namespace lemon{namespace luabind{
 				{ NULL, NULL }
 			};
 
-			lua_pushlightuserdata(module,_ptr);
+			lua_pushlightuserdata(module,(void*)_ptr);
 
 			luaL_setfuncs(module,reg,1);
 		}
@@ -51,7 +51,7 @@ namespace lemon{namespace luabind{
 
 			sig_type ptr = (sig_type)lua_touserdata(L,lua_upvalueindex(1));
 
-			return __function_call(L,ptr,is_same<void,R>::type());
+			return __function_call(L,ptr,typename is_same<void,R>::type());
 		}
 
 		static int __function_call(lua_State *,R(*ptr)(),mpl::true_type)
@@ -93,7 +93,7 @@ namespace lemon{namespace luabind{
 				{ NULL, NULL }
 			};
 
-			lua_pushlightuserdata(module,_ptr);
+			lua_pushlightuserdata(module,(void*)_ptr);
 
 			luaL_setfuncs(module,reg,1);
 		}
@@ -104,7 +104,7 @@ namespace lemon{namespace luabind{
 
 			sig_type ptr = (sig_type)lua_touserdata(L,lua_upvalueindex(1));
 
-			return __function_call(L,ptr,is_same<void,R>::type());
+			return __function_call(L,ptr,typename is_same<void,R>::type());
 		}
 
 		static int __function_call(lua_State * L,sig_type ptr,mpl::true_type)

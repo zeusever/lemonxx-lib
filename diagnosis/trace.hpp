@@ -23,7 +23,7 @@ namespace lemon{namespace dtrace{
 	{
 		cm.write_utf8_string(message);
 	}
-
+#ifdef WIN32
 	inline void write(commit_message & cm,const char_t * message)
 	{
 		cm.write_utf8_string(to_utf8(message));
@@ -33,7 +33,7 @@ namespace lemon{namespace dtrace{
 	{
 		cm.write_utf8_string(lemon::to_utf8(message));
 	}
-
+#endif //WIN32
 	inline void write(commit_message & cm,lemon::uint32_t val)
 	{
 		cm.write_number(val);
