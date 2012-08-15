@@ -270,7 +270,7 @@ namespace lemon{namespace fs{
 
 			while(start < newsource.length() && (offset = newsource.find(LEMON_TEXT('/'),start)) != lemon::String::npos)
 			{
-				_nodes.push_back(newsource.substr(start ,offset - start));
+				if(offset -  start > 0) { _nodes.push_back(newsource.substr(start ,offset - start)); }
 
 				start = offset + 1;
 			}
