@@ -23,8 +23,6 @@ namespace lemon{
 
 		size_t length = LemonGetEnv(varname.c_str(),NULL,0,&errorCode);
 
-		if(LEMON_FAILED(errorCode)) throw lemon::Exception(errorCode);
-
 		if(length == 0) return lemon::String();
 
 		buffer.resize(length + 1);
