@@ -135,10 +135,10 @@ namespace lemon{
 	class basic_datetime_t : public LemonDateTime
 	{
 	public:
-		basic_datetime_t()
+		/*basic_datetime_t()
 		{
-			Type::fromtime(reinterpret_cast<Type*>(this),time_t());
-		}
+			Type::fromtime(reinterpret_cast<Type*>(this),time_t::now());
+		}*/
 		basic_datetime_t(time_t source)
 		{
 			Type::fromtime(reinterpret_cast<Type*>(this),source);
@@ -168,9 +168,9 @@ namespace lemon{
 	class localtime_t : public basic_datetime_t<localtime_t>
 	{
 	public:
-		localtime_t()
+		/*localtime_t()
 			:basic_datetime_t<localtime_t>()
-		{}
+		{}*/
 
 		localtime_t(time_t source)
 			:basic_datetime_t<localtime_t>(source)
@@ -198,9 +198,9 @@ namespace lemon{
 	class utctime_t : public basic_datetime_t<utctime_t>
 	{
 	public:
-		utctime_t()
+		/*utctime_t()
 			:basic_datetime_t<utctime_t>()
-		{}
+		{}*/
 
 		utctime_t(time_t source)
 			:basic_datetime_t<utctime_t>(source)

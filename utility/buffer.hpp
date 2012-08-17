@@ -13,6 +13,7 @@
 #include <lemonxx/configure.h>
 #include <lemonxx/sys/inttypes.hpp>
 #include <lemonxx/type_traits/type_traits.hpp>
+#include <lemonxx/sys/text.hpp>
 
 namespace lemon{
 
@@ -64,6 +65,19 @@ namespace lemon{
 	{
 		return const_buffer(source,N);
 	}
+
+	template<typename T,size_t N>
+	inline const_buffer cbuf(const T (&source) [N])
+	{
+		return const_buffer((const lemon::byte_t *)source,N * sizeof(T));
+	}
+
+#ifdef WIN32
+	inline const_buffer cbuf(const lemon::char_t * message)
+	{
+		return const_buffer((const byte_t*)message,lemon_strlen(message) * sizeof(lemon::char_t));
+	}
+#endif //WIN32
 
 	template<size_t N>
 	inline mutable_buffer buf(char (&source) [N])

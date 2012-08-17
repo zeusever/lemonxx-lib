@@ -167,7 +167,7 @@ namespace lemon{namespace dtrace{
 		{
 			error_info errorCode;
 
-			LemonTraceWriteSockAddr(_event,ep.ptr(),ep.length(),errorCode);
+			LemonTraceWriteSockAddr(_event,ep.ptr(),(socklen_t)ep.length(),errorCode);
 
 			errorCode.check_throw();
 		}
