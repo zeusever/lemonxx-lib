@@ -19,7 +19,6 @@
 #include <lemonxx/type_traits/type_traits.hpp>
 namespace lemon{
 
-	
 }
 
 #endif // LEMONXX_SYS_RESOURCE_HPP
