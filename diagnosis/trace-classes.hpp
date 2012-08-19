@@ -167,6 +167,8 @@ namespace lemon{namespace dtrace{
 	class message : private lemon::nocopyable
 	{
 	public:
+		message(){}
+
 		explicit message(LemonDTraceEvent traceEvent)
 			:_event(traceEvent)
 		{
@@ -175,7 +177,14 @@ namespace lemon{namespace dtrace{
 
 		void reset()
 		{
+			reset(_event);
+		}
+
+		void reset(LemonDTraceEvent e)
+		{
 			error_info errorCode;
+
+			_event = e;
 
 			LemonTraceOffset(_event,LEMON_IO_BEGIN,0,errorCode);
 
@@ -219,7 +228,19 @@ namespace lemon{namespace dtrace{
 			return length;
 		}
 
-		template<typename Buffer>
+
+		lemon::byte_t peek() const
+		{
+			error_info errorCode;
+
+			lemon::byte_t t = LemonTracePeek(_event,&errorCode);
+
+			errorCode.check_throw();
+
+			return t;
+		}
+
+	/*	template<typename Buffer>
 		size_t dump(Buffer buffer) const
 		{
 			error_info errorCode;
@@ -227,6 +248,30 @@ namespace lemon{namespace dtrace{
 			size_t length = LemonTraceDump(_event,buffer.Data,buffer.Length,errorCode);
 
 			errorCode.check_throw();
+
+			return length;
+		}*/
+
+		void dump(std::ostream &stream) const
+		{
+			error_info errorCode;
+
+			LemonIoWriter writer = {&stream,&message::Write};
+
+			LemonTraceDump(_event,writer,errorCode);
+
+			errorCode.check_throw();
+		}
+
+	private:
+
+		static size_t Write(void * userdata,const lemon_byte_t * source,size_t length,LemonErrorInfo *errorCode)
+		{
+			LEMON_RESET_ERRORINFO(*errorCode);
+
+			std::ostream &stream = *reinterpret_cast<std::ostream*>(userdata);
+
+			stream.write((const char*)source,length);
 
 			return length;
 		}

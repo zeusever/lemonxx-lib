@@ -17,6 +17,7 @@
 #include <lemonxx/utility/iterator.hpp>
 #include <lemonxx/mpl/inttypes.hpp>
 #include <lemonxx/type_traits/type_traits.hpp>
+
 namespace lemon{
 
 }
