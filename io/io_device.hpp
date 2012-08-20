@@ -34,29 +34,29 @@ namespace lemon{namespace io{
 
 		io_device()
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			base_type::reset(LemonCreateIoDevice(&errorCode));
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		void run()
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonJoinAsIoDeviceWorkThread(*this,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		void stop()
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonStopAllIoDeviceWorkThread(*this,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		template<typename Handle>
@@ -64,11 +64,11 @@ namespace lemon{namespace io{
 		{
 			AsyncIoCallback cb(handle);
 
-			LEMON_DECLARE_ERRORINFO(errorCode);	
+			error_info errorCode;	
 
 			LemonPostIoDeviceCompeleteEvent(*this,&IoCallback,cb.release(),0,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 	};
 }}

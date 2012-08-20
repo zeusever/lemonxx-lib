@@ -121,11 +121,11 @@ namespace lemon{namespace memory{namespace ringbuffer{
 
 		void create(size_t blocks)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			_allocator = LemonCreateRingBuffer(blocks,BlockSize,BlocksPerPage,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		~allocator()

@@ -35,7 +35,7 @@ namespace lemon{namespace io{
 		template<typename Handle>
 		void start(io_device & device,size_t milliseconds,Handle handle)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			_callback = handle;
 

@@ -38,11 +38,11 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		template<class ConstBuffer>
 		size_t sendto(ConstBuffer buffer,int flags,const endpoint & ep)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			size_t length = LemonSendTo(*this,buffer.Data,buffer.Length,flags,ep.ptr(),(socklen_t)ep.length(),&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return length;
 		}
@@ -70,11 +70,11 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		{
 			AsyncIoCallback cb(handle);
 
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonAsyncSendTo(*this,buffer.Data,buffer.Length,flags,ep.ptr(),(socklen_t)ep.length(),&IoCallback,cb.release(),&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		template<class ConstBuffer,typename Handle>
@@ -86,11 +86,11 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		template<class MutableBuffer>
 		size_t receivefrom(MutableBuffer buffer,endpoint & ep,int flags)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			size_t length = LemonReceiveFrom(*this,buffer.Data,buffer.Length,flags,ep.ptr(),&ep.buffersize(),&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return length;
 		}
@@ -106,11 +106,11 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		{
 			AsyncIoCallback cb(handle);
 
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonAsyncReceiveFrom(*this,buffer.Data,buffer.Length,flags,ep.ptr(),&ep.buffersize(),&IoCallback,cb.release(),&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		template<class MutableBuffer,typename Handle>

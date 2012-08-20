@@ -30,26 +30,26 @@ namespace lemon{namespace io{namespace ip{
 		
 			static address from(const char * source)
 			{
-				LEMON_DECLARE_ERRORINFO(errorCode);
+				error_info errorCode;
 
 				address addr;
 
 				LemonAddressFromString(AF_INET,source,strlen(source),&addr,sizeof(addr),&errorCode);
 
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+				errorCode.check_throw();
 
 				return addr;
 			}
 
 			std::string string() const
 			{
-				LEMON_DECLARE_ERRORINFO(errorCode);
+				error_info errorCode;
 
 				char buffer[sizeof("255.255.255.255")];
 
 				LemonAddressToString(AF_INET,(void*)this,sizeof(in_addr),buffer,sizeof(buffer),&errorCode);
 
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+				errorCode.check_throw();
 
 				return buffer;
 			}
@@ -170,26 +170,26 @@ namespace lemon{namespace io{namespace ip{
 
 			static address from(const char * source)
 			{
-				LEMON_DECLARE_ERRORINFO(errorCode);
+				error_info errorCode;
 
 				address addr;
 
 				LemonAddressFromString(AF_INET6,source,strlen(source),&addr,sizeof(addr),&errorCode);
 
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+				errorCode.check_throw();
 
 				return addr;
 			}
 
 			std::string string() const
 			{
-				LEMON_DECLARE_ERRORINFO(errorCode);
+				error_info errorCode;
 
 				char buffer[sizeof("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255")];
 
 				LemonAddressToString(AF_INET6,(void*)this,sizeof(in6_addr),buffer,sizeof(buffer),&errorCode);
 
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+				errorCode.check_throw();
 
 				return buffer;
 			}

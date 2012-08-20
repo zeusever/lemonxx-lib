@@ -39,11 +39,11 @@ namespace lemon{namespace io{
 		
 		static LemonIo WrapHandle(LemonFileHandle native,LemonIoDevice device)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonIo io = LemonNativeFileHandle(native,device,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return io;
 		}
@@ -51,11 +51,11 @@ namespace lemon{namespace io{
 		template<class MutableBuffer>
 		size_t read(MutableBuffer buffer,size_t timeout)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			size_t length = LemonReadFileTimeout(*this,buffer.Data,buffer.Length,0,buffer.Length,timeout,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return length;
 		}
@@ -63,11 +63,11 @@ namespace lemon{namespace io{
 		template<class ConstBuffer>
 		size_t write(ConstBuffer buffer,size_t timeout)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			size_t length = LemonWriteFileTimeout(*this,buffer.Data,buffer.Length,0,buffer.Length,timeout,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return length;
 		}

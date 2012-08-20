@@ -27,7 +27,7 @@ namespace lemon{
 
 		~sharedlibrary()
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			if(LEMON_CHECK_HANDLE(_lib)) LemonUnloadLibrary(_lib,&errorCode);
 		}
@@ -35,22 +35,22 @@ namespace lemon{
 		template<typename Func>
 		Func get(const char* name)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			void * address = LemonGetProcAddress(_lib,name,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return reinterpret_cast<Func>(address);
 		}
 
 		void load(const lemon_char_t * path)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			_lib = LemonLoadLibrary(path,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		void load(const std::string & path)

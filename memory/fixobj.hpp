@@ -38,11 +38,11 @@ namespace lemon{namespace memory{namespace fixed{
 
 		allocator()
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			_allocator = LemonCreateFixObjectAllocator(N,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////

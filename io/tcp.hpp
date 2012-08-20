@@ -55,11 +55,11 @@ namespace lemon{namespace io{namespace ip{
 		template<class ConstBuffer>
 		size_t send(ConstBuffer buffer,int flags)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			size_t length = LemonSend(*this,buffer.Data,buffer.Length,flags,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return length;
 		}
@@ -75,11 +75,11 @@ namespace lemon{namespace io{namespace ip{
 		{
 			AsyncIoCallback cb(handle);
 
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonAsyncSend(*this,buffer.Data,buffer.Length,flags,&IoCallback,cb.release(),&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		template<class ConstBuffer,typename Handle>
@@ -91,11 +91,11 @@ namespace lemon{namespace io{namespace ip{
 		template<class MutableBuffer>
 		size_t receive(MutableBuffer buffer,int flags)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			size_t length = LemonReceive(*this,buffer.Data,buffer.Length,flags,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return length;
 		}
@@ -111,11 +111,11 @@ namespace lemon{namespace io{namespace ip{
 		{
 			AsyncIoCallback cb(handle);
 
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonAsyncReceive(*this,buffer.Data,buffer.Length,flags,&IoCallback,cb.release(),&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 		
 		template<class MutableBuffer,typename Handle>
@@ -191,11 +191,11 @@ namespace lemon{namespace io{namespace ip{
 
 			void listen(int backlog)
 			{
-				LEMON_DECLARE_ERRORINFO(errorCode);
+				error_info errorCode;
 
 				LemonListen(*this,backlog,&errorCode);
 
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+				errorCode.check_throw();
 			}
 
 			tuple<connection::handle_type,endpoint> accept()
@@ -204,11 +204,11 @@ namespace lemon{namespace io{namespace ip{
 
 				socklen_t length = (socklen_t)sizeof(buffer);
 
-				LEMON_DECLARE_ERRORINFO(errorCode);
+				error_info errorCode;
 
 				connection::handle_type handle = LemonAccept(*this,(sockaddr*)buffer,&length,&errorCode);
 
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+				errorCode.check_throw();
 
 				return tuple<connection::handle_type,endpoint>(handle,endpoint((sockaddr*)buffer));
 			}
@@ -218,7 +218,7 @@ namespace lemon{namespace io{namespace ip{
 			{
 				AsyncIoCallback cb(handle);
 
-				LEMON_DECLARE_ERRORINFO(errorCode);
+				error_info errorCode;
 
 				AsyncIoCallback::wrapper_type data = cb.release();
 
@@ -260,11 +260,11 @@ namespace lemon{namespace io{namespace ip{
 
 			void connect(const endpoint & ep)
 			{
-				LEMON_DECLARE_ERRORINFO(errorCode);
+				error_info errorCode;
 
 				LemonConnect(*this,ep.ptr(),(socklen_t)ep.length(),&errorCode);
 
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+				errorCode.check_throw();
 			}
 
 			template<typename Handle>
@@ -272,11 +272,11 @@ namespace lemon{namespace io{namespace ip{
 			{
 				AsyncIoCallback cb(handle);
 
-				LEMON_DECLARE_ERRORINFO(errorCode);
+				error_info errorCode;
 
 				LemonAsyncConnect(*this,ep.ptr(),(socklen_t)ep.length(),&IoCallback,cb.release(),&errorCode);
 
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+				errorCode.check_throw();
 			}
 		};
 

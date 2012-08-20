@@ -10,7 +10,7 @@
 #define LEMON_CXX_SYS_DATETIME_HPP
 #include <algorithm>
 #include <lemon/sys/datetime.h>
-#include <lemonxx/sys/exception.hpp>
+#include <lemonxx/sys/errorcode.hpp>
 #include <lemonxx/utility/nocopyable.hpp>
 #include <lemonxx/sys/inttypes.hpp>
 namespace lemon{
@@ -43,11 +43,11 @@ namespace lemon{
 
 		static lemon::time_t now()
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 		    
-			lemon::time_t t = LemonNow(&errorinfo);
+			lemon::time_t t = LemonNow(errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonNow exception",errorinfo);
+			errorCode.check_throw();
 
 			return t;
 		}
@@ -146,11 +146,11 @@ namespace lemon{
 
 		lemon::time_t time() const
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			lemon::time_t result  = LemonDateTimeToTime(this,&errorinfo);
+			lemon::time_t result  = LemonDateTimeToTime(this,errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonDateTimeToTime exception",errorinfo);
+			errorCode.check_throw();
 
 			return result;
 		}
@@ -178,11 +178,11 @@ namespace lemon{
 	
 		static void fromtime(localtime_t * datetime,lemon::time_t source)
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			LemonLocalDateTime(datetime,source,&errorinfo);
+			LemonLocalDateTime(datetime,source,errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonLocalDateTime exception",errorinfo);
+			errorCode.check_throw();
 		}
 	};
 
@@ -208,11 +208,11 @@ namespace lemon{
 
 		static void fromtime(utctime_t * datetime,lemon::time_t source)
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			LemonUTCDateTime(datetime,source,&errorinfo);
+			LemonUTCDateTime(datetime,source,errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonUTCDateTime exception",errorinfo);
+			errorCode.check_throw();
 		}
 	};
 

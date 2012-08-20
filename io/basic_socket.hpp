@@ -117,11 +117,11 @@ namespace lemon{namespace io{
 
 		void shutdown(int how)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonShutdownSocket(*this,how,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		endpoint_type name()
@@ -130,22 +130,22 @@ namespace lemon{namespace io{
 
 			socklen_t length = (socklen_t)sizeof(buffer);
 
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonGetSockName(*this,(sockaddr*)buffer,&length,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return (const sockaddr*)buffer;
 		}
 
 		void bind(const endpoint_type & ep)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonBind(*this,ep.ptr(),(socklen_t)ep.length(),&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		void create(int af,LemonIoDevice device)
@@ -162,11 +162,11 @@ namespace lemon{namespace io{
 
 		static LemonSocket Create(int af,LemonIoDevice device)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonSocket socket = LemonCreateSocket(af,type,protocol,device,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return socket;
 		}

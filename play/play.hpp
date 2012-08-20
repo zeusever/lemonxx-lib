@@ -42,31 +42,31 @@ namespace lemon{namespace concurrency{
 
 		void join()
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonPlayJoin(*this,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		void stop()
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonPlayStop(*this,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 	private:
 
 		static LemonPlay Create(size_t backgroundThreads)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonPlay p = LemonCreatePlay(backgroundThreads,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return p;
 		}
@@ -91,7 +91,7 @@ namespace lemon{namespace concurrency{
 		template<typename Handle>
 		void start(Handle handle)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			actor_handle_type cb(handle);
 
@@ -103,17 +103,17 @@ namespace lemon{namespace concurrency{
 			{
 				actor_handle_type(userData);
 
-				throw Exception(errorCode);
+				errorCode.check_throw();
 			}
 		}
 
 		void join()
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonActorJoin(*_play,_actor,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 	private:

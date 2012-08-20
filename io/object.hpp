@@ -40,11 +40,11 @@ namespace lemon{namespace io{
 		template<class ConstBuffer>
 		size_t write(ConstBuffer buffer)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			size_t length = LemonIoWrite(*this,buffer.Data,buffer.Length,0,buffer.Length,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return length;
 		}
@@ -54,7 +54,7 @@ namespace lemon{namespace io{
 		{
 			AsyncIoCallback cb(handle);
 
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			AsyncIoCallback::wrapper_type data = cb.release();
 
@@ -71,11 +71,11 @@ namespace lemon{namespace io{
 		template<class MutableBuffer>
 		size_t read(MutableBuffer buffer)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			size_t length = LemonIoRead(*this,buffer.Data,buffer.Length,0,buffer.Length,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return length;
 		}
@@ -86,7 +86,7 @@ namespace lemon{namespace io{
 		{
 			AsyncIoCallback cb(handle);
 
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			AsyncIoCallback::wrapper_type data = cb.release();
 

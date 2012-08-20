@@ -37,11 +37,11 @@ namespace lemon{namespace io{
 
 		void create(const char * nodeName,const char * serverName)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			_resolver = LemonCreateResolver(nodeName,serverName,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			increment();
 		}
@@ -75,11 +75,11 @@ namespace lemon{namespace io{
 
 		void increment()
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			_current = LemonResovlerNext(_resolver,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			if(!_current){reset();}
 		}

@@ -13,7 +13,7 @@
 #include <iostream>
 #include <lemonxx/assembly.h>
 #include <lemonxx/unittest/dsel.hpp>
-#include <lemonxx/sys/exception.hpp>
+#include <lemonxx/sys/errorcode.hpp>
 #include <lemonxx/sys/errorcode.hpp>
 #include <lemonxx/sys/datetime.hpp>
 
@@ -77,14 +77,6 @@ namespace lemon{namespace unittest{namespace cxx{
 				std::cerr << "\tlins:" << e.ErrorCode().Lines << std::endl;
 
 				return 1;
-			}
-			catch(const lemon::Exception & e)
-			{
-				std::cerr << "error!!!" << e.what() << std::endl;
-
-				std::cerr << e.ErrorInfo() << std::endl;
-
-				return 3;
 			}
 			catch(const std::exception & e)
 			{

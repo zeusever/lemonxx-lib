@@ -9,7 +9,7 @@
 #ifndef LEMON_CXX_SYS_RANDOM_HPP
 #define LEMON_CXX_SYS_RANDOM_HPP
 #include <lemon/sys/random.h>
-#include <lemonxx/sys/exception.hpp>
+#include <lemonxx/sys/errorcode.hpp>
 #include <lemonxx/utility/nocopyable.hpp>
 namespace lemon{
 
@@ -41,11 +41,11 @@ namespace lemon{
 
 		random_t()
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			_device = LemonCreateRandomDevice(&errorinfo);
+			_device = LemonCreateRandomDevice(errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonCreateRandomDevice exception",errorinfo);
+			errorCode.check_throw();
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,11 +82,11 @@ namespace lemon{
 
 		size_t next() const
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			size_t result = LemonRandomDeviceNext(_device,&errorinfo);
+			size_t result = LemonRandomDeviceNext(_device,errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonRandomDeviceNext exception",errorinfo);
+			errorCode.check_throw();
 
 			return result;
 		}

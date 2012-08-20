@@ -16,6 +16,7 @@
 #include <lemon/sys/abi.h>
 #include <lemon/sys/assembly.h>
 #include <lemonxx/utility/utility.hpp>
+#include <lemonxx/sys/errorcode.hpp>
 
 namespace lemon{namespace unittest{namespace cxx{
 
@@ -66,7 +67,7 @@ namespace lemon{namespace unittest{namespace cxx{
 	{
 		if(!condition)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LEMON_USER_ERROR(errorCode,LEMON_SYS_UNITTEST_FAILED);
 

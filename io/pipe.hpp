@@ -70,11 +70,11 @@ namespace lemon{namespace io{namespace pipe{
 
 		void accept()
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonPipeServerAccept(*this,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 
 		
@@ -83,11 +83,11 @@ namespace lemon{namespace io{namespace pipe{
 
 		static LemonPipe Create(const char * name,LemonPipeOpenMode openMode,uint32_t timeout,LemonIoDevice device)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonPipe pipe = LemonCreatePipeServer(name,openMode,timeout,device,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return pipe;
 		}
@@ -127,11 +127,11 @@ namespace lemon{namespace io{namespace pipe{
 	private:
 		static LemonPipe Create(const char * name,LemonPipeOpenMode openMode,LemonIoDevice device)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			LemonPipe pipe = LemonCreatePipeClient(name,openMode,device,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			return pipe;
 		}

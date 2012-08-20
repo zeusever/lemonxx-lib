@@ -11,7 +11,7 @@
 #include <vector>
 #include <lemon/sys/thread.h>
 #include <lemonxx/sys/handle.hpp>
-#include <lemonxx/sys/exception.hpp>
+#include <lemonxx/sys/errorcode.hpp>
 #include <lemonxx/utility/utility.hpp>
 #include <lemonxx/function/function.hpp>
 #include <lemonxx/sys/inttypes.hpp>
@@ -45,26 +45,20 @@ namespace lemon{
 
 		tlsptr()
 		{
-			LEMON_DECLARE_ERRORINFO(errorcode);
+			error_info errorCode;
 
-			_tls = LemonCreateTls(&tlsptr<T>::Destructor,&errorcode);
+			_tls = LemonCreateTls(&tlsptr<T>::Destructor,errorCode);
 
-			if(LEMON_FAILED(errorcode))
-			{
-				throw Exception(errorcode);
-			}
+			errorCode.check_throw();
 		}
 
 		tlsptr(void(*destructor)(void*))
 		{
-			LEMON_DECLARE_ERRORINFO(errorcode);
+			error_info errorCode;
 
-			_tls = LemonCreateTls(destructor,&errorcode);
+			_tls = LemonCreateTls(destructor,errorCode);
 
-			if(LEMON_FAILED(errorcode))
-			{
-				throw Exception(errorcode);
-			}
+			errorCode.check_throw();
 		}
 
 		~tlsptr()
@@ -76,26 +70,20 @@ namespace lemon{
 
 		void set(T * val)
 		{
-			LEMON_DECLARE_ERRORINFO(errorcode);
+			error_info errorCode;
 
-			LemonTlsSet(_tls,val,&errorcode);
+			LemonTlsSet(_tls,val,errorCode);
 
-			if(LEMON_FAILED(errorcode))
-			{
-				throw Exception(errorcode);
-			}
+			errorCode.check_throw();
 		}
 
 		T * get() const
 		{
-			LEMON_DECLARE_ERRORINFO(errorcode);
+			error_info errorCode;
 
-			void * data = LemonTlsGet(_tls,&errorcode);
+			void * data = LemonTlsGet(_tls,errorCode);
 
-			if (LEMON_FAILED(errorcode))
-			{
-				throw Exception(errorcode);
-			}
+			errorCode.check_throw();
 
 			return reinterpret_cast<T*>(data);
 		}
@@ -132,11 +120,11 @@ namespace lemon{
 
 	inline lemon_thread_id_t current_thread_id()
 	{
-		LEMON_DECLARE_ERRORINFO(errorinfo);
+		error_info errorCode;
 
-		lemon_thread_id_t id = LemonGetCurrentThreadId(&errorinfo);
+		lemon_thread_id_t id = LemonGetCurrentThreadId(errorCode);
 
-		if(LEMON_FAILED(errorinfo)) throw Exception(errorinfo);
+		errorCode.check_throw();
 
 		return id;
 	}
@@ -210,15 +198,15 @@ namespace lemon{
 
 				proc_type::wrapper_type data = cb.release();
 
-				LEMON_DECLARE_ERRORINFO(errorinfo);
+				error_info errorCode;
 
-				_thread = LemonCreateThread(&thread_t::Proc,data,&errorinfo);
+				_thread = LemonCreateThread(&thread_t::Proc,data,errorCode);
 
-				if(LEMON_FAILED(errorinfo))
+				if(LEMON_FAILED(errorCode))
 				{
 					cb = data;
 
-					throw Exception("LemonCreateThread exception",errorinfo);
+					throw errorCode;
 				}
 			}
 		}
@@ -241,11 +229,11 @@ namespace lemon{
 		{
 			if(!empty())
 			{
-				LEMON_DECLARE_ERRORINFO(errorinfo);
+				error_info errorCode;
 				
-				LemonThreadJoin(_thread,&errorinfo);
+				LemonThreadJoin(_thread,errorCode);
 
-				if(LEMON_FAILED(errorinfo)) throw Exception("LemonCreateThread exception",errorinfo);
+				errorCode.check_throw();
 			}
 		}
 
@@ -429,11 +417,11 @@ namespace lemon{
 
 		mutex_t()
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			_mutex = LemonCreateMutex(&errorinfo);
+			_mutex = LemonCreateMutex(errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonCreateMutex exception",errorinfo);
+			errorCode.check_throw();
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -458,11 +446,11 @@ namespace lemon{
 
 		void lock()
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			LemonMutexLock(_mutex,&errorinfo);
+			LemonMutexLock(_mutex,&errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonMutexLock exception",errorinfo);
+			errorCode.check_throw();
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -475,11 +463,11 @@ namespace lemon{
 
 		bool trylock()
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			lemon_bool result = LemonMutexTryLock(_mutex,&errorinfo);
+			lemon_bool result = LemonMutexTryLock(_mutex,errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonMutexTryLock exception",errorinfo);
+			errorCode.check_throw();
 
 			return result?true:false;
 		}
@@ -492,11 +480,11 @@ namespace lemon{
 
 		void unlock()
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			LemonMutexUnLock(_mutex,&errorinfo);
+			LemonMutexUnLock(_mutex,errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonMutexUnLock exception",errorinfo);
+			errorCode.check_throw();
 		}
 
 		operator LemonMutex ()
@@ -721,14 +709,11 @@ namespace lemon{
 
 		condition_variable()
 		{
-			LEMON_DECLARE_ERRORINFO(errorcode);
+			error_info errorCode;
 
-			_cv = LemonCreateConditionVariable(&errorcode);
+			_cv = LemonCreateConditionVariable(errorCode);
 
-			if (LEMON_FAILED(errorcode)) {
-
-				throw Exception(errorcode);
-			}
+			errorCode.check_throw();
 		}
 
 		~condition_variable()
@@ -739,29 +724,29 @@ namespace lemon{
 		template<typename Lock>
 		void wait(Lock & lock)
 		{
-			LEMON_DECLARE_ERRORINFO(errorcode);
+			error_info errorCode;
 
-			LemonConditionVariableWait(_cv,lock.mutex(),&errorcode);
+			LemonConditionVariableWait(_cv,lock.mutex(),errorCode);
 
-			if (LEMON_FAILED(errorcode)) throw Exception(errorcode);
+			errorCode.check_throw();
 		}
 
 		void notify()
 		{
-			LEMON_DECLARE_ERRORINFO(errorcode);
+			error_info errorCode;
 
-			LemonConditionVariableNotify(_cv,&errorcode);
+			LemonConditionVariableNotify(_cv,errorCode);
 
-			if (LEMON_FAILED(errorcode)) throw Exception(errorcode);
+			errorCode.check_throw();
 		}
 
 		void notifyall()
 		{
-			LEMON_DECLARE_ERRORINFO(errorcode);
+			error_info errorCode;
 
-			LemonConditionVariableNotifyAll(_cv,&errorcode);
+			LemonConditionVariableNotifyAll(_cv,errorCode);
 
-			if (LEMON_FAILED(errorcode)) throw Exception(errorcode);
+			errorCode.check_throw();
 		}
 
 	private:

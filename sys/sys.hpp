@@ -1,6 +1,6 @@
 #include <lemonxx/sys/coroutine.hpp>
 #include <lemonxx/sys/datetime.hpp>
-#include <lemonxx/sys/exception.hpp>
+#include <lemonxx/sys/errorcode.hpp>
 #include <lemonxx/sys/ld.hpp>
 #include <lemonxx/sys/random.hpp>
 #include <lemonxx/sys/text.hpp>
@@ -11,3 +11,5 @@
 #include <lemonxx/sys/filesystem.hpp>
 #include <lemonxx/sys/environment.hpp>
 #include <lemonxx/sys/resource.hpp>
+#include <lemonxx/sys/ostream.hpp>
+#include <lemonxx/sys/converter.hpp>
