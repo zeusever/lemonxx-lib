@@ -50,5 +50,27 @@ namespace lemon{namespace luabind{
 			errorCode.check_throw();
 		}
 	}
+
+	inline void include_path(lua_State *L,const char * path)
+	{
+		std::ostringstream stream;
+
+		stream << "package.path = package.path .. \"" << path << "/?.lua\"";
+
+		dostring(L,stream.str().c_str());
+	}
+
+	inline void include_cpath(lua_State *L,const char * path)
+	{
+		std::ostringstream stream;
+
+#ifdef WIN32
+		stream << "package.cpath = package.cpath .. \"" << path << "/?.dll\"";
+#else
+		stream << "package.cpath = package.cpath .. \"" << path << "/?.so\"";
+#endif //WIN32
+
+		dostring(L,stream.str().c_str());
+	}
 }}
 #endif //LEMONXX_LUABIND_LUAPI_HPP
