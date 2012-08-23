@@ -55,7 +55,7 @@ namespace lemon{namespace luabind{
 	{
 		std::ostringstream stream;
 
-		stream << "package.path = package.path .. \"" << path << "/?.lua\"";
+		stream << "package.path = package.path .. \";" << path << "/?.lua\"";
 
 		dostring(L,stream.str().c_str());
 	}
@@ -65,9 +65,9 @@ namespace lemon{namespace luabind{
 		std::ostringstream stream;
 
 #ifdef WIN32
-		stream << "package.cpath = package.cpath .. \"" << path << "/?.dll\"";
+		stream << "package.cpath = package.cpath .. \";" << path << "/?.dll\"";
 #else
-		stream << "package.cpath = package.cpath .. \"" << path << "/?.so\"";
+		stream << "package.cpath = package.cpath .. \";" << path << "/?.so\"";
 #endif //WIN32
 
 		dostring(L,stream.str().c_str());

@@ -147,6 +147,23 @@ namespace lemon{namespace luabind{
 		}
 	};
 
+	template<> struct lua_cast<char*>
+	{
+		static void to(lua_State *L,const char* val)
+		{
+			lua_checkstack(L,1);
+
+			lua_pushstring(L,val);
+		}
+
+		static const char* from(lua_State *L,int index)
+		{
+			luaL_checktype(L,index,LUA_TSTRING);
+
+			return lua_tostring(L,index);
+		}
+	};
+
 	template<> struct lua_cast<bool>
 	{
 		static void to(lua_State *L,bool val)

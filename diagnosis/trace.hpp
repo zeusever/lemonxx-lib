@@ -62,6 +62,8 @@ namespace lemon{namespace dtrace{
 
 		length = ntohs(length);
 
+		if(length == 0) return "";
+
 		std::vector<char> buffer(length,0);
 
 		cm.read_rawdata((byte_t*)&buffer[0],buffer.size());
