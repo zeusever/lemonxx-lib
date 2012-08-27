@@ -45,6 +45,10 @@ namespace lemon{
 			}
 		}
 
+		bool fail() const { return LEMON_FAILED(*this); }
+
+		bool success() const { return LEMON_SUCCESS(*this); }
+
 	private:
 
 		lemon::String				_message;

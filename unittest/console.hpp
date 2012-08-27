@@ -12,8 +12,8 @@
 #include <iomanip>
 #include <iostream>
 #include <lemonxx/assembly.h>
+#include <lemonxx/sys/ostream.hpp>
 #include <lemonxx/unittest/dsel.hpp>
-#include <lemonxx/sys/errorcode.hpp>
 #include <lemonxx/sys/errorcode.hpp>
 #include <lemonxx/sys/datetime.hpp>
 

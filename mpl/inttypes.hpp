@@ -15,6 +15,8 @@ namespace lemon{namespace mpl{
 	struct inttypes_
 	{
 		static const Type value = val;
+
+		operator Type() { return value; }
 	};
 
 	template<bool val>
