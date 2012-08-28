@@ -89,32 +89,32 @@ namespace lemon{
 		}
 		///////////////////////////////////////////////////////////////////
 		//below is operator overload
-		bool operator == (const uuid_t & rhs) const
+		bool operator == (const LemonUuid & rhs) const
 		{
 			return memcmp(this,&rhs,sizeof(uuid_t)) == 0;
 		}
 
-		bool operator != (const uuid_t & rhs) const 
+		bool operator != (const LemonUuid & rhs) const 
 		{
 			return memcmp(this,&rhs,sizeof(uuid_t)) != 0;
 		}
 
-		bool operator > (const uuid_t & rhs) const 
+		bool operator > (const LemonUuid & rhs) const 
 		{
 			return memcmp(this,&rhs,sizeof(uuid_t)) > 0;
 		}
 
-		bool operator < (const uuid_t & rhs) const 
+		bool operator < (const LemonUuid & rhs) const 
 		{
 			return memcmp(this,&rhs,sizeof(uuid_t)) < 0;
 		}
 
-		bool operator >= (const uuid_t & rhs) const 
+		bool operator >= (const LemonUuid & rhs) const 
 		{
 			return memcmp(this,&rhs,sizeof(uuid_t)) >= 0;
 		}
 
-		bool operator <= (const uuid_t & rhs) const 
+		bool operator <= (const LemonUuid & rhs) const 
 		{
 			return memcmp(this,&rhs,sizeof(uuid_t)) <= 0;
 		}
