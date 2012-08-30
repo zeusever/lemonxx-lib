@@ -9,6 +9,7 @@
 #ifndef LEMONXX_TRACE_OBJECT_HPP
 #define LEMONXX_TRACE_OBJECT_HPP
 #include <lemon/trace/abi.h>
+#include <lemonxx/io/io.hpp>
 #include <lemonxx/sys/sys.hpp>
 #include <lemonxx/function/function.hpp>
 #include <lemonxx/utility/utility.hpp>
