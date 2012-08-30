@@ -62,7 +62,7 @@ namespace lemon{namespace trace{
 		}
 
 		template<typename ConstBuffer>
-		size_t write(ConstBuffer buffer) const
+		size_t write(ConstBuffer buffer)
 		{
 			return write(buffer.Data,buffer.Length);
 		}
@@ -168,6 +168,20 @@ namespace lemon{namespace trace{
 
 		controller(const std::string & url):base_type(Create(url.c_str())) {}
 
+		void open_trace(const LemonUuid * provider, flag_t flag)
+		{
+			scope_error_info errorCode;
+
+			LemonOpenTrace(*this,provider,flag,errorCode);
+		}
+
+		void close_trace(const LemonUuid * provider, flag_t flag)
+		{
+			scope_error_info errorCode;
+
+			LemonCloseTrace(*this,provider,flag,errorCode);
+		}
+
 	private:
 
 		static LemonTraceController Create(const char * URL)
@@ -223,8 +237,15 @@ namespace lemon{namespace trace{
 	public:
 		message_commiter(provider & p,lemon_trace_flag flag) : message(Create(p,flag)),_p(p) {}
 
+		~message_commiter()
+		{
+			commit();
+		}
+
 		void commit()
 		{
+			if(empty()) return;
+
 			scope_error_info errorCode;
 
 			LemonTrace(_p,release(),errorCode);

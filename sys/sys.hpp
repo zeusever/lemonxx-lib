@@ -92,6 +92,84 @@ namespace lemon{namespace io{
 		}
 	};
 
+	struct buffer_reader : public reader
+	{
+		const void	*Data;
+
+		size_t		Length;
+
+		size_t		Offset;
+
+		buffer_reader(const void * data, size_t length)
+			:Data(data)
+			,Length(length) 
+			,Offset(0)
+		{}
+
+		size_t read( byte_t * source,size_t length)
+		{
+			if( Offset + length > Length ) length = Length - Offset;
+
+			memcpy(source,&((const byte_t*)Data)[Offset],length);
+
+			Offset += length;
+
+			return length;
+		}
+
+		size_t read( byte_t * source,size_t length,error_info & errorCode)
+		{
+			LEMON_RESET_ERRORINFO(errorCode);
+
+			if( Offset + length > Length ) length = Length - Offset;
+
+			memcpy(source,&((const byte_t*)Data)[Offset],length);
+
+			Offset += length;
+
+			return length;
+		}
+	};
+
+	struct buffer_writer : public writer
+	{
+		void	*Data;
+
+		size_t		Length;
+
+		size_t		Offset;
+
+		buffer_writer(void * data, size_t length)
+			:Data(data)
+			,Length(length) 
+			,Offset(0)
+		{}
+
+		size_t write(const byte_t * source,size_t length)
+		{
+			if( Offset + length > Length ) length = Length - Offset;
+
+			memcpy(&((byte_t*)Data)[Offset],source,length);
+
+			Offset += length;
+
+			return length;
+		}
+
+		size_t write(const byte_t * source,size_t length,error_info & errorCode)
+		{
+			LEMON_RESET_ERRORINFO(errorCode);
+
+			if( Offset + length > Length ) length = Length - Offset;
+
+			memcpy(&((byte_t*)Data)[Offset],source,length);
+
+			Offset += length;
+
+			return length;
+		}
+	};
+
 }}
 
 #endif // LEMONXX_SYS_HPP
