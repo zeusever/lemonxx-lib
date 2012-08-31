@@ -694,6 +694,24 @@ namespace lemon{
 		lemon_atomic_t _value;
 	};
 
+	class scope_counter : private lemon::nocopyable
+	{
+	public:
+
+		scope_counter(atomic_t & counter) : _counter(counter)
+		{
+			++ _counter;
+		}
+
+		~scope_counter()
+		{
+			-- _counter;
+		}
+
+	private:
+		atomic_t  &_counter;
+	};
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// @class	condition_variable
 	///

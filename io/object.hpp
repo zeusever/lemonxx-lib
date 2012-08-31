@@ -21,6 +21,8 @@ namespace lemon{namespace io{
 
 		typedef basic_handle_object<LemonIO,&LemonCloseIO> base_type;
 
+		object(){}
+
 		object(LemonIO io) : base_type(io) {}
 	};
 

@@ -438,13 +438,13 @@ namespace lemon{namespace net{
 #ifdef LEMON_SUPPORT_IPV6
 			assert(addr->sa_family == AF_INET6 || addr->sa_family == AF_INET);
 
-			if(addr->sa_family == AF_INET6) memcpy(&_buffer,&addr,sizeof(sockaddr_in6));
+			if(addr->sa_family == AF_INET6) memcpy(&_buffer,addr,sizeof(sockaddr_in6));
 
-			else memcpy(&_buffer,&addr,sizeof(sockaddr_in));
+			else memcpy(&_buffer,addr,sizeof(sockaddr_in));
 #else
 			assert(addr->sa_family == AF_INET6 || addr->sa_family == AF_INET);
 
-			memcpy(&_buffer,&addr,sizeof(sockaddr_in));
+			memcpy(&_buffer,addr,sizeof(sockaddr_in));
 
 #endif //LEMON_SUPPORT_IPV6
 
@@ -467,6 +467,10 @@ namespace lemon{namespace net{
 				return sizeof(sockaddr_in6);
 			}
 #endif //LEMON_SUPPORT_IPV6
+			else
+			{
+				return 0;
+			}
 		}
 
 		sockaddr * ptr() 
@@ -520,6 +524,36 @@ namespace lemon{namespace net{
 		void port(uint16_t val)
 		{
 			_buffer.v4.sin_port = val;
+		}
+
+		bool operator == (const endpoint & rhs)
+		{
+			return length() == rhs.length() && memcmp(&_buffer,&rhs._buffer,length()) == 0;
+		}
+
+		bool operator != (const endpoint & rhs)
+		{
+			return !(*this == rhs);
+		}
+
+		bool operator < (const endpoint & rhs)
+		{
+			return length() < rhs.length() || ( length() == rhs.length() && memcmp(&_buffer,&rhs._buffer,length()) < 0);
+		}
+
+		bool operator <= (const endpoint & rhs)
+		{
+			return length() <= rhs.length() || ( length() == rhs.length() && memcmp(&_buffer,&rhs._buffer,length()) <= 0);
+		}
+
+		bool operator > (const endpoint & rhs)
+		{
+			return length() > rhs.length() || ( length() == rhs.length() && memcmp(&_buffer,&rhs._buffer,length()) > 0);
+		}
+
+		bool operator >= (const endpoint & rhs)
+		{
+			return length() >= rhs.length() || ( length() == rhs.length() && memcmp(&_buffer,&rhs._buffer,length()) >= 0);
 		}
 
 	private:
