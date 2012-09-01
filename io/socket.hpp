@@ -21,6 +21,8 @@ namespace lemon{namespace io{
 
 		basic_socket(){}
 
+		basic_socket(LemonIO handle):object(handle){}
+
 		basic_socket(const endpoint & ep,io_service & service)
 		{
 			open(ep.af(),service);

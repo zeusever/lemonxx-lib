@@ -17,7 +17,7 @@ namespace lemon{namespace io{
 
 	typedef lemon::function<void(size_t numberOfBytesTransferred , const LemonErrorInfo & errorCode)> Callback;
 
-	inline void CallbackWrapper( void * userdata , size_t numberOfBytesTransferred , const LemonErrorInfo *errorCode )
+	inline void IOCallback( void * userdata , size_t numberOfBytesTransferred , const LemonErrorInfo *errorCode )
 	{
 		Callback cb((Callback::wrapper_type)userdata);
 
@@ -73,7 +73,7 @@ namespace lemon{namespace io{
 
 			error_info errorCode;
 
-			LemonIOServicePostJob(*this,&CallbackWrapper,data,errorCode);
+			LemonIOServicePostJob(*this,&IOCallback,data,errorCode);
 
 			if(errorCode.fail())
 			{

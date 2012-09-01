@@ -18,6 +18,10 @@ namespace lemon{namespace io{namespace tcp{
 
 		typedef basic_socket<SOCK_STREAM,IPPROTO_TCP,net::endpoint> base_type;
 
+		basic_stream_socket(){}
+
+		basic_stream_socket(LemonIO handle) :base_type(handle){}
+
 		basic_stream_socket(int af,io_service & device) :base_type(af,device){}
 
 		basic_stream_socket(const net::endpoint & ep,io_service & device) :base_type(ep,device){}
@@ -79,10 +83,10 @@ namespace lemon{namespace io{namespace tcp{
 			async_receive(buffer.Data,buffer.Length,flags,handle);
 		}
 
-		template<typename MutableBuffer>
-		void async_receive(MutableBuffer buffer)
+		template<typename MutableBuffer,typename Handle>
+		void async_receive(MutableBuffer buffer,Handle handle)
 		{
-			async_receive(buffer.Data,buffer.Length);
+			async_receive(buffer.Data,buffer.Length,handle);
 		}
 
 		template<typename MutableBuffer,typename Handle>
@@ -121,7 +125,7 @@ namespace lemon{namespace io{namespace tcp{
 
 			Callback::wrapper_type data = cb.release();
 
-			LemonAsyncRecv(*this,buffer,bufferSize,flags,&CallbackWrapper,data,errorCode);
+			LemonAsyncRecv(*this,buffer,bufferSize,flags,&IOCallback,data,errorCode);
 
 			if(LEMON_FAILED(errorCode)) cb = data;
 
@@ -184,10 +188,10 @@ namespace lemon{namespace io{namespace tcp{
 			async_send(buffer.Data,buffer.Length,flags,handle);
 		}
 
-		template<typename ConstBuffer>
-		void async_send(ConstBuffer buffer)
+		template<typename ConstBuffer,typename Handle>
+		void async_send(ConstBuffer buffer,Handle handle)
 		{
-			async_send(buffer.Data,buffer.Length);
+			async_send(buffer.Data,buffer.Length,handle);
 		}
 
 		template<typename ConstBuffer,typename Handle>
@@ -226,7 +230,7 @@ namespace lemon{namespace io{namespace tcp{
 
 			Callback::wrapper_type data = cb.release();
 
-			LemonAsyncSend(*this,buffer,bufferSize,flags,&CallbackWrapper,data,errorCode);
+			LemonAsyncSend(*this,buffer,bufferSize,flags,&IOCallback,data,errorCode);
 
 			if(LEMON_FAILED(errorCode)) cb = data;
 
@@ -240,12 +244,27 @@ namespace lemon{namespace io{namespace tcp{
 
 		typedef basic_stream_socket base_type;
 
+		connection(){}
+
+		connection(LemonIO sock):base_type(sock) {}
+
 		connection(int af,io_service & device) :base_type(af,device){}
 
 		connection(const net::endpoint & ep,io_service & device) :base_type(ep,device){}
 	};
 
 	//////////////////////////////////////////////////////////////////////////
+
+
+	typedef lemon::function<void(connection::wrapper_type io, size_t numberOfBytesTransferred , const LemonErrorInfo & errorCode)> AcceptCallback;
+
+	inline void IOAcceptCallback( void * userdata , LemonIO io ,size_t numberOfBytesTransferred , const LemonErrorInfo *errorCode )
+	{
+		AcceptCallback cb((AcceptCallback::wrapper_type)userdata);
+
+		cb(io,numberOfBytesTransferred,*errorCode);
+	}
+
 
 	class server : public basic_socket<SOCK_STREAM,IPPROTO_TCP,net::endpoint>
 	{
@@ -256,6 +275,47 @@ namespace lemon{namespace io{namespace tcp{
 		server(int af,io_service & device) :base_type(af,device){}
 
 		server(const net::endpoint & ep,io_service & device) :base_type(ep,device){}
+
+		void listen(int backlog)
+		{
+			scope_error_info errorCode;
+
+			LemonListen(*this,backlog,&errorCode);
+		}
+
+		connection::wrapper_type accept(net::endpoint & remote)
+		{
+			scope_error_info errorCode;
+
+			socklen_t length = (socklen_t)remote.capacity();
+
+			LemonIO io = LemonAccept(*this,remote.ptr(),&length,errorCode);
+
+			assert(length == remote.length());
+
+			return io;
+		}
+
+		template<typename Handle>
+		void async_accept(net::endpoint & remote,Handle handle)
+		{
+			AcceptCallback cb(handle);
+
+			error_info errorCode;
+
+			AcceptCallback::wrapper_type data = cb.release();
+
+			socklen_t length = (socklen_t)remote.capacity();
+
+			LemonAsyncAccept(*this,remote.ptr(),&length,&IOAcceptCallback,data,&errorCode);
+
+			if(LEMON_FAILED(errorCode))
+			{
+				cb = data;
+				
+				errorCode.check_throw();
+			}
+		}
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -265,6 +325,8 @@ namespace lemon{namespace io{namespace tcp{
 	public:
 
 		typedef basic_stream_socket base_type;
+
+		client(){}
 
 		client(int af,io_service & device) :base_type(af,device){}
 
@@ -301,7 +363,7 @@ namespace lemon{namespace io{namespace tcp{
 
 			Callback::wrapper_type data = cb.release();
 
-			LemonAsyncConnect(*this,remote.ptr(),(socklen_t)remote.length(),&CallbackWrapper,data,errorCode);
+			LemonAsyncConnect(*this,remote.ptr(),(socklen_t)remote.length(),&IOCallback,data,errorCode);
 
 			if(LEMON_FAILED(errorCode)) cb = data;
 		}
