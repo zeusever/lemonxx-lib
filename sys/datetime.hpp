@@ -57,6 +57,8 @@ namespace lemon{
 			time_t tmp(rhs);
 
 			tmp.swap(*this);
+
+			return *this;
 		}
 
 		time_duration operator - (const lemon::time_t & rhs) const
@@ -239,3 +241,4 @@ namespace lemon{
 	};
 }
 #endif //LEMON_CXX_SYS_DATETIME_HPP
+

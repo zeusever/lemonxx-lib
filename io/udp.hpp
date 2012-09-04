@@ -32,44 +32,44 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		template<typename ConstBuffer>
 		size_t sendto(ConstBuffer buffer, const net::endpoint & remote)
 		{
-			sendto(buffer.Data,buffer.Length,remote);
+			return sendto(buffer.Data,buffer.Length,remote);
 		}
 
 		size_t sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote)
 		{
 			scope_error_info errorCode;
 
-			sendto(buffer,bufferSize,0,remote,errorCode);
+			return sendto(buffer,bufferSize,0,remote,errorCode);
 		}
 
 		template<typename ConstBuffer>
 		size_t sendto(ConstBuffer buffer, int flags , const net::endpoint & remote)
 		{
-			sendto(buffer.Data,buffer.Length,flags,remote);
+			return sendto(buffer.Data,buffer.Length,flags,remote);
 		}
 
 		size_t sendto(const byte_t * buffer, size_t bufferSize, int flags, const net::endpoint & remote)
 		{
 			scope_error_info errorCode;
 
-			sendto(buffer,bufferSize,flags,remote,errorCode);
+			return sendto(buffer,bufferSize,flags,remote,errorCode);
 		}
 
 		template<typename ConstBuffer>
 		size_t sendto(ConstBuffer buffer, const net::endpoint & remote,error_info & errorCode)
 		{
-			sendto(buffer.Data,buffer.Length,remote,errorCode);
+			return sendto(buffer.Data,buffer.Length,remote,errorCode);
 		}
 
 		size_t sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote,error_info & errorCode)
 		{
-			sendto(buffer,bufferSize,0,remote,errorCode);
+			return sendto(buffer,bufferSize,0,remote,errorCode);
 		}
 
 		template<typename ConstBuffer>
 		size_t sendto(ConstBuffer buffer, int flags , const net::endpoint & remote,error_info & errorCode)
 		{
-			sendto(buffer.Data,buffer.Length,flags,remote,errorCode);
+			return sendto(buffer.Data,buffer.Length,flags,remote,errorCode);
 		}
 
 		size_t sendto(const byte_t * buffer, size_t bufferSize, int flags, const net::endpoint & remote,error_info & errorCode)
@@ -82,44 +82,44 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		template<typename ConstBuffer, typename Handle>
 		void async_sendto(ConstBuffer buffer, const net::endpoint & remote, Handle handle)
 		{
-			sendto(buffer.Data,buffer.Length,remote,handle);
+			return sendto(buffer.Data,buffer.Length,remote,handle);
 		}
 		template<typename Handle>
 		void async_sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote, Handle handle)
 		{
 			scope_error_info errorCode;
 
-			sendto(buffer,bufferSize,0,remote,handle,errorCode);
+			return sendto(buffer,bufferSize,0,remote,handle,errorCode);
 		}
 
 		template<typename ConstBuffer, typename Handle>
 		void async_sendto(ConstBuffer buffer, int flags , const net::endpoint & remote, Handle handle)
 		{
-			sendto(buffer.Data,buffer.Length,flags,remote,handle);
+			return sendto(buffer.Data,buffer.Length,flags,remote,handle);
 		}
 		template<typename Handle>
 		void async_sendto(const byte_t * buffer, size_t bufferSize, int flags, const net::endpoint & remote, Handle handle)
 		{
 			scope_error_info errorCode;
 
-			sendto(buffer,bufferSize,flags,remote,handle,errorCode);
+			return sendto(buffer,bufferSize,flags,remote,handle,errorCode);
 		}
 
 		template<typename ConstBuffer, typename Handle>
 		void async_sendto(ConstBuffer buffer, const net::endpoint & remote, Handle handle,error_info & errorCode)
 		{
-			sendto(buffer.Data,buffer.Length,remote,handle,errorCode);
+			return sendto(buffer.Data,buffer.Length,remote,handle,errorCode);
 		}
 		template<typename Handle>
 		void async_sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote, Handle handle,error_info & errorCode)
 		{
-			sendto(buffer,bufferSize,0,remote,handle,errorCode);
+			return sendto(buffer,bufferSize,0,remote,handle,errorCode);
 		}
 
 		template<typename ConstBuffer, typename Handle>
 		void async_sendto(ConstBuffer buffer, int flags , const net::endpoint & remote, Handle handle,error_info & errorCode)
 		{
-			sendto(buffer.Data,buffer.Length,flags,remote,handle,errorCode);
+			return sendto(buffer.Data,buffer.Length,flags,remote,handle,errorCode);
 		}
 		template<typename Handle>
 		void async_sendto(const byte_t * buffer, size_t bufferSize, int flags, const net::endpoint & remote, Handle handle,error_info & errorCode)
@@ -141,44 +141,44 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		template<typename MutableBuffer>
 		size_t recvfrom(MutableBuffer buffer, net::endpoint & remote)
 		{
-			recvfrom(buffer.Data,buffer.Length,remote);
+			return recvfrom(buffer.Data,buffer.Length,remote);
 		}
 
 		size_t recvfrom(byte_t * buffer, size_t bufferSize, net::endpoint & remote)
 		{
 			scope_error_info errorCode;
 
-			recvfrom(buffer,bufferSize,0,remote,errorCode);
+			return recvfrom(buffer,bufferSize,0,remote,errorCode);
 		}
 
 		template<typename MutableBuffer>
 		size_t recvfrom(MutableBuffer buffer, int flags , net::endpoint & remote)
 		{
-			recvfrom(buffer.Data,buffer.Length,flags,remote);
+			return recvfrom(buffer.Data,buffer.Length,flags,remote);
 		}
 
 		size_t recvfrom(byte_t * buffer, size_t bufferSize, int flags, net::endpoint & remote)
 		{
 			scope_error_info errorCode;
 
-			recvfrom(buffer,bufferSize,flags,remote,errorCode);
+			return recvfrom(buffer,bufferSize,flags,remote,errorCode);
 		}
 
 		template<typename MutableBuffer>
 		size_t recvfrom(MutableBuffer buffer, net::endpoint & remote,error_info & errorCode)
 		{
-			recvfrom(buffer.Data,buffer.Length,remote,errorCode);
+			return recvfrom(buffer.Data,buffer.Length,remote,errorCode);
 		}
 
 		size_t recvfrom(byte_t * buffer, size_t bufferSize, net::endpoint & remote,error_info & errorCode)
 		{
-			recvfrom(buffer,bufferSize,0,remote,errorCode);
+			return recvfrom(buffer,bufferSize,0,remote,errorCode);
 		}
 
 		template<typename MutableBuffer>
 		size_t recvfrom(MutableBuffer buffer, int flags , net::endpoint & remote,error_info & errorCode)
 		{
-			recvfrom(buffer.Data,buffer.Length,flags,remote,errorCode);
+			return recvfrom(buffer.Data,buffer.Length,flags,remote,errorCode);
 		}
 
 		size_t recvfrom(byte_t * buffer, size_t bufferSize, int flags, net::endpoint & remote,error_info & errorCode)
@@ -193,44 +193,44 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		template<typename MutableBuffer, typename Handle>
 		void async_recvfrom(MutableBuffer buffer, net::endpoint & remote, Handle handle)
 		{
-			recvfrom(buffer.Data,buffer.Length,remote,handle);
+			async_recvfrom(buffer.Data,buffer.Length,remote,handle);
 		}
 		template<typename Handle>
 		void async_recvfrom(byte_t * buffer, size_t bufferSize, net::endpoint & remote, Handle handle)
 		{
 			scope_error_info errorCode;
 
-			recvfrom(buffer,bufferSize,0,remote,handle,errorCode);
+			async_recvfrom(buffer,bufferSize,0,remote,handle,errorCode);
 		}
 
 		template<typename MutableBuffer, typename Handle>
 		void async_recvfrom(MutableBuffer buffer, int flags , net::endpoint & remote, Handle handle)
 		{
-			recvfrom(buffer.Data,buffer.Length,flags,remote,handle);
+			async_recvfrom(buffer.Data,buffer.Length,flags,remote,handle);
 		}
 		template<typename Handle>
 		void async_recvfrom(byte_t * buffer, size_t bufferSize, int flags, net::endpoint & remote, Handle handle)
 		{
 			scope_error_info errorCode;
 
-			recvfrom(buffer,bufferSize,flags,remote,handle,errorCode);
+			async_recvfrom(buffer,bufferSize,flags,remote,handle,errorCode);
 		}
 
 		template<typename MutableBuffer, typename Handle>
 		void async_recvfrom(MutableBuffer buffer, net::endpoint & remote, Handle handle,error_info & errorCode)
 		{
-			recvfrom(buffer.Data,buffer.Length,remote,handle,errorCode);
+			async_recvfrom(buffer.Data,buffer.Length,remote,handle,errorCode);
 		}
 		template<typename Handle>
 		void async_recvfrom(byte_t * buffer, size_t bufferSize, net::endpoint & remote, Handle handle,error_info & errorCode)
 		{
-			recvfrom(buffer,bufferSize,0,remote,handle,errorCode);
+			async_recvfrom(buffer,bufferSize,0,remote,handle,errorCode);
 		}
 
 		template<typename MutableBuffer, typename Handle>
 		void async_recvfrom(MutableBuffer buffer, int flags , net::endpoint & remote, Handle handle,error_info & errorCode)
 		{
-			recvfrom(buffer.Data,buffer.Length,flags,remote,handle,errorCode);
+			async_recvfrom(buffer.Data,buffer.Length,flags,remote,handle,errorCode);
 		}
 		template<typename Handle>
 		void async_recvfrom(byte_t * buffer, size_t bufferSize, int flags, net::endpoint & remote, Handle handle,error_info & errorCode)

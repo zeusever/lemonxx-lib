@@ -105,7 +105,7 @@ namespace lemon{namespace luabind{
 		{
 			lua_checkstack(L,1);
 
-			lua_pushlstring(L,val,N);
+			lua_pushlstring(L,(const char*)val,N);
 		}
 	};
 

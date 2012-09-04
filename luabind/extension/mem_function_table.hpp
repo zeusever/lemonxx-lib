@@ -16,6 +16,8 @@ namespace lemon{namespace luabind{
 		mem_handle(const char * name):Name(name) {}
 
 		virtual int call(lua_State * L) = 0;
+
+		virtual ~mem_handle(){}
 	};
 
 	inline int __call_object_function(lua_State * L)

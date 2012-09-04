@@ -131,6 +131,8 @@ namespace lemon{namespace unittest{namespace cxx{
 
 		TestSuite(const char * name):_name(name){}
 
+		virtual ~TestSuite(){}
+
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// @fn	void AddTestCase(TestCase * testCase)
 		///

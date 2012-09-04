@@ -842,8 +842,7 @@ namespace lemon{
 		is_scalar<T>::value||
 		is_void<T>::value||
 		is_scalar<T>::value||
-		LEMON_HAS_TRIVIAL_CONSTRUCTOR(T) && 
-		LEMON_IS_POD(T)
+		(LEMON_HAS_TRIVIAL_CONSTRUCTOR(T) && LEMON_IS_POD(T))
 		>
 	{
 

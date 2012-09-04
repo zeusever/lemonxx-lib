@@ -319,7 +319,7 @@ namespace lemon{namespace net{
 			{
 				return lemon::net::tostring(_buffer.v6);
 			}
-#endif LEMON_SUPPORT_IPV6
+#endif //LEMON_SUPPORT_IPV6
 			else
 			{
 				assert(false && "invalid address");
