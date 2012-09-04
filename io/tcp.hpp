@@ -4,284 +4,372 @@
 * @brief    Copyright (C) 2012  yayanyang All Rights Reserved 
 * @author   yayanyang
 * @version  1.0.0.0  
-* @date     2012/02/19
+* @date     2012/08/31
 */
 #ifndef LEMONXX_IO_TCP_HPP
 #define LEMONXX_IO_TCP_HPP
+#include <lemonxx/io/socket.hpp>
 
-#include <lemonxx/io/endpoint.hpp>
-#include <lemonxx/io/basic_socket.hpp>
-#include <lemonxx/io/io_device.hpp>
-#include <lemonxx/utility/tuple.hpp>
-#include <lemonxx/utility/buffer.hpp>
-namespace lemon{namespace io{namespace ip{
+namespace lemon{namespace io{namespace tcp{
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// @class	basic_stream_socket
-	///
-	/// @brief	Basic stream socket. 
-	///
-	/// @author	Yuki
-	/// @date	2012/2/19
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	class basic_stream_socket : public basic_socket<SOCK_STREAM,IPPROTO_TCP,endpoint>
+	class basic_stream_socket : public basic_socket<SOCK_STREAM,IPPROTO_TCP,net::endpoint>
 	{
 	public:
 
-		typedef basic_socket<SOCK_STREAM,IPPROTO_TCP,endpoint> base_type;
+		typedef basic_socket<SOCK_STREAM,IPPROTO_TCP,net::endpoint> base_type;
 
-		basic_stream_socket(LemonSocket handle) :base_type(handle){}
+		basic_stream_socket(){}
 
-		basic_stream_socket(int af) :base_type(af){}
+		basic_stream_socket(LemonIO handle) :base_type(handle){}
 
-		basic_stream_socket(const endpoint & ep):base_type(ep){}
+		basic_stream_socket(int af,io_service & device) :base_type(af,device){}
 
-		basic_stream_socket(int af,io_device & device) :base_type(af,device){}
-
-		basic_stream_socket(const endpoint & ep,io_device & device) :base_type(ep,device){}
+		basic_stream_socket(const net::endpoint & ep,io_service & device) :base_type(ep,device){}
 
 	public:
 
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		/// @class	flags
-		///
-		/// @brief	Flags. 
-		///
-		/// @author	Yuki
-		/// @date	2012/2/20
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		template<class ConstBuffer>
-		size_t send(ConstBuffer buffer,int flags)
-		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
-
-			size_t length = LemonSend(*this,buffer.Data,buffer.Length,flags,&errorCode);
-
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-
-			return length;
-		}
-
-		template<class ConstBuffer>
-		size_t send(ConstBuffer buffer)
-		{
-			return send(buffer,0);
-		}
-
-		template<class ConstBuffer,typename Handle>
-		void async_send(ConstBuffer buffer,int flags,Handle handle)
-		{
-			AsyncIoCallback cb(handle);
-
-			LEMON_DECLARE_ERRORINFO(errorCode);
-
-			LemonAsyncSend(*this,buffer.Data,buffer.Length,flags,&IoCallback,cb.release(),&errorCode);
-
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-		}
-
-		template<class ConstBuffer,typename Handle>
-		void async_send(ConstBuffer buffer,Handle handle)
-		{
-			async_send(buffer,0,handle);
-		}
-
-		template<class MutableBuffer>
+		template<typename MutableBuffer>
 		size_t receive(MutableBuffer buffer,int flags)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
-
-			size_t length = LemonReceive(*this,buffer.Data,buffer.Length,flags,&errorCode);
-
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-
-			return length;
+			return receive(buffer.Data,buffer.Length,flags);
 		}
 
-		template<class MutableBuffer>
+		template<typename MutableBuffer>
 		size_t receive(MutableBuffer buffer)
 		{
-			return receive(buffer,0);
+			return receive(buffer.Data,buffer.Length);
 		}
 
-		template<class MutableBuffer,typename Handle>
+		template<typename MutableBuffer>
+		size_t receive(MutableBuffer buffer,int flags,error_info & errorCode)
+		{
+			return receive(buffer.Data,buffer.Length,flags,errorCode);
+		}
+
+		template<typename MutableBuffer>
+		size_t receive(MutableBuffer buffer,error_info & errorCode)
+		{
+			return receive(buffer.Data,buffer.Length,errorCode);
+		}
+
+		size_t receive(byte_t * buffer, size_t bufferSize)
+		{
+			return receive(buffer,bufferSize,0);
+		}
+
+		size_t receive(byte_t * buffer, size_t bufferSize,error_info & errorCode)
+		{
+			return receive(buffer,bufferSize,0,errorCode);
+		}
+
+		size_t receive(byte_t * buffer, size_t bufferSize,int flags)
+		{
+			scope_error_info errorCode;
+
+			return receive(buffer,bufferSize,flags,errorCode);
+
+		}
+
+		size_t receive(byte_t * buffer, size_t bufferSize,int flags,error_info & errorCode)
+		{
+			return LemonRecv(*this,buffer,bufferSize,flags,errorCode);
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+
+		template<typename MutableBuffer,typename Handle>
 		void async_receive(MutableBuffer buffer,int flags,Handle handle)
 		{
-			AsyncIoCallback cb(handle);
-
-			LEMON_DECLARE_ERRORINFO(errorCode);
-
-			LemonAsyncReceive(*this,buffer.Data,buffer.Length,flags,&IoCallback,cb.release(),&errorCode);
-
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			async_receive(buffer.Data,buffer.Length,flags,handle);
 		}
-		
-		template<class MutableBuffer,typename Handle>
+
+		template<typename MutableBuffer,typename Handle>
 		void async_receive(MutableBuffer buffer,Handle handle)
 		{
-			async_receive(buffer,0,handle);
+			async_receive(buffer.Data,buffer.Length,handle);
+		}
+
+		template<typename MutableBuffer,typename Handle>
+		void async_receive(MutableBuffer buffer,int flags,Handle handle,error_info & errorCode)
+		{
+			async_receive(buffer.Data,buffer.Length,flags,handle,errorCode);
+		}
+
+		template<typename MutableBuffer,typename Handle>
+		void async_receive(MutableBuffer buffer,Handle handle,error_info & errorCode)
+		{
+			async_receive(buffer.Data,buffer.Length,handle,errorCode);
+		}
+		template<typename Handle>
+		void async_receive(byte_t * buffer, size_t bufferSize,Handle handle)
+		{
+			async_receive(buffer,bufferSize,0,handle);
+		}
+		template<typename Handle>
+		void async_receive(byte_t * buffer, size_t bufferSize,Handle handle,error_info & errorCode)
+		{
+			async_receive(buffer,bufferSize,0,handle,errorCode);
+		}
+		template<typename Handle>
+		void async_receive(byte_t * buffer, size_t bufferSize,int flags,Handle handle)
+		{
+			scope_error_info errorCode;
+
+			async_receive(buffer,bufferSize,flags,handle,errorCode);
+
+		}
+		template<typename Handle>
+		void async_receive(byte_t * buffer, size_t bufferSize,int flags,Handle handle,error_info & errorCode)
+		{
+			Callback cb(handle);
+
+			Callback::wrapper_type data = cb.release();
+
+			LemonAsyncRecv(*this,buffer,bufferSize,flags,&IOCallback,data,errorCode);
+
+			if(LEMON_FAILED(errorCode)) cb = data;
+
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+
+		template<typename ConstBuffer>
+		size_t send(ConstBuffer buffer,int flags)
+		{
+			return send(buffer.Data,buffer.Length,flags);
+		}
+
+		template<typename ConstBuffer>
+		size_t send(ConstBuffer buffer)
+		{
+			return send(buffer.Data,buffer.Length);
+		}
+
+		template<typename ConstBuffer>
+		size_t send(ConstBuffer buffer,int flags,error_info & errorCode)
+		{
+			return send(buffer.Data,buffer.Length,flags,errorCode);
+		}
+
+		template<typename ConstBuffer>
+		size_t send(ConstBuffer buffer,error_info & errorCode)
+		{
+			return send(buffer.Data,buffer.Length,errorCode);
+		}
+
+		size_t send(const byte_t * buffer, size_t bufferSize)
+		{
+			return send(buffer,bufferSize,0);
+		}
+
+		size_t send(const byte_t * buffer, size_t bufferSize,error_info & errorCode)
+		{
+			return send(buffer,bufferSize,0,errorCode);
+		}
+
+		size_t send(const byte_t * buffer, size_t bufferSize,int flags)
+		{
+			scope_error_info errorCode;
+
+			return send(buffer,bufferSize,flags,errorCode);
+
+		}
+
+		size_t send(const byte_t * buffer, size_t bufferSize,int flags,error_info & errorCode)
+		{
+			return LemonSend(*this,buffer,bufferSize,flags,errorCode);
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+
+		template<typename ConstBuffer,typename Handle>
+		void async_send(ConstBuffer buffer,int flags,Handle handle)
+		{
+			async_send(buffer.Data,buffer.Length,flags,handle);
+		}
+
+		template<typename ConstBuffer,typename Handle>
+		void async_send(ConstBuffer buffer,Handle handle)
+		{
+			async_send(buffer.Data,buffer.Length,handle);
+		}
+
+		template<typename ConstBuffer,typename Handle>
+		void async_send(ConstBuffer buffer,int flags,Handle handle,error_info & errorCode)
+		{
+			async_send(buffer.Data,buffer.Length,flags,handle,errorCode);
+		}
+
+		template<typename ConstBuffer,typename Handle>
+		void async_send(ConstBuffer buffer,Handle handle,error_info & errorCode)
+		{
+			async_send(buffer.Data,buffer.Length,handle,errorCode);
+		}
+		template<typename Handle>
+		void async_send(const byte_t * buffer, size_t bufferSize,Handle handle)
+		{
+			async_send(buffer,bufferSize,0,handle);
+		}
+		template<typename Handle>
+		void async_send(const byte_t * buffer, size_t bufferSize,Handle handle,error_info & errorCode)
+		{
+			async_send(buffer,bufferSize,0,handle,errorCode);
+		}
+		template<typename Handle>
+		void async_send(const byte_t * buffer, size_t bufferSize,int flags,Handle handle)
+		{
+			scope_error_info errorCode;
+
+			async_send(buffer,bufferSize,flags,handle,errorCode);
+
+		}
+		template<typename Handle>
+		void async_send(const byte_t * buffer, size_t bufferSize,int flags,Handle handle,error_info & errorCode)
+		{
+			Callback cb(handle);
+
+			Callback::wrapper_type data = cb.release();
+
+			LemonAsyncSend(*this,buffer,bufferSize,flags,&IOCallback,data,errorCode);
+
+			if(LEMON_FAILED(errorCode)) cb = data;
+
 		}
 	};
 
-	namespace tcp{
 
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		/// @class	connection
-		///
-		/// @brief	Connection. 
-		///
-		/// @author	Yuki
-		/// @date	2012/2/19
-		////////////////////////////////////////////////////////////////////////////////////////////////////
+	class connection : public basic_stream_socket
+	{
+	public:
 
-		class connection : public basic_stream_socket
-		{
-		public:
+		typedef basic_stream_socket base_type;
 
-			typedef basic_stream_socket base_type;
+		connection(){}
 
-			connection(LemonSocket handle) : base_type(handle){}
+		connection(LemonIO sock):base_type(sock) {}
 
-			connection(int af) :base_type(af){}
+		connection(int af,io_service & device) :base_type(af,device){}
 
-			connection(const endpoint & ep):base_type(ep){}
+		connection(const net::endpoint & ep,io_service & device) :base_type(ep,device){}
+	};
 
-			connection(int af,io_device & device) :base_type(af,device){}
+	//////////////////////////////////////////////////////////////////////////
 
-			connection(const endpoint & ep,io_device & device) :base_type(ep,device){}
-		};
 
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		/// @class	server
-		///
-		/// @brief	Server. 
-		///
-		/// @author	Yuki
-		/// @date	2012/2/19
-		////////////////////////////////////////////////////////////////////////////////////////////////////
+	typedef lemon::function<void(connection::wrapper_type io, size_t numberOfBytesTransferred , const LemonErrorInfo & errorCode)> AcceptCallback;
 
-		class server : public basic_stream_socket
-		{
-		public:
+	inline void IOAcceptCallback( void * userdata , LemonIO io ,size_t numberOfBytesTransferred , const LemonErrorInfo *errorCode )
+	{
+		AcceptCallback cb((AcceptCallback::wrapper_type)userdata);
 
-			typedef basic_stream_socket base_type;
-
-			server(int af) :base_type(af){}
-
-			server(const endpoint & ep):base_type(ep){}
-
-			server(int af,io_device & device) :base_type(af,device){}
-
-			server(const endpoint & ep,io_device & device) :base_type(ep,device){}
-
-		public:
-
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			/// @fn	void listen(int backlog)
-			///
-			/// @brief	Listens. 
-			///
-			/// @author	Yuki
-			/// @date	2012/2/19
-			///
-			/// @param	backlog	The backlog. 
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-
-			void listen(int backlog)
-			{
-				LEMON_DECLARE_ERRORINFO(errorCode);
-
-				LemonListen(*this,backlog,&errorCode);
-
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-			}
-
-			tuple<connection::handle_type,endpoint> accept()
-			{
-				byte_t buffer[128];
-
-				socklen_t length = (socklen_t)sizeof(buffer);
-
-				LEMON_DECLARE_ERRORINFO(errorCode);
-
-				connection::handle_type handle = LemonAccept(*this,(sockaddr*)buffer,&length,&errorCode);
-
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-
-				return tuple<connection::handle_type,endpoint>(handle,endpoint((sockaddr*)buffer));
-			}
-
-			template<typename Handle>
-			void async_accept(connection & conn,endpoint & ep,Handle handle)
-			{
-				AsyncIoCallback cb(handle);
-
-				LEMON_DECLARE_ERRORINFO(errorCode);
-
-				AsyncIoCallback::wrapper_type data = cb.release();
-
-				LemonAsyncAccept(*this,conn,ep.ptr(),&ep.buffersize(),&IoCallback,data,&errorCode);
-
-				if(LEMON_FAILED(errorCode))
-				{
-					cb = data;
-
-					throw Exception(errorCode);
-				}
-			}
-		};
-
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		/// @class	client
-		///
-		/// @brief	Client. 
-		///
-		/// @author	Yuki
-		/// @date	2012/2/19
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		class client : public basic_stream_socket
-		{
-		public:
-
-			typedef basic_stream_socket base_type;
-
-			client(int af) :base_type(af){}
-
-			client(const endpoint & ep):base_type(ep){}
-
-			client(int af,io_device & device) :base_type(af,device){}
-
-			client(const endpoint & ep,io_device & device) :base_type(ep,device){}
-
-		public:
-
-			void connect(const endpoint & ep)
-			{
-				LEMON_DECLARE_ERRORINFO(errorCode);
-
-				LemonConnect(*this,ep.ptr(),(socklen_t)ep.length(),&errorCode);
-
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-			}
-
-			template<typename Handle>
-			void async_connect(const endpoint & ep,Handle handle)
-			{
-				AsyncIoCallback cb(handle);
-
-				LEMON_DECLARE_ERRORINFO(errorCode);
-
-				LemonAsyncConnect(*this,ep.ptr(),(socklen_t)ep.length(),&IoCallback,cb.release(),&errorCode);
-
-				if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-			}
-		};
-
+		cb(io,numberOfBytesTransferred,*errorCode);
 	}
 
+
+	class server : public basic_socket<SOCK_STREAM,IPPROTO_TCP,net::endpoint>
+	{
+	public:
+
+		typedef basic_socket base_type;
+
+		server(int af,io_service & device) :base_type(af,device){}
+
+		server(const net::endpoint & ep,io_service & device) :base_type(ep,device){}
+
+		void listen(int backlog)
+		{
+			scope_error_info errorCode;
+
+			LemonListen(*this,backlog,&errorCode);
+		}
+
+		connection::wrapper_type accept(net::endpoint & remote)
+		{
+			scope_error_info errorCode;
+
+			socklen_t length = (socklen_t)remote.capacity();
+
+			LemonIO io = LemonAccept(*this,remote.ptr(),&length,errorCode);
+
+			assert(length == remote.length());
+
+			return io;
+		}
+
+		template<typename Handle>
+		void async_accept(net::endpoint & remote,Handle handle)
+		{
+			AcceptCallback cb(handle);
+
+			error_info errorCode;
+
+			AcceptCallback::wrapper_type data = cb.release();
+
+			socklen_t length = (socklen_t)remote.capacity();
+
+			LemonAsyncAccept(*this,remote.ptr(),&length,&IOAcceptCallback,data,&errorCode);
+
+			if(LEMON_FAILED(errorCode))
+			{
+				cb = data;
+				
+				errorCode.check_throw();
+			}
+		}
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+
+	class client : public basic_stream_socket
+	{
+	public:
+
+		typedef basic_stream_socket base_type;
+
+		client(){}
+
+		client(int af,io_service & device) :base_type(af,device){}
+
+		client(const net::endpoint & ep,io_service & device) :base_type(ep,device){}
+
+	public:
+
+		//////////////////////////////////////////////////////////////////////////
+
+		void connect(const net::endpoint &remote)
+		{
+			scope_error_info errorCode;
+
+			connect(remote,errorCode);
+		}
+
+		void connect(const net::endpoint &remote,error_info & errorCode)
+		{
+			LemonConnect(*this,remote.ptr(),(socklen_t)remote.length(),errorCode);
+		}
+
+		template<typename Handle>
+		void async_connect(const net::endpoint &remote,Handle handle)
+		{
+			scope_error_info errorCode;
+
+			async_connect(remote,handle,errorCode);
+		}
+
+		template<typename Handle>
+		void async_connect(const net::endpoint &remote,Handle handle,error_info & errorCode)
+		{
+			Callback cb(handle);
+
+			Callback::wrapper_type data = cb.release();
+
+			LemonAsyncConnect(*this,remote.ptr(),(socklen_t)remote.length(),&IOCallback,data,errorCode);
+
+			if(LEMON_FAILED(errorCode)) cb = data;
+		}
+	};
+
 }}}
+
 
 #endif //LEMONXX_IO_TCP_HPP

@@ -15,100 +15,101 @@
 #include <sstream>
 #include <algorithm>
 
-#include <lemon/sys/filesystem.h>
-#include <lemonxx/utility/utility.hpp>
 #include <lemonxx/sys/text.hpp>
+#include <lemon/sys/filesystem.h>
+#include <lemonxx/sys/errorcode.hpp>
+#include <lemonxx/utility/utility.hpp>
 
 
 namespace lemon{namespace fs{
 	inline String current_directory()
 	{
-		LemonErrorInfo errorCode;
+		error_info errorCode;
 
 		lemon_char_t buffer[LEMON_MAX_PATH];
 
 		LemonGetCurrentDirectory(buffer,LEMON_MAX_PATH,&errorCode);
 
-		if(LEMON_FAILED(errorCode)) throw lemon::Exception(errorCode);
+		errorCode.check_throw();
 
 		return buffer;
 	}
 
 	inline void current_directory(const String& current)
 	{
-		LemonErrorInfo errorCode;
+		error_info errorCode;
 
 		LemonSetCurrentDirectory(current.c_str(),&errorCode);
 
-		if(LEMON_FAILED(errorCode)) throw lemon::Exception(errorCode);
+		errorCode.check_throw();
 	}
 
 	inline void remove_directory(const String& dir)
 	{
-		LemonErrorInfo errorCode;
+		error_info errorCode;
 
 		LemonRemoveDirectory(dir.c_str(),&errorCode);
 
-		if(LEMON_FAILED(errorCode)) throw lemon::Exception(errorCode);
+		errorCode.check_throw();
 
 	}
 
 	inline void create_directory(const String& dir)
 	{
-		LemonErrorInfo errorCode;
+		error_info errorCode;
 
 		LemonCreateDirectory(dir.c_str(),&errorCode);
 
-		if(LEMON_FAILED(errorCode)) throw lemon::Exception(errorCode);
+		errorCode.check_throw();
 	}
 
 	inline bool is_directory(const String & dir)
 	{
-		LemonErrorInfo errorCode;
+		error_info errorCode;
 
 		lemon_bool result = LemonIsDirectory(dir.c_str(),&errorCode);
 
-		if(LEMON_FAILED(errorCode)) throw lemon::Exception(errorCode);
+		errorCode.check_throw();
 
 		return result?true:false;
 	}
 
 	inline bool exists(const String & current)
 	{
-		LemonErrorInfo errorCode;
+		error_info errorCode;
 
 		lemon_bool result = LemonCheckFileExist(current.c_str(),&errorCode);
 
-		if(LEMON_FAILED(errorCode)) throw lemon::Exception(errorCode);
+		errorCode.check_throw();
 
 		return result?true:false;
 	}
 
 	inline void remove_file(const String & file)
 	{
-		LemonErrorInfo errorCode;
+		error_info errorCode;
 
 		LemonDeleteFile(file.c_str(),&errorCode);
 
-		if(!LEMON_SUCCESS(errorCode)) throw lemon::Exception(errorCode);
+		errorCode.check_throw();
 	}
 
 	inline void copy(const String & source,const String & target)
 	{
-		LemonErrorInfo errorCode;
+		error_info errorCode;
 
 		LemonCopyFile(source.c_str(),target.c_str(),&errorCode);
 
-		if(!LEMON_SUCCESS(errorCode)) throw lemon::Exception(errorCode);
+		errorCode.check_throw();
 	}
 
 	inline void move(const String & source,const String & target)
 	{
-		LemonErrorInfo errorCode;
+		error_info errorCode;
 
 		LemonMoveFile(source.c_str(),target.c_str(),&errorCode);
 
-		if(!LEMON_SUCCESS(errorCode)) throw lemon::Exception(errorCode);
+		errorCode.check_throw();
 	}
 
 	class directory_iteartor_t 
@@ -124,11 +125,11 @@ namespace lemon{namespace fs{
 
 		directory_iteartor_t(const String& directory)
 		{
-			LemonErrorInfo errorCode;
+			error_info errorCode;
 
 			_enumerator = LemonCreateDirectoryEnumerator(directory.c_str(),&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 
 			increment();
 		}
@@ -155,11 +156,11 @@ namespace lemon{namespace fs{
 
 		void increment()
 		{
-			LemonErrorInfo errorCode;
+			error_info errorCode;
 
 			const lemon_char_t * next  = LemonDirectoryEnumeratorNextItem(_enumerator,&errorCode);
 
-			if(!LEMON_SUCCESS(errorCode)) throw lemon::Exception(errorCode);
+			errorCode.check_throw();
 
 			if(!next)
 			{

@@ -8,115 +8,242 @@
 */
 #ifndef LEMONXX_IO_UDP_HPP
 #define LEMONXX_IO_UDP_HPP
-#include <lemonxx/io/endpoint.hpp>
-#include <lemonxx/io/io_device.hpp>
-#include <lemonxx/utility/tuple.hpp>
-#include <lemonxx/io/basic_socket.hpp>
+
+#include <lemonxx/io/socket.hpp>
 
 namespace lemon{namespace io{namespace ip{namespace udp{
 
-	class socket : public basic_socket<SOCK_DGRAM,IPPROTO_UDP,endpoint>
+	class socket : public basic_socket<SOCK_DGRAM,IPPROTO_UDP,net::endpoint>
 	{
 	public:
 
-		typedef basic_socket<SOCK_DGRAM,IPPROTO_UDP,endpoint> base_type;
+		typedef basic_socket<SOCK_DGRAM,IPPROTO_UDP,net::endpoint> base_type;
 
 		socket(){}
 
-		socket(LemonSocket handle) :base_type(handle){}
+		socket(LemonIO handle) :base_type(handle){}
 
-		socket(int af) :base_type(af){}
+		socket(int af,io_service & device) :base_type(af,device){}
 
-		socket(const endpoint & ep):base_type(ep){}
-
-		socket(int af,io_device & device) :base_type(af,device){}
-
-		socket(const endpoint & ep,io_device & device) :base_type(ep,device){}
+		socket(const net::endpoint & ep,io_service & device) :base_type(ep,device){}
 
 	public:
 
-		template<class ConstBuffer>
-		size_t sendto(ConstBuffer buffer,int flags,const endpoint & ep)
+		template<typename ConstBuffer>
+		size_t sendto(ConstBuffer buffer, const net::endpoint & remote)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
-
-			size_t length = LemonSendTo(*this,buffer.Data,buffer.Length,flags,ep.ptr(),(socklen_t)ep.length(),&errorCode);
-
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-
-			return length;
+			return sendto(buffer.Data,buffer.Length,remote);
 		}
 
-		template<class ConstBuffer>
-		size_t sendto(ConstBuffer buffer,int flags,const endpoint & ep,LemonErrorInfo & errorCode)
+		size_t sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote)
 		{
-			return LemonSendTo(*this,buffer.Data,buffer.Length,flags,ep.ptr(),(socklen_t)ep.length(),&errorCode);
+			scope_error_info errorCode;
+
+			return sendto(buffer,bufferSize,0,remote,errorCode);
 		}
 
-		template<class ConstBuffer>
-		size_t sendto(ConstBuffer buffer,const endpoint & ep)
+		template<typename ConstBuffer>
+		size_t sendto(ConstBuffer buffer, int flags , const net::endpoint & remote)
 		{
-			return sendto(buffer,0,ep);
+			return sendto(buffer.Data,buffer.Length,flags,remote);
 		}
 
-		template<class ConstBuffer>
-		size_t sendto(ConstBuffer buffer,const endpoint & ep,LemonErrorInfo & errorCode)
+		size_t sendto(const byte_t * buffer, size_t bufferSize, int flags, const net::endpoint & remote)
 		{
-			return sendto(buffer,0,ep,errorCode);
+			scope_error_info errorCode;
+
+			return sendto(buffer,bufferSize,flags,remote,errorCode);
 		}
 
-		template<class ConstBuffer,typename Handle>
-		void async_sendto(ConstBuffer buffer,int flags,const endpoint & ep,Handle handle)
+		template<typename ConstBuffer>
+		size_t sendto(ConstBuffer buffer, const net::endpoint & remote,error_info & errorCode)
 		{
-			AsyncIoCallback cb(handle);
-
-			LEMON_DECLARE_ERRORINFO(errorCode);
-
-			LemonAsyncSendTo(*this,buffer.Data,buffer.Length,flags,ep.ptr(),(socklen_t)ep.length(),&IoCallback,cb.release(),&errorCode);
-
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			return sendto(buffer.Data,buffer.Length,remote,errorCode);
 		}
 
-		template<class ConstBuffer,typename Handle>
-		void async_sendto(ConstBuffer buffer,const endpoint & ep,Handle handle)
+		size_t sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote,error_info & errorCode)
 		{
-			async_sendto(buffer,0,ep,handle);
+			return sendto(buffer,bufferSize,0,remote,errorCode);
 		}
 
-		template<class MutableBuffer>
-		size_t receivefrom(MutableBuffer buffer,endpoint & ep,int flags)
+		template<typename ConstBuffer>
+		size_t sendto(ConstBuffer buffer, int flags , const net::endpoint & remote,error_info & errorCode)
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
-
-			size_t length = LemonReceiveFrom(*this,buffer.Data,buffer.Length,flags,ep.ptr(),&ep.buffersize(),&errorCode);
-
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-
-			return length;
+			return sendto(buffer.Data,buffer.Length,flags,remote,errorCode);
 		}
 
-		template<class MutableBuffer>
-		size_t receivefrom(MutableBuffer buffer,endpoint & ep)
+		size_t sendto(const byte_t * buffer, size_t bufferSize, int flags, const net::endpoint & remote,error_info & errorCode)
 		{
-			return receivefrom(buffer,ep,0);
+			return LemonSendTo(*this,buffer,bufferSize,flags,remote.ptr(),(socklen_t)remote.length(),errorCode);
 		}
 
-		template<class MutableBuffer,typename Handle>
-		void async_receivefrom(MutableBuffer buffer,int flags,endpoint & ep,Handle handle)
+		//////////////////////////////////////////////////////////////////////////
+
+		template<typename ConstBuffer, typename Handle>
+		void async_sendto(ConstBuffer buffer, const net::endpoint & remote, Handle handle)
 		{
-			AsyncIoCallback cb(handle);
+			return sendto(buffer.Data,buffer.Length,remote,handle);
+		}
+		template<typename Handle>
+		void async_sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote, Handle handle)
+		{
+			scope_error_info errorCode;
 
-			LEMON_DECLARE_ERRORINFO(errorCode);
-
-			LemonAsyncReceiveFrom(*this,buffer.Data,buffer.Length,flags,ep.ptr(),&ep.buffersize(),&IoCallback,cb.release(),&errorCode);
-
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			return sendto(buffer,bufferSize,0,remote,handle,errorCode);
 		}
 
-		template<class MutableBuffer,typename Handle>
-		void async_receivefrom(MutableBuffer buffer,endpoint & ep,Handle handle)
+		template<typename ConstBuffer, typename Handle>
+		void async_sendto(ConstBuffer buffer, int flags , const net::endpoint & remote, Handle handle)
 		{
-			async_receivefrom(buffer,0,ep,handle);
+			return sendto(buffer.Data,buffer.Length,flags,remote,handle);
+		}
+		template<typename Handle>
+		void async_sendto(const byte_t * buffer, size_t bufferSize, int flags, const net::endpoint & remote, Handle handle)
+		{
+			scope_error_info errorCode;
+
+			return sendto(buffer,bufferSize,flags,remote,handle,errorCode);
+		}
+
+		template<typename ConstBuffer, typename Handle>
+		void async_sendto(ConstBuffer buffer, const net::endpoint & remote, Handle handle,error_info & errorCode)
+		{
+			return sendto(buffer.Data,buffer.Length,remote,handle,errorCode);
+		}
+		template<typename Handle>
+		void async_sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote, Handle handle,error_info & errorCode)
+		{
+			return sendto(buffer,bufferSize,0,remote,handle,errorCode);
+		}
+
+		template<typename ConstBuffer, typename Handle>
+		void async_sendto(ConstBuffer buffer, int flags , const net::endpoint & remote, Handle handle,error_info & errorCode)
+		{
+			return sendto(buffer.Data,buffer.Length,flags,remote,handle,errorCode);
+		}
+		template<typename Handle>
+		void async_sendto(const byte_t * buffer, size_t bufferSize, int flags, const net::endpoint & remote, Handle handle,error_info & errorCode)
+		{
+			Callback cb(handle);
+
+			Callback::wrapper_type data = cb.release();
+
+			LemonAsyncSendTo(*this,buffer,bufferSize,flags,remote.ptr(),(socklen_t)remote.length(),&IOCallback,data,errorCode);
+
+			if(LEMON_FAILED(errorCode)) cb = data;
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+
+		//////////////////////////////////////////////////////////////////////////
+
+
+		template<typename MutableBuffer>
+		size_t recvfrom(MutableBuffer buffer, net::endpoint & remote)
+		{
+			return recvfrom(buffer.Data,buffer.Length,remote);
+		}
+
+		size_t recvfrom(byte_t * buffer, size_t bufferSize, net::endpoint & remote)
+		{
+			scope_error_info errorCode;
+
+			return recvfrom(buffer,bufferSize,0,remote,errorCode);
+		}
+
+		template<typename MutableBuffer>
+		size_t recvfrom(MutableBuffer buffer, int flags , net::endpoint & remote)
+		{
+			return recvfrom(buffer.Data,buffer.Length,flags,remote);
+		}
+
+		size_t recvfrom(byte_t * buffer, size_t bufferSize, int flags, net::endpoint & remote)
+		{
+			scope_error_info errorCode;
+
+			return recvfrom(buffer,bufferSize,flags,remote,errorCode);
+		}
+
+		template<typename MutableBuffer>
+		size_t recvfrom(MutableBuffer buffer, net::endpoint & remote,error_info & errorCode)
+		{
+			return recvfrom(buffer.Data,buffer.Length,remote,errorCode);
+		}
+
+		size_t recvfrom(byte_t * buffer, size_t bufferSize, net::endpoint & remote,error_info & errorCode)
+		{
+			return recvfrom(buffer,bufferSize,0,remote,errorCode);
+		}
+
+		template<typename MutableBuffer>
+		size_t recvfrom(MutableBuffer buffer, int flags , net::endpoint & remote,error_info & errorCode)
+		{
+			return recvfrom(buffer.Data,buffer.Length,flags,remote,errorCode);
+		}
+
+		size_t recvfrom(byte_t * buffer, size_t bufferSize, int flags, net::endpoint & remote,error_info & errorCode)
+		{
+			socklen_t length = (socklen_t)remote.capacity();
+
+			return LemonReceiveFrom(*this,buffer,bufferSize,flags,remote.ptr(),&length,errorCode);
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+
+		template<typename MutableBuffer, typename Handle>
+		void async_recvfrom(MutableBuffer buffer, net::endpoint & remote, Handle handle)
+		{
+			async_recvfrom(buffer.Data,buffer.Length,remote,handle);
+		}
+		template<typename Handle>
+		void async_recvfrom(byte_t * buffer, size_t bufferSize, net::endpoint & remote, Handle handle)
+		{
+			scope_error_info errorCode;
+
+			async_recvfrom(buffer,bufferSize,0,remote,handle,errorCode);
+		}
+
+		template<typename MutableBuffer, typename Handle>
+		void async_recvfrom(MutableBuffer buffer, int flags , net::endpoint & remote, Handle handle)
+		{
+			async_recvfrom(buffer.Data,buffer.Length,flags,remote,handle);
+		}
+		template<typename Handle>
+		void async_recvfrom(byte_t * buffer, size_t bufferSize, int flags, net::endpoint & remote, Handle handle)
+		{
+			scope_error_info errorCode;
+
+			async_recvfrom(buffer,bufferSize,flags,remote,handle,errorCode);
+		}
+
+		template<typename MutableBuffer, typename Handle>
+		void async_recvfrom(MutableBuffer buffer, net::endpoint & remote, Handle handle,error_info & errorCode)
+		{
+			async_recvfrom(buffer.Data,buffer.Length,remote,handle,errorCode);
+		}
+		template<typename Handle>
+		void async_recvfrom(byte_t * buffer, size_t bufferSize, net::endpoint & remote, Handle handle,error_info & errorCode)
+		{
+			async_recvfrom(buffer,bufferSize,0,remote,handle,errorCode);
+		}
+
+		template<typename MutableBuffer, typename Handle>
+		void async_recvfrom(MutableBuffer buffer, int flags , net::endpoint & remote, Handle handle,error_info & errorCode)
+		{
+			async_recvfrom(buffer.Data,buffer.Length,flags,remote,handle,errorCode);
+		}
+		template<typename Handle>
+		void async_recvfrom(byte_t * buffer, size_t bufferSize, int flags, net::endpoint & remote, Handle handle,error_info & errorCode)
+		{
+			Callback cb(handle);
+
+			Callback::wrapper_type data = cb.release();
+
+			socklen_t length = (socklen_t)remote.capacity();
+
+			LemonAsyncReceiveFrom(*this,buffer,bufferSize,flags,remote.ptr(),&length,&IOCallback,data,errorCode);
+
+			if(LEMON_FAILED(errorCode)) cb = data;
 		}
 	};
 

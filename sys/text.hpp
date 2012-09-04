@@ -12,7 +12,6 @@
 #include <sstream>
 #include <fstream>
 #include <lemon/sys/text.h>
-#include <lemonxx/sys/exception.hpp>
 
 #include <vector>
 
@@ -41,67 +40,6 @@ namespace lemon{
 	typedef std::basic_stringstream<lemon_char_t> StringStream;
 
 	typedef std::basic_fstream<lemon_char_t> FileStream;
-
-	inline std::string to_locale(const String & source)
-	{
-		LEMON_DECLARE_ERRORINFO(errorCode);
-
-		if(source.empty()) return "";
-
-		std::vector<char> buffer(source.length() * 6 + 1);
-
-		LemonToLocale(source.c_str(),source.length() + 1,(lemon::byte_t*)&buffer[0],buffer.size(),&errorCode);
-
-		if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-
-		return &buffer[0];
-	}
-
-	inline String from_locale(const std::string & source)
-	{
-		LEMON_DECLARE_ERRORINFO(errorCode);
-
-		if(source.empty()) return LEMON_TEXT("");
-
-		std::vector<lemon_char_t> buffer(source.length() * 6 + 1);
-
-		LemonFromLocale((const lemon::byte_t*)source.c_str(),source.length() + 1,&buffer[0],buffer.size(),&errorCode);
-
-		if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-
-		return &buffer[0];
-	}
-
-
-	inline std::string to_utf8(const String & source)
-	{
-		LEMON_DECLARE_ERRORINFO(errorCode);
-
-		if(source.empty()) return "";
-
-		std::vector<char> buffer(source.length() * 6 + 1);
-
-		LemonToUTF8(source.c_str(),source.length() + 1,(lemon::byte_t*)&buffer[0],buffer.size(),&errorCode);
-
-		if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-
-		return &buffer[0];
-	}
-
-	inline String from_utf8(const std::string & source)
-	{
-		LEMON_DECLARE_ERRORINFO(errorCode);
-
-		if(source.empty()) return LEMON_TEXT("");
-
-		std::vector<lemon_char_t> buffer(source.length() * 6 + 1);
-
-		LemonFromUTF8((const lemon::byte_t*)source.c_str(),source.length() + 1,&buffer[0],buffer.size(),&errorCode);
-
-		if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
-
-		return &buffer[0];
-	}
 
 	namespace string_algorithm{
 

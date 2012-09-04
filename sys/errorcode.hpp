@@ -10,23 +10,9 @@
 #define LEMONXX_SYS_ERRORCODE_HPP
 #include <sstream>
 #include <lemon/sys/abi.h>
-#include <lemonxx/sys/uuid.hpp>
 #include <lemonxx/sys/text.hpp>
 
 namespace lemon{
-
-	inline std::ostream & operator << (std::ostream & stream,const LemonErrorInfo & errorCode)
-	{
-		 stream << "lemon error info :" << std::endl;
-
-		 stream << "\terror code :" << errorCode.Error.Code << std::endl;
-
-		 stream << "\terror catalog :" << lemon::uuid_t(*errorCode.Error.Catalog).tostring() << std::endl;
-
-		 stream << "\traise file :" << errorCode.File << "(" << errorCode.Lines << ")" <<std::endl;
-
-		 return stream;
-	}
 
 	class error_info : public LemonErrorInfo
 	{
@@ -59,25 +45,22 @@ namespace lemon{
 			}
 		}
 
+		bool fail() const { return LEMON_FAILED(*this); }
+
+		bool success() const { return LEMON_SUCCESS(*this); }
+
 	private:
 
 		lemon::String				_message;
 	};
 
-
-	inline std::ostream & operator << (std::ostream & stream,const error_info & errorCode)
+	struct scope_error_info : public error_info
 	{
-		stream << "lemon error info :" << lemon::to_locale(errorCode.error_msg()) << std::endl;
-
-		stream << "\terror code :" << errorCode.Error.Code << std::endl;
-
-		stream << "\terror catalog :" << lemon::uuid_t(*errorCode.Error.Catalog).tostring() << std::endl;
-
-		stream << "\traise file :" << errorCode.File << "(" << errorCode.Lines << ")" <<std::endl;
-
-		return stream;
-	}
-
+		~scope_error_info()
+		{
+			check_throw();
+		}
+	};
 }
 
 #endif //LEMONXX_SYS_ERRORCODE_HPP

@@ -19,11 +19,11 @@ namespace lemon{namespace memory{namespace smallobject{
 	public:
 		allocator()
 		{
-			LEMON_DECLARE_ERRORINFO(errorCode);
+			error_info errorCode;
 
 			_allocator = LemonCreateSmallObjAllocator(MaxBlockSize,AlignSize,&errorCode);
 
-			if(LEMON_FAILED(errorCode)) throw Exception(errorCode);
+			errorCode.check_throw();
 		}
 		~allocator()
 		{

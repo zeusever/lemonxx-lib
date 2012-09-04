@@ -9,7 +9,7 @@
 #ifndef LEMON_CXX_SYS_COROUTINE_HPP
 #define LEMON_CXX_SYS_COROUTINE_HPP
 #include <lemon/sys/coroutine.h>
-#include <lemonxx/sys/exception.hpp>
+#include <lemonxx/sys/errorcode.hpp>
 #include <lemonxx/utility/utility.hpp>
 #include <lemonxx/function/function.hpp>
 
@@ -64,11 +64,11 @@ namespace lemon{
 
 		coroutine()
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			_coroutine = LemonThreadToCoroutine(&errorinfo);
+			_coroutine = LemonThreadToCoroutine(errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonThreadToCoroutine exception",errorinfo);
+			errorCode.check_throw();
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,11 +85,11 @@ namespace lemon{
 		coroutine(coroutine & parent,const Proc & proc,size_t stackSize)
 			:_proc(proc)
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			_coroutine = LemonCreateCoroutine(parent._coroutine,&coroutine::__call,this,stackSize,&errorinfo);
+			_coroutine = LemonCreateCoroutine(parent._coroutine,&coroutine::__call,this,stackSize,errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonCreateCoroutine exception",errorinfo);
+			errorCode.check_throw();
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,20 +108,20 @@ namespace lemon{
 
 		void yield()
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			LemonCoroutineYield(_coroutine,&errorinfo);
+			LemonCoroutineYield(_coroutine,errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonCoroutineYield exception",errorinfo);
+			errorCode.check_throw();
 		}
 
 		void resume()
 		{
-			LEMON_DECLARE_ERRORINFO(errorinfo);
+			error_info errorCode;
 
-			LemonCoroutineResume(_coroutine,&errorinfo);
+			LemonCoroutineResume(_coroutine,errorCode);
 
-			if(LEMON_FAILED(errorinfo)) throw Exception("call LemonCoroutineResume exception",errorinfo);
+			errorCode.check_throw();
 		}
 
 	private:

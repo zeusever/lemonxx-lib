@@ -10,7 +10,7 @@
 #define LEMON_CXX_SYS_UUID_HPP
 #include <string>
 #include <lemon/sys/uuid.h>
-#include <lemonxx/sys/exception.hpp>
+#include <lemonxx/sys/errorcode.hpp>
 
 namespace lemon{
 
@@ -29,11 +29,11 @@ namespace lemon{
 
 		uuid_t()
 		{
-			LEMON_DECLARE_ERRORINFO(errorInfo);
+			error_info errorCode;
 
-			(LemonUuid&)*this = LemonUuidGenerate(&errorInfo);
+			(LemonUuid&)*this = LemonUuidGenerate(errorCode);
 
-			if(LEMON_FAILED(errorInfo)) throw Exception("call LemonUuidGenerate exception",errorInfo);
+			errorCode.check_throw();
 		}
 		
 		explicit uuid_t(const LemonUuid & rhs)
@@ -77,44 +77,44 @@ namespace lemon{
 
 		std::string tostring() const
 		{
-			LEMON_DECLARE_ERRORINFO(errorInfo);
+			error_info errorCode;
 
 			char buffer[64] = {0};
 
-			LemonUuidToString(this,buffer,sizeof(buffer),&errorInfo);
+			LemonUuidToString(this,buffer,sizeof(buffer),&errorCode);
 
-			if(LEMON_FAILED(errorInfo)) throw Exception("call LemonUuidToString exception",errorInfo);
+			errorCode.check_throw();
 
 			return buffer;
 		}
 		///////////////////////////////////////////////////////////////////
 		//below is operator overload
-		bool operator == (const uuid_t & rhs) const
+		bool operator == (const LemonUuid & rhs) const
 		{
 			return memcmp(this,&rhs,sizeof(uuid_t)) == 0;
 		}
 
-		bool operator != (const uuid_t & rhs) const 
+		bool operator != (const LemonUuid & rhs) const 
 		{
 			return memcmp(this,&rhs,sizeof(uuid_t)) != 0;
 		}
 
-		bool operator > (const uuid_t & rhs) const 
+		bool operator > (const LemonUuid & rhs) const 
 		{
 			return memcmp(this,&rhs,sizeof(uuid_t)) > 0;
 		}
 
-		bool operator < (const uuid_t & rhs) const 
+		bool operator < (const LemonUuid & rhs) const 
 		{
 			return memcmp(this,&rhs,sizeof(uuid_t)) < 0;
 		}
 
-		bool operator >= (const uuid_t & rhs) const 
+		bool operator >= (const LemonUuid & rhs) const 
 		{
 			return memcmp(this,&rhs,sizeof(uuid_t)) >= 0;
 		}
 
-		bool operator <= (const uuid_t & rhs) const 
+		bool operator <= (const LemonUuid & rhs) const 
 		{
 			return memcmp(this,&rhs,sizeof(uuid_t)) <= 0;
 		}
@@ -123,11 +123,11 @@ namespace lemon{
 
 		void fromstring(const char * source)
 		{
-			LEMON_DECLARE_ERRORINFO(errorInfo);
+			error_info errorCode;
 
-			(LemonUuid&)*this = LemonUuidFromString(source,&errorInfo);
+			(LemonUuid&)*this = LemonUuidFromString(source,errorCode);
 
-			if(LEMON_FAILED(errorInfo)) throw Exception("call LemonUuidFromString exception",errorInfo);
+			errorCode.check_throw();
 		}
 
 		

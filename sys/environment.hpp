@@ -17,7 +17,7 @@ namespace lemon{
 
 	inline lemon::String getenv(const lemon::String & varname)
 	{
-		LEMON_DECLARE_ERRORINFO(errorCode);
+		error_info errorCode;
 
 		std::vector<lemon_char_t> buffer(0);
 
@@ -29,16 +29,18 @@ namespace lemon{
 
 		LemonGetEnv(varname.c_str(),&buffer[0],buffer.size(),&errorCode);
 
+		errorCode.check_throw();
+
 		return &buffer[0];
 	}
 
 	inline void setenv(const lemon::String & varname,const lemon::String & val)
 	{
-		LEMON_DECLARE_ERRORINFO(errorCode);
+		error_info errorCode;
 
 		LemonSetEnv(varname.c_str(),val.c_str(),&errorCode);
 
-		if(LEMON_FAILED(errorCode)) throw lemon::Exception(errorCode);
+		errorCode.check_throw();
 	}
 
 	inline lemon::String get_homedirectory(const lemon::String & varname)
