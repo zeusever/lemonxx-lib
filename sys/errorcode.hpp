@@ -20,6 +20,11 @@ namespace lemon{
 
 		error_info() { reset(); }
 
+		error_info(const LemonErrorInfo * ec)
+		{
+			memcpy((LemonErrorInfo*)this,ec,sizeof(ec));
+		}
+
 		void reset() { LEMON_RESET_ERRORINFO(*this); _message.clear(); }
 
 		const lemon::String & error_msg() const { return _message; }
@@ -56,6 +61,10 @@ namespace lemon{
 
 	struct scope_error_info : public error_info
 	{
+		scope_error_info(){}
+
+		scope_error_info(const LemonErrorInfo * ec):error_info(ec){}
+
 		~scope_error_info()
 		{
 			check_throw();
