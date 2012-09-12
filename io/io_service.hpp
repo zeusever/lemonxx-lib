@@ -64,25 +64,6 @@ namespace lemon{namespace io{
 			LemonIOServiceReset(*this,errorCode);
 		}
 
-		template<typename Handle>
-		void post_one(Handle handle)
-		{
-			Callback cb(handle);
-
-			Callback::wrapper_type data = cb.release();
-
-			error_info errorCode;
-
-			LemonIOServicePostJob(*this,&IOCallback,data,errorCode);
-
-			if(errorCode.fail())
-			{
-				cb = data;
-
-				errorCode.check_throw();
-			}
-		}
-
 	private:
 
 		static LemonIOService Create()
