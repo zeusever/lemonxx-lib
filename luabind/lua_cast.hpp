@@ -186,9 +186,9 @@ namespace lemon{namespace luabind{
 
 	LEMON_LUABIND_INTEGER_TYPE_CAST(unsigned int);
 
-	//LEMON_LUABIND_INTEGER_TYPE_CAST(long);
+	LEMON_LUABIND_INTEGER_TYPE_CAST(long);
 
-	//LEMON_LUABIND_INTEGER_TYPE_CAST(unsigned long);
+	LEMON_LUABIND_INTEGER_TYPE_CAST(unsigned long);
 
 	LEMON_LUABIND_INTEGER_TYPE_CAST(float);
 
@@ -202,24 +202,7 @@ namespace lemon{namespace luabind{
 
 	LEMON_LUABIND_INTEGER_TYPE_CAST(int64_t);
 
-	//LEMON_LUABIND_INTEGER_TYPE_CAST(uint64_t);
-
-	template<> struct lua_cast<uint64_t>
-	{
-		static void to(lua_State *L,uint64_t val)
-		{
-			lua_checkstack(L,1);
-
-			lua_pushnumber(L,(lua_Number)val);
-		}
-
-		static uint64_t from(lua_State *L,int index)
-		{
-			luaL_checktype(L,index,LUA_TNUMBER);
-
-			return (uint64_t)lua_tonumber(L,index);
-		}
-	};
+	LEMON_LUABIND_INTEGER_TYPE_CAST(uint64_t);
 }}
 
 #endif //LEMONXX_LUABIND_LUA_CAST_HPP
