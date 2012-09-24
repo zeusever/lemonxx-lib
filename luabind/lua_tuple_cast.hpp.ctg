@@ -9,6 +9,7 @@
 
 #ifndef LEMONXX_LUABIND_TUPLE_CAST_HPP
 #define LEMONXX_LUABIND_TUPLE_CAST_HPP
+#include <lemonxx/utility/utility.hpp>
 
 namespace lemon{namespace luabind{
 
@@ -87,7 +88,7 @@ namespace lemon{namespace luabind{
 
 		tupe_getter(lua_State * L,const tuple_type & result) : base_type(L,result)
 		{
-			lua_cast<value_type>::to(L,result.get<current_index::value>());
+			lua_cast<value_type>::to(L,get<current_index::value>(result));
 		}
 	};
 
@@ -104,7 +105,7 @@ namespace lemon{namespace luabind{
 
 		tupe_getter(lua_State * L,const tuple_type & result)
 		{
-			lua_cast<value_type>::to(L,result.get<current_index::value>());
+			lua_cast<value_type>::to(L,get<current_index::value>(result));
 		}
 	};
 
@@ -121,24 +122,24 @@ namespace lemon{namespace luabind{
 	template<typename A0$ ,typename A<i>$(1,max)>
 	struct lua_cast< tuple<A0$ ,A<i>$(1,max)> >
 	{
-	typedef tuple<A0$ ,A<i>$(1,max)> value_type;
+		typedef tuple<A0$ ,A<i>$(1,max)> value_type;
 
-	typedef mpl::inttypes_<int,mpl::size<typename value_type::Seq>::value> nresults;
+		typedef mpl::inttypes_<int,mpl::size<typename value_type::Seq>::value> nresults;
 
-	static value_type from(lua_State * L,int)
-	{
-		value_type result;
+		static value_type from(lua_State * L,int)
+		{
+			value_type result;
 
-		tupe_setter<value_type>(L,result);
+			tupe_setter<value_type>(L,result);
 
-		return result;
-	}
+			return result;
+		}
 
-	static void to(lua_State * L,const value_type & val)
-	{
-		tupe_getter<value_type>(L,val);
-	}
-};
+		static void to(lua_State * L,const value_type & val)
+		{
+			tupe_getter<value_type>(L,val);
+		}
+	};
 
 }}
 

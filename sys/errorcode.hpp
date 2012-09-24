@@ -22,7 +22,7 @@ namespace lemon{
 
 		error_info(const LemonErrorInfo * ec)
 		{
-			memcpy((LemonErrorInfo*)this,ec,sizeof(ec));
+			memcpy((LemonErrorInfo*)this,ec,sizeof(LemonErrorInfo));
 		}
 
 		void reset() { LEMON_RESET_ERRORINFO(*this); _message.clear(); }
