@@ -21,9 +21,11 @@ namespace lemon{namespace net{
 	{
 		char buffer[sizeof("255.255.255.255")] = {0};
 
-		scope_error_info errorCode;
+		error_info errorCode;
 
 		LemonAddressToString(AF_INET,&addr,sizeof(addr),buffer,sizeof(buffer),errorCode);
+
+		errorCode.check_throw();
 
 		return buffer;
 	}
@@ -32,9 +34,11 @@ namespace lemon{namespace net{
 	{
 		char buffer[sizeof("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255")] = {0};
 
-		scope_error_info errorCode;
+		error_info errorCode;
 
 		LemonAddressToString(AF_INET6,&addr,sizeof(addr),buffer,sizeof(buffer),errorCode);
+
+		errorCode.check_throw();
 
 		return buffer;
 	}
@@ -78,9 +82,11 @@ namespace lemon{namespace net{
 
 		void fromstring(const char * message)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonAddressFromString(AF_INET,message,strlen(message),ptr(),length(),errorCode);
+
+			errorCode.check_throw();
 		}
 
 		std::string tostring() const
@@ -158,9 +164,11 @@ namespace lemon{namespace net{
 
 		void fromstring(const char * message)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonAddressFromString(AF_INET6,message,strlen(message),ptr(),length(),errorCode);
+
+			errorCode.check_throw();
 		}
 
 		std::string tostring() const
@@ -269,9 +277,11 @@ namespace lemon{namespace net{
 
 		void fromstring(const char * message)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonAddressFromString(_af,message,strlen(message),ptr(),length(),errorCode);
+
+			errorCode.check_throw();
 		}
 
 		int af() const
@@ -602,9 +612,11 @@ namespace lemon{namespace net{
 		{
 			if(_resolver)
 			{
-				scope_error_info errorCode;
+				error_info errorCode;
 
 				_current = LemonResovlerNext(_resolver,errorCode);
+
+				errorCode.check_throw();
 
 				if(!_current) close();
 			}
@@ -624,9 +636,13 @@ namespace lemon{namespace net{
 
 		static LemonResovler Create(const char * nodename, const char * servername)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return LemonCreateResolver(nodename,servername,errorCode);
+			LemonResovler resolover = LemonCreateResolver(nodename,servername,errorCode);
+
+			errorCode.check_throw();
+
+			return resolover;
 		}
 	private:
 

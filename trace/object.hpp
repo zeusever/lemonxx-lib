@@ -44,16 +44,24 @@ namespace lemon{namespace trace{
 
 		size_t write(const void * data, size_t length)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return LemonTraceWrite(_msg,data,length,errorCode);
+			size_t nresult = LemonTraceWrite(_msg,data,length,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 		}
 
 		size_t read(void * data, size_t length) const
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return LemonTraceRead(_msg,data,length,errorCode);
+			size_t nresult = LemonTraceRead(_msg,data,length,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 		}
 
 		template<typename Buffer>
@@ -77,34 +85,50 @@ namespace lemon{namespace trace{
 
 		size_t dump(LemonIoWriter writer) const
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return LemonTraceDump(_msg,writer,errorCode);
+			size_t nresult = LemonTraceDump(_msg,writer,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 		}
 
 		size_t load(LemonIoReader reader)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return LemonTraceLoad(_msg,reader,errorCode);
+			size_t nresult = LemonTraceLoad(_msg,reader,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 		}
 
 		size_t dump(std::ostream& stream) const
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonIoWriter writer = {&stream,&message::ostream_writer};
 
-			return LemonTraceDump(_msg,writer,errorCode);
+			size_t nresult = LemonTraceDump(_msg,writer,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 		}
 
 		size_t load(std::istream& stream)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonIoReader reader = {&stream,&message::istream_reader};
 
-			return LemonTraceLoad(_msg,reader,errorCode);
+			size_t nresult =  LemonTraceLoad(_msg,reader,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 		}
 
 	private:
@@ -149,9 +173,13 @@ namespace lemon{namespace trace{
 
 		static LemonTraceService Create(const char * URL)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return LemonCreateTraceService(URL,errorCode);
+			LemonTraceService service =  LemonCreateTraceService(URL,errorCode);
+
+			errorCode.check_throw();
+
+			return service;
 		}
 
 	};
@@ -171,32 +199,44 @@ namespace lemon{namespace trace{
 
 		void open_trace(const LemonUuid * provider, flag_t flag)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonOpenTrace(*this,provider,flag,errorCode);
+
+			errorCode.check_throw();
 		}
 
 		void close_trace(const LemonUuid * provider, flag_t flag)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonCloseTrace(*this,provider,flag,errorCode);
+
+			errorCode.check_throw();
 		}
 
 	private:
 
 		static LemonTraceController Create(const char * URL)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return LemonCreateRemoteTraceController(URL,errorCode);
+			LemonTraceController controller =  LemonCreateRemoteTraceController(URL,errorCode);
+
+			errorCode.check_throw();
+
+			return controller;
 		}
 
 		static LemonTraceController Create(LemonTraceService s)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return LemonCreateTraceController(s,errorCode);
+			LemonTraceController controller =  LemonCreateTraceController(s,errorCode);
+
+			errorCode.check_throw();
+
+			return controller;
 		}
 
 	};
@@ -217,16 +257,24 @@ namespace lemon{namespace trace{
 
 		static LemonTraceProvider Create(const char * URL,const LemonUuid * id)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return LemonCreateRemoteTraceProvider(URL,id,errorCode);
+			LemonTraceProvider provider = LemonCreateRemoteTraceProvider(URL,id,errorCode);
+
+			errorCode.check_throw();
+
+			return provider;
 		}
 
 		static LemonTraceProvider Create(LemonTraceService s,const LemonUuid * id)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return LemonCreateTraceProvider(s,id,errorCode);
+			LemonTraceProvider provider = LemonCreateTraceProvider(s,id,errorCode);
+
+			errorCode.check_throw();
+
+			return provider;
 		}
 
 	};
@@ -247,9 +295,11 @@ namespace lemon{namespace trace{
 		{
 			if(empty()) return;
 
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonTrace(_p,release(),errorCode);
+
+			errorCode.check_throw();
 		}
 	private:
 		static LemonTraceMessage Create(LemonTraceProvider provider,lemon_trace_flag flag)
@@ -280,11 +330,13 @@ namespace lemon{namespace trace{
 		template<typename Handle>
 		void start(controller & c,Handle handle)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			_handle = handle;
 
 			reset(LemonCreateTraceConsumer(c,&conumser::__traceproc,this,errorCode));
+
+			errorCode.check_throw();
 		}
 
 	private:

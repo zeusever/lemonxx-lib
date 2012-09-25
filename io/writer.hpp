@@ -32,9 +32,13 @@ namespace lemon{namespace io{
 
 		size_t write( const byte_t * source,size_t length)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return _w.Write(_w.UserData,source,length,errorCode);
+			size_t nresult = _w.Write(_w.UserData,source,length,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 		}
 
 		size_t write( const byte_t * source,size_t length,error_info & errorCode)

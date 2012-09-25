@@ -31,9 +31,13 @@ namespace lemon{namespace io{
 
 		size_t read( byte_t * source,size_t length)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return _r.Read(_r.UserData,source,length,errorCode);
+			size_t nresult =  _r.Read(_r.UserData,source,length,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 		}
 
 		size_t read( byte_t * source,size_t length,error_info & errorCode)

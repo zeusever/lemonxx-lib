@@ -37,9 +37,13 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 
 		size_t sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return sendto(buffer,bufferSize,0,remote,errorCode);
+			size_t nresult = sendto(buffer,bufferSize,0,remote,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 		}
 
 		template<typename ConstBuffer>
@@ -50,9 +54,13 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 
 		size_t sendto(const byte_t * buffer, size_t bufferSize, int flags, const net::endpoint & remote)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return sendto(buffer,bufferSize,flags,remote,errorCode);
+			size_t nresult = sendto(buffer,bufferSize,flags,remote,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 		}
 
 		template<typename ConstBuffer>
@@ -82,44 +90,48 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		template<typename ConstBuffer, typename Handle>
 		void async_sendto(ConstBuffer buffer, const net::endpoint & remote, Handle handle)
 		{
-			return sendto(buffer.Data,buffer.Length,remote,handle);
+			async_sendto(buffer.Data,buffer.Length,remote,handle);
 		}
 		template<typename Handle>
 		void async_sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote, Handle handle)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return sendto(buffer,bufferSize,0,remote,handle,errorCode);
+			async_sendto(buffer,bufferSize,0,remote,handle,errorCode);
+
+			errorCode.check_throw();
 		}
 
 		template<typename ConstBuffer, typename Handle>
 		void async_sendto(ConstBuffer buffer, int flags , const net::endpoint & remote, Handle handle)
 		{
-			return sendto(buffer.Data,buffer.Length,flags,remote,handle);
+			async_sendto(buffer.Data,buffer.Length,flags,remote,handle);
 		}
 		template<typename Handle>
 		void async_sendto(const byte_t * buffer, size_t bufferSize, int flags, const net::endpoint & remote, Handle handle)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return sendto(buffer,bufferSize,flags,remote,handle,errorCode);
+			async_sendto(buffer,bufferSize,flags,remote,handle,errorCode);
+
+			errorCode.check_throw();
 		}
 
 		template<typename ConstBuffer, typename Handle>
 		void async_sendto(ConstBuffer buffer, const net::endpoint & remote, Handle handle,error_info & errorCode)
 		{
-			return sendto(buffer.Data,buffer.Length,remote,handle,errorCode);
+			async_sendto(buffer.Data,buffer.Length,remote,handle,errorCode);
 		}
 		template<typename Handle>
 		void async_sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote, Handle handle,error_info & errorCode)
 		{
-			return sendto(buffer,bufferSize,0,remote,handle,errorCode);
+			async_sendto(buffer,bufferSize,0,remote,handle,errorCode);
 		}
 
 		template<typename ConstBuffer, typename Handle>
 		void async_sendto(ConstBuffer buffer, int flags , const net::endpoint & remote, Handle handle,error_info & errorCode)
 		{
-			return sendto(buffer.Data,buffer.Length,flags,remote,handle,errorCode);
+			async_sendto(buffer.Data,buffer.Length,flags,remote,handle,errorCode);
 		}
 		template<typename Handle>
 		void async_sendto(const byte_t * buffer, size_t bufferSize, int flags, const net::endpoint & remote, Handle handle,error_info & errorCode)
@@ -146,9 +158,13 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 
 		size_t recvfrom(byte_t * buffer, size_t bufferSize, net::endpoint & remote)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return recvfrom(buffer,bufferSize,0,remote,errorCode);
+			size_t nresult = recvfrom(buffer,bufferSize,0,remote,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 		}
 
 		template<typename MutableBuffer>
@@ -159,9 +175,13 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 
 		size_t recvfrom(byte_t * buffer, size_t bufferSize, int flags, net::endpoint & remote)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return recvfrom(buffer,bufferSize,flags,remote,errorCode);
+			size_t nresult =  recvfrom(buffer,bufferSize,flags,remote,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 		}
 
 		template<typename MutableBuffer>
@@ -198,9 +218,11 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		template<typename Handle>
 		void async_recvfrom(byte_t * buffer, size_t bufferSize, net::endpoint & remote, Handle handle)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			async_recvfrom(buffer,bufferSize,0,remote,handle,errorCode);
+
+			errorCode.check_throw();
 		}
 
 		template<typename MutableBuffer, typename Handle>
@@ -211,9 +233,11 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		template<typename Handle>
 		void async_recvfrom(byte_t * buffer, size_t bufferSize, int flags, net::endpoint & remote, Handle handle)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			async_recvfrom(buffer,bufferSize,flags,remote,handle,errorCode);
+
+			errorCode.check_throw();
 		}
 
 		template<typename MutableBuffer, typename Handle>

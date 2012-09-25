@@ -44,27 +44,33 @@ namespace lemon{namespace io{
 
 		void bind(const endpoint & ep)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonBind(*this,ep.ptr(),(socklen_t)ep.length(),errorCode);
+
+			errorCode.check_throw();
 		}
 
 		void shutdown(int how)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonShutdown(*this,how,errorCode);
+
+			errorCode.check_throw();
 		}
 
 		endpoint sockname()
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			endpoint ep;
 
 			socklen_t length = (socklen_t)ep.capacity();
 
 			LemonGetSockName(*this,ep.ptr(),&length,errorCode);
+
+			errorCode.check_throw();
 
 			assert(length == ep.length());
 
@@ -75,9 +81,13 @@ namespace lemon{namespace io{
 
 		static LemonIO Create(int af,LemonIOService service)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return LemonSock(af,type,protocol,service,errorCode);
+			LemonIO io = LemonSock(af,type,protocol,service,errorCode);
+
+			errorCode.check_throw();
+
+			return io;
 		}
 	};
 

@@ -88,9 +88,8 @@ namespace lemon{namespace unittest{namespace cxx{
 			{
 				std::cerr << e << std::endl;
 
-				return 4;
+				return 5;
 			}
-
 			
 		}
 

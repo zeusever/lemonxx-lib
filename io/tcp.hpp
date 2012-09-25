@@ -64,9 +64,13 @@ namespace lemon{namespace io{namespace tcp{
 
 		size_t receive(byte_t * buffer, size_t bufferSize,int flags)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return receive(buffer,bufferSize,flags,errorCode);
+			size_t nresult = receive(buffer,bufferSize,flags,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 
 		}
 
@@ -113,9 +117,11 @@ namespace lemon{namespace io{namespace tcp{
 		template<typename Handle>
 		void async_receive(byte_t * buffer, size_t bufferSize,int flags,Handle handle)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			async_receive(buffer,bufferSize,flags,handle,errorCode);
+
+			errorCode.check_throw();
 
 		}
 		template<typename Handle>
@@ -169,9 +175,13 @@ namespace lemon{namespace io{namespace tcp{
 
 		size_t send(const byte_t * buffer, size_t bufferSize,int flags)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return send(buffer,bufferSize,flags,errorCode);
+			size_t nresult = send(buffer,bufferSize,flags,errorCode);
+
+			errorCode.check_throw();
+
+			return nresult;
 
 		}
 
@@ -218,9 +228,11 @@ namespace lemon{namespace io{namespace tcp{
 		template<typename Handle>
 		void async_send(const byte_t * buffer, size_t bufferSize,int flags,Handle handle)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			async_send(buffer,bufferSize,flags,handle,errorCode);
+
+			errorCode.check_throw();
 
 		}
 		template<typename Handle>
@@ -278,18 +290,22 @@ namespace lemon{namespace io{namespace tcp{
 
 		void listen(int backlog)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonListen(*this,backlog,&errorCode);
+
+			errorCode.check_throw();
 		}
 
 		connection::wrapper_type accept(net::endpoint & remote)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			socklen_t length = (socklen_t)remote.capacity();
 
 			LemonIO io = LemonAccept(*this,remote.ptr(),&length,errorCode);
+
+			errorCode.check_throw();
 
 			assert(length == remote.length());
 
@@ -338,9 +354,11 @@ namespace lemon{namespace io{namespace tcp{
 
 		void connect(const net::endpoint &remote)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			connect(remote,errorCode);
+
+			errorCode.check_throw();
 		}
 
 		void connect(const net::endpoint &remote,error_info & errorCode)
@@ -351,9 +369,11 @@ namespace lemon{namespace io{namespace tcp{
 		template<typename Handle>
 		void async_connect(const net::endpoint &remote,Handle handle)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			async_connect(remote,handle,errorCode);
+
+			errorCode.check_throw();
 		}
 
 		template<typename Handle>

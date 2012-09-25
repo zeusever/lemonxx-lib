@@ -38,39 +38,51 @@ namespace lemon{namespace io{
 
 		void start(size_t workthreads)
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonNewIOServiceWorkThreads(*this,workthreads,errorCode);
+
+			errorCode.check_throw();
 		}
 
 		void stop()
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonIOServiceStopAll(*this,errorCode);
+
+			errorCode.check_throw();
 		}
 
 		void join()
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonIOServiceJoin(*this,errorCode);
+
+			errorCode.check_throw();
 		}
 
 		void reset()
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
 			LemonIOServiceReset(*this,errorCode);
+
+			errorCode.check_throw();
 		}
 
 	private:
 
 		static LemonIOService Create()
 		{
-			scope_error_info errorCode;
+			error_info errorCode;
 
-			return LemonCreateIOService(errorCode);
+			LemonIOService service = LemonCreateIOService(errorCode);
+
+			errorCode.check_throw();
+
+			return service;
 		}
 	};
 

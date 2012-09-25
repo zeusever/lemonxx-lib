@@ -58,18 +58,6 @@ namespace lemon{
 
 		lemon::String				_message;
 	};
-
-	struct scope_error_info : public error_info
-	{
-		scope_error_info(){}
-
-		scope_error_info(const LemonErrorInfo * ec):error_info(ec){}
-
-		~scope_error_info()
-		{
-			check_throw();
-		}
-	};
 }
 
 #endif //LEMONXX_SYS_ERRORCODE_HPP
