@@ -118,11 +118,11 @@ namespace lemon{
 		LemonTls _tls;
 	};
 
-	inline lemon_tid_t current_thread_id()
+	inline lemon_pid_t current_thread_id()
 	{
 		error_info errorCode;
 
-		lemon_tid_t id = LemonGetCurrentThreadId(errorCode);
+		lemon_pid_t id = LemonGetCurrentThreadId(errorCode);
 
 		errorCode.check_throw();
 
@@ -237,7 +237,7 @@ namespace lemon{
 			}
 		}
 
-		lemon_tid_t id() const
+		lemon_pid_t id() const
 		{
 			if(empty()) return 0;
 
