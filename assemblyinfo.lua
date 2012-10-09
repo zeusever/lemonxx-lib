@@ -22,5 +22,9 @@ assembly =
 		{
 			name = "LUA_DUMPLICATE_CLASS_FUNCTION_DEF";
 		};
+
+		{
+			name = "INVALIDE_WMI_METHOD_PARAMETERS";
+		};
 	  };
    }
