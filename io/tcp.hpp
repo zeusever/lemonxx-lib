@@ -307,7 +307,7 @@ namespace lemon{namespace io{namespace tcp{
 
 			errorCode.check_throw();
 
-			assert(length == remote.length());
+			assert(length == (socklen_t)remote.length());
 
 			return io;
 		}
