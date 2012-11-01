@@ -27,49 +27,39 @@ namespace lemon{namespace io{
 	class io_service : public basic_handle_object<LemonIOService,&LemonCloseIOService>
 	{
 	public:
+
 		typedef basic_handle_object<LemonIOService,&LemonCloseIOService> base_type;
 
 		io_service():base_type(Create()) {}
 
-		io_service(size_t workhreads):base_type(Create()) 
+		void reset()
 		{
-			start(workhreads);
-		}
+			lemon::error_info errorCode;
 
-		void start(size_t workthreads)
-		{
-			error_info errorCode;
-
-			LemonNewIOServiceWorkThreads(*this,workthreads,errorCode);
+			LemonResetIOService(*this,errorCode);
 
 			errorCode.check_throw();
 		}
 
 		void stop()
 		{
-			error_info errorCode;
+			lemon::error_info errorCode;
 
-			LemonIOServiceStopAll(*this,errorCode);
-
-			errorCode.check_throw();
-		}
-
-		void join()
-		{
-			error_info errorCode;
-
-			LemonIOServiceJoin(*this,errorCode);
+			LemonStopIOService(*this,errorCode);
 
 			errorCode.check_throw();
 		}
 
-		void reset()
+		bool stopped() const
 		{
-			error_info errorCode;
+			return LemonIOServiceStatus(*this) == lemon_true ? true:false;
+		}
 
-			LemonIOServiceReset(*this,errorCode);
+		void dispatch()
+		{
+			lemon::error_info errorCode;
 
-			errorCode.check_throw();
+			LemonIODispatch(*this,errorCode);
 		}
 
 	private:
@@ -78,7 +68,7 @@ namespace lemon{namespace io{
 		{
 			error_info errorCode;
 
-			LemonIOService service = LemonCreateIOService(errorCode);
+			LemonIOService service = LemonCreateIOService(NULL,errorCode);
 
 			errorCode.check_throw();
 
