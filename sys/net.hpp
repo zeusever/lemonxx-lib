@@ -422,6 +422,8 @@ namespace lemon{namespace net{
 		endpoint()
 		{
 			_buffer.addr.sa_family = AF_UNSPEC;
+
+			_capacity = buffer_length::value;
 		}
 
 		explicit endpoint(const sockaddr_in & addr)
@@ -429,6 +431,8 @@ namespace lemon{namespace net{
 			assert(addr.sin_family == AF_INET);
 
 			memcpy(&_buffer,&addr,sizeof(sockaddr_in));
+
+			_capacity = buffer_length::value;
 		}
 
 #ifdef LEMON_SUPPORT_IPV6
@@ -438,6 +442,8 @@ namespace lemon{namespace net{
 			assert(addr.sin6_family == AF_INET6);
 
 			memcpy(&_buffer,&addr,sizeof(sockaddr_in6));
+
+			_capacity = buffer_length::value;
 		}
 
 #endif //LEMON_SUPPORT_IPV6
@@ -458,6 +464,8 @@ namespace lemon{namespace net{
 
 #endif //LEMON_SUPPORT_IPV6
 
+			_capacity = buffer_length::value;
+
 		}
 
 		size_t capacity() const 
@@ -465,8 +473,17 @@ namespace lemon{namespace net{
 			return buffer_length::value;
 		}
 
+		socklen_t& capacity() 
+		{
+			_capacity = buffer_length::value;
+
+			return _capacity;
+		}
+
 		size_t length() const
 		{
+			if(_capacity != buffer_length::value) return _capacity;
+
 			if(_buffer.addr.sa_family == AF_INET)
 			{
 				return sizeof(sockaddr_in);
@@ -569,6 +586,8 @@ namespace lemon{namespace net{
 	private:
 
 		buffer_type				_buffer;
+
+		socklen_t				_capacity;
 	};
 
 	//////////////////////////////////////////////////////////////////////////

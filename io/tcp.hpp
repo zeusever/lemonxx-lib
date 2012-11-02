@@ -10,7 +10,7 @@
 #define LEMONXX_IO_TCP_HPP
 #include <lemonxx/io/socket.hpp>
 
-namespace lemon{namespace io{namespace tcp{
+namespace lemon{namespace io{namespace ip{namespace tcp{
 
 	class basic_stream_socket : public basic_socket<SOCK_STREAM,IPPROTO_TCP,net::endpoint>
 	{
@@ -268,13 +268,13 @@ namespace lemon{namespace io{namespace tcp{
 	//////////////////////////////////////////////////////////////////////////
 
 
-	typedef lemon::function<void(connection::wrapper_type io, size_t numberOfBytesTransferred , const LemonErrorInfo & errorCode)> AcceptCallback;
+	typedef lemon::function<void(connection::wrapper_type io, const LemonErrorInfo & errorCode)> AcceptCallback;
 
-	inline void IOAcceptCallback( void * userdata , LemonIO io ,size_t numberOfBytesTransferred , const LemonErrorInfo *errorCode )
+	inline void IOAcceptCallback( void * userdata , LemonIO io , const LemonErrorInfo *errorCode )
 	{
 		AcceptCallback cb((AcceptCallback::wrapper_type)userdata);
 
-		cb(io,numberOfBytesTransferred,*errorCode);
+		cb(io,*errorCode);
 	}
 
 
@@ -321,9 +321,7 @@ namespace lemon{namespace io{namespace tcp{
 
 			AcceptCallback::wrapper_type data = cb.release();
 
-			socklen_t length = (socklen_t)remote.capacity();
-
-			LemonAsyncAccept(*this,remote.ptr(),&length,&IOAcceptCallback,data,&errorCode);
+			LemonAsyncAccept(*this,remote.ptr(),&remote.capacity(),&IOAcceptCallback,data,&errorCode);
 
 			if(LEMON_FAILED(errorCode))
 			{
@@ -389,7 +387,7 @@ namespace lemon{namespace io{namespace tcp{
 		}
 	};
 
-}}}
+}}}}
 
 
 #endif //LEMONXX_IO_TCP_HPP

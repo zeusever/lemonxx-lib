@@ -24,6 +24,13 @@ namespace lemon{namespace io{
 		object(){}
 
 		object(LemonIO io) : base_type(io) {}
+
+		void cancel()
+		{
+			error_info errorCode;
+
+			LemonCancelIO(*this);
+		}
 	};
 
 }}

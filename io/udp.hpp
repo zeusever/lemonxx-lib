@@ -263,9 +263,7 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 
 			Callback::wrapper_type data = cb.release();
 
-			socklen_t length = (socklen_t)remote.capacity();
-
-			LemonAsyncReceiveFrom(*this,buffer,bufferSize,flags,remote.ptr(),&length,&IOCallback,data,errorCode);
+			LemonAsyncReceiveFrom(*this,buffer,bufferSize,flags,remote.ptr(),&remote.capacity(),&IOCallback,data,errorCode);
 
 			if(LEMON_FAILED(errorCode)) cb = data;
 		}
