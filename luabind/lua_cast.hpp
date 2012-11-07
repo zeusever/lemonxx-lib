@@ -186,8 +186,8 @@ namespace lemon{namespace luabind{
 	LEMON_LUABIND_INTEGER_TYPE_CAST(double);	
 
 #ifndef WIN32
-	LEMON_LUABIND_INTEGER_TYPE_CAST(long);
-	LEMON_LUABIND_INTEGER_TYPE_CAST(unsigned long);	
+	//LEMON_LUABIND_INTEGER_TYPE_CAST(long);
+	//LEMON_LUABIND_INTEGER_TYPE_CAST(unsigned long);	
 #endif
 
 	LEMON_LUABIND_INTEGER_TYPE_CAST(int8_t);
