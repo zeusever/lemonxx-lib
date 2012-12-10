@@ -9,7 +9,6 @@
 #ifndef LEMONXX_LUABIND_LUA_CAST_HPP
 #define LEMONXX_LUABIND_LUA_CAST_HPP
 #include <typeinfo>
-#include <lemonxx/sys/sys.hpp>
 #include <lemonxx/utility/utility.hpp>
 #include <lemonxx/type_traits/type_traits.hpp>
 #include <lemonxx/luabind/lstate.hpp>
@@ -63,15 +62,13 @@ namespace lemon{namespace luabind{
 
 		static T * from(lua_State *L,int index)
 		{
-			
-
 			const mem_function_table * calltable = context(L)->register_class(typeid(typename remove_cv<T>::type));
 
 			if(calltable)
 			{
-				luaL_checktype(L,index,LUA_TUSERDATA);
+				luaL_checktype(L,index,LUA_TTABLE);
 
-				return *(T**)lua_touserdata(L,index);
+				return (T*)calltable->unwrapper(L,index);
 			}
 			else
 			{
@@ -181,30 +178,58 @@ namespace lemon{namespace luabind{
 		}
 	};
 
-	LEMON_LUABIND_INTEGER_TYPE_CAST(float);
+	template<typename T> struct lua_cast< std::vector<T> >
+	{
+		static void to(lua_State *L,const std::vector<T> & val)
+		{
+			lua_newtable(L);
 
-	LEMON_LUABIND_INTEGER_TYPE_CAST(double);	
+			std::vector<T>::const_iterator iter,end = val.end();
 
-#ifndef WIN32
-	//LEMON_LUABIND_INTEGER_TYPE_CAST(long);
-	//LEMON_LUABIND_INTEGER_TYPE_CAST(unsigned long);	
-#endif
+			int index = 1;
 
-	LEMON_LUABIND_INTEGER_TYPE_CAST(int8_t);
+			for(iter = val.begin(); iter != end; ++ iter)
+			{
+				lua_pushnumber(L,index);
 
-	LEMON_LUABIND_INTEGER_TYPE_CAST(uint8_t);
+				lua_cast<T>::to(L,*iter);
 
-	LEMON_LUABIND_INTEGER_TYPE_CAST(int16_t);
+				lua_settable(L,-3);
 
-	LEMON_LUABIND_INTEGER_TYPE_CAST(uint16_t);
+				++ index ;
+			}
+		}
 
-	LEMON_LUABIND_INTEGER_TYPE_CAST(int32_t);
+		static std::vector<T> from(lua_State *L,int index)
+		{
+			luaL_checktype(L,index,LUA_TTABLE);
 
-	LEMON_LUABIND_INTEGER_TYPE_CAST(uint32_t);
+			std::vector<T> val;
 
-	LEMON_LUABIND_INTEGER_TYPE_CAST(int64_t);
+			lua_pushnil(L); 
 
-	LEMON_LUABIND_INTEGER_TYPE_CAST(uint64_t);
+			while (lua_next(L, index - 1) != 0)
+			{
+				val.push_back(lua_cast<T>::from(L,-1));
+
+				lua_pop(L, 1);
+			}
+
+			lua_pop(L, 1);
+		}
+	};
+
+	LEMON_LUABIND_INTEGER_TYPE_CAST(int);
+
+	LEMON_LUABIND_INTEGER_TYPE_CAST(unsigned int);
+
+	LEMON_LUABIND_INTEGER_TYPE_CAST(short);
+
+	LEMON_LUABIND_INTEGER_TYPE_CAST(unsigned short);
+
+	LEMON_LUABIND_INTEGER_TYPE_CAST(char);
+
+	LEMON_LUABIND_INTEGER_TYPE_CAST(unsigned char);
 }}
 
 #endif //LEMONXX_LUABIND_LUA_CAST_HPP
