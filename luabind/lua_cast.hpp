@@ -184,7 +184,7 @@ namespace lemon{namespace luabind{
 		{
 			lua_newtable(L);
 
-			std::vector<T>::const_iterator iter,end = val.end();
+			typename std::vector<T>::const_iterator iter,end = val.end();
 
 			int index = 1;
 

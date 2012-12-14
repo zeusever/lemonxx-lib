@@ -81,6 +81,21 @@ namespace lemon{namespace luabind{
 			}
 		}
 
+		void * unwrapper(lua_State * L,int index) const
+		{
+			lua_pushnumber(L,1);
+
+			lua_gettable(L,index - 1);
+
+			luaL_checktype(L,-1,LUA_TLIGHTUSERDATA);
+
+			void * result = lua_touserdata(L,-1);
+
+			lua_pop(L,1);
+
+			return result;
+		}
+
 	private:
 
 		handles_type			_set;
