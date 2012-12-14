@@ -17,31 +17,86 @@
 
 namespace lemon{
 
-	struct const_buffer
+	struct const_buffer : public LemonCBuff
 	{
-		const_buffer(const byte_t * source,size_t length)
-			:Data(source),Length(length)
-		{}
+		const_buffer()
+		{
+			LemonCBuff::Data = NULL;
 
-		byte_t const	*Data;
+			LemonCBuff::Length = 0;
+		}
 
-		size_t			Length;
+		const_buffer(LemonCBuff rhs)
+		{
+			LemonCBuff::Data = rhs.Data;
+
+			LemonCBuff::Length = rhs.Length;
+		}
+
+		const_buffer(LemonBuff rhs)
+		{
+			LemonCBuff::Data = rhs.Data;
+
+			LemonCBuff::Length = rhs.Length;
+		}
+
+		const_buffer(const byte_t * source,size_t length)	
+		{
+			LemonCBuff::Data = source;
+
+			LemonCBuff::Length = length;
+		}
+
+		bool empty() const
+		{
+			return !LEMON_CHECK_BUFF(*this);
+		}
 	};
 
-	struct mutable_buffer
+	struct mutable_buffer : public LemonBuff
 	{
-		mutable_buffer(byte_t * source,size_t length)
-			:Data(source),Length(length)
-		{}
-		
-		byte_t		*Data;
+		mutable_buffer()
+		{
+			LemonBuff::Data = NULL;
 
-		size_t		Length;
+			LemonBuff::Length = 0;
+		}
+
+		mutable_buffer(LemonBuff rhs)
+		{
+			LemonBuff::Data = rhs.Data;
+
+			LemonBuff::Length = rhs.Length;
+		}
+
+		mutable_buffer(byte_t * source,size_t length)
+		{
+			LemonBuff::Data = source;
+
+			LemonBuff::Length = length;
+		}
+
+		bool empty() const
+		{
+			return !LEMON_CHECK_BUFF(*this);
+		}
 	};
 
 	inline mutable_buffer buf(byte_t * source,size_t length)
 	{
 		return mutable_buffer(source,length);
+	}
+
+	template<typename T>
+	inline mutable_buffer buf(T & t)
+	{
+		return mutable_buffer((lemon_byte_t*)&t,sizeof(T));
+	}
+
+	template<typename T>
+	inline const_buffer cbuf(const T & t)
+	{
+		return const_buffer((const lemon_byte_t*)&t,sizeof(T));
 	}
 
 	template<size_t N>
@@ -98,6 +153,14 @@ namespace lemon{
 	inline const_buffer cbuf(const std::string &message)
 	{
 		return const_buffer((const byte_t*)message.c_str(),message.length());
+	}
+
+	template<typename R,typename Buffer>
+	inline R& buffer_cast(Buffer buffer)
+	{
+		assert(!buffer.empty() && sizeof(R) <= buffer.Length);
+
+		return *(R*)buffer.Data;
 	}
 }
 #endif //LEMONXX_UTILITY_BUFFER_HPP

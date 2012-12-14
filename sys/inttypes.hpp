@@ -13,6 +13,8 @@
 
 namespace lemon{
 
+	typedef lemon_sbyte_t sbyte_t;
+
 	typedef lemon_byte_t byte_t;
 
 	typedef lemon_utf8_t utf8_t;
