@@ -162,5 +162,11 @@ namespace lemon{
 
 		return *(R*)buffer.Data;
 	}
+
+	template<typename Buffer>
+	inline mutable_buffer mutable_buffer_cast(Buffer buffer)
+	{
+		return mutable_buffer((byte_t*)buffer.Data,buffer.Length);
+	}
 }
 #endif //LEMONXX_UTILITY_BUFFER_HPP
