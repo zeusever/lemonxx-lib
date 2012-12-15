@@ -94,6 +94,36 @@ namespace lemon{namespace runQ{
 			runQ::free(Q,buffer);
 		}
 
+		void start_timer(job_id job,size_t milliseconds)
+		{
+			runQ::start_timer(Q,job,milliseconds);
+		}
+
+		void start_timer(size_t milliseconds)
+		{
+			runQ::start_timer(Q,_id,milliseconds);
+		}
+
+		void stop_timer(job_id job)
+		{
+			runQ::stop_timer(Q,job);
+		}
+
+		void stop_timer()
+		{
+			runQ::start_timer(Q,_id);
+		}
+
+		void send_timeout()
+		{
+			runQ::send_timeout(Q,_id);
+		}
+
+		void send_timeout(job_id job)
+		{
+			runQ::send_timeout(Q,job);
+		}
+
 	private:
 
 		static void* __initialize(LemonRunQ Q,lemon_job_id id,LemonErrorInfo* errorCode)

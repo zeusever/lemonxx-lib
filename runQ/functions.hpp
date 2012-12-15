@@ -37,6 +37,30 @@ namespace lemon{ namespace runQ{
 		LemonCloseJob(s,id);
 	}
 
+	void start_timer(LemonRunQ s, lemon_job_id id,size_t milliseconds)
+	{
+		error_info errorCode;
+
+		LemonRunQTimerStart(s,id,milliseconds * 1000 * 10,errorCode);
+
+		errorCode.check_throw();
+	}
+
+	void stop_timer(LemonRunQ s, lemon_job_id id)
+	{
+		LemonRunQTimerStop(s,id);
+	}
+
+	void send_timeout(LemonRunQ s, lemon_job_id id)
+	{
+		LemonJobTimeout(s,id);
+	}
+
+	size_t jobs(LemonRunQ s)
+	{
+		return LemonRunQJobs(s);
+	}
+
 }}
 
 #endif //LEMONXX_RUNQ_FUNCTIONS_HPP

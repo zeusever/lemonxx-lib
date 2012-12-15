@@ -48,7 +48,11 @@ namespace lemon{
 
 		void reset()
 		{
-			LemonRunQReset(*this);
+			error_info errorCode;
+
+			LemonRunQReset(*this,&errorCode);
+
+			errorCode.check_throw();
 		}
 
 		size_t jobs() const
