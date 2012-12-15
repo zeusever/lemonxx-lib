@@ -333,6 +333,8 @@ namespace lemon{namespace net{
 			else
 			{
 				assert(false && "invalid address");
+
+				return "";
 			}
 		}
 

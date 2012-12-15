@@ -111,7 +111,7 @@ namespace lemon{namespace runQ{
 
 		void stop_timer()
 		{
-			runQ::start_timer(Q,_id);
+			runQ::stop_timer(Q,_id);
 		}
 
 		void send_timeout()
