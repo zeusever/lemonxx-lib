@@ -25,10 +25,15 @@ namespace lemon{namespace runQ{
 
 		static job_id create(LemonRunQ service)
 		{
+			return create(service,NULL);
+		}
+
+		static job_id create(LemonRunQ service,void * param)
+		{
 			LemonJobClass jobClass = 
 			{
 				&self_type::__initialize,
-		
+
 				&self_type::__recv,
 
 				&self_type::__uninitialize
@@ -36,7 +41,7 @@ namespace lemon{namespace runQ{
 
 			error_info errorCode;
 
-			job_id id = LemonCreateJob(service,&jobClass,errorCode);
+			job_id id = LemonCreateJob(service,param,&jobClass,errorCode);
 
 			errorCode.check_throw();
 
@@ -45,7 +50,7 @@ namespace lemon{namespace runQ{
 
 	public:
 
-		void initialize() {}
+		void initialize(void*) {}
 
 		void uninitialize() {}
 
@@ -138,7 +143,7 @@ namespace lemon{namespace runQ{
 
 	private:
 
-		static void* __initialize(LemonRunQ Q,lemon_job_id id,LemonErrorInfo* errorCode)
+		static void* __initialize(LemonRunQ Q,void * param,lemon_job_id id,LemonErrorInfo* errorCode)
 		{
 			mutable_buffer block;
 
@@ -161,7 +166,7 @@ namespace lemon{namespace runQ{
 
 				self->Q = Q;
 
-				job->initialize();
+				job->initialize(param);
 
 				return job;
 			}
@@ -175,16 +180,16 @@ namespace lemon{namespace runQ{
 			}
 		}
 
-		static void __uninitialize(LemonRunQ Q,void * userdata)
+		static void __uninitialize(void * userdata)
 		{
 			job_type* job = (job_type*)userdata;
 
 			job->uninitialize();
 
-			runQ::free(Q,buf((byte_t*)userdata,sizeof(job_type)));
+			runQ::free(job->Q,buf((byte_t*)userdata,sizeof(job_type)));
 		}
 
-		static void __recv(LemonRunQ, void * userdata, lemon_job_id source,lemon_job_id target, LemonBuffer buff)
+		static void __recv(void * userdata, lemon_job_id source,lemon_job_id target, LemonBuffer buff)
 		{
 			job_type* job = (job_type*)userdata;
 
