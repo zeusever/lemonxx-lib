@@ -28,9 +28,7 @@ namespace lemon{namespace runQ{
 			LemonJobClass jobClass = 
 			{
 				&self_type::__initialize,
-				
-				&self_type::__timeout,
-
+		
 				&self_type::__recv,
 
 				&self_type::__uninitialize
@@ -54,6 +52,20 @@ namespace lemon{namespace runQ{
 		void timeout() {}
 
 		void recv(lemon_job_id, LemonBuffer buff)
+		{
+			//do nothing, release the buffer
+			if(LEMON_CHECK_BUFF(buff)) runQ::free(Q,buff);
+		}
+
+		void proxy(lemon_job_id, lemon_job_id, LemonBuffer buff)
+		{
+			//do nothing, release the buffer
+			if(LEMON_CHECK_BUFF(buff)) runQ::free(Q,buff);
+		}
+
+		void multicast(lemon_job_id, const_buffer) {}
+
+		void broadcast(lemon_job_id, LemonBuffer buff)
 		{
 			//do nothing, release the buffer
 			if(LEMON_CHECK_BUFF(buff)) runQ::free(Q,buff);
@@ -172,18 +184,31 @@ namespace lemon{namespace runQ{
 			runQ::free(Q,buf((byte_t*)userdata,sizeof(job_type)));
 		}
 
-		static void __timeout(LemonRunQ, void * userdata, lemon_job_id)
+		static void __recv(LemonRunQ, void * userdata, lemon_job_id source,lemon_job_id target, LemonBuffer buff)
 		{
 			job_type* job = (job_type*)userdata;
 
-			job->timeout();
-		}
-
-		static void __recv(LemonRunQ, void * userdata, lemon_job_id,lemon_job_id source, LemonBuffer buff)
-		{
-			job_type* job = (job_type*)userdata;
-
-			job->recv(source,buff);
+			if(job->_id == target)
+			{
+				job->recv(source,buff);
+			}
+			else if(LEMON_TIMEOUT_JOBID == target)
+			{
+				job->timeout();
+			}
+			else if(LEMON_JOBID_IS_REMOTE(target))
+			{
+				job->proxy(source,target,buff);
+			}
+			else if(LEMON_JOBID_IS_MULTICAST(target))
+			{
+				job->multicast(source,const_buffer(buff));
+			}
+			else if(LEMON_JOBID_IS_BROADCAST(target))
+			{
+				job->broadcast(source,buff);
+			}
+			
 		}
 
 	private:

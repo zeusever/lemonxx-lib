@@ -60,13 +60,18 @@ namespace lemon{
 			return LemonRunQJobs(*this);
 		}
 
+		void proxy(job_id  id)
+		{
+			LemonCreateProxyJob(*this,id);
+		}
+
 	private:
 
 		static LemonRunQ Create()
 		{
 			error_info errorCode;
 
-			LemonRunQ Q = LemonCreateRunQ(NULL,NULL,errorCode);
+			LemonRunQ Q = LemonCreateRunQ(errorCode);
 
 			errorCode.check_throw();
 
