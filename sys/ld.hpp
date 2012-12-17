@@ -10,8 +10,9 @@
 #define LEMON_CXX_SYS_LD_HPP
 #include <string>
 #include <lemon/sys/ld.h>
-#include <lemonxx/utility/nocopyable.hpp>
 #include <lemonxx/sys/text.hpp>
+#include <lemonxx/sys/converter.hpp>
+#include <lemonxx/utility/nocopyable.hpp>
 
 namespace lemon{
 	class sharedlibrary : private nocopyable
@@ -54,6 +55,11 @@ namespace lemon{
 		}
 
 		void load(const std::string & path)
+		{
+			load(from_locale(path));
+		}
+
+		void load(const String & path)
 		{
 			load(path.c_str());
 		}
