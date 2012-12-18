@@ -284,6 +284,8 @@ namespace lemon{namespace io{namespace ip{namespace tcp{
 
 		typedef basic_socket base_type;
 
+		server(){}
+
 		server(int af,io_service & device) :base_type(af,device){}
 
 		server(const net::endpoint & ep,io_service & device) :base_type(ep,device){}

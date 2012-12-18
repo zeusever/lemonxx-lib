@@ -30,7 +30,7 @@ namespace lemon{namespace runQ{
 
 		static job_id create(LemonRunQ service,void * param)
 		{
-			LemonJobClass jobClass = 
+			const static LemonJobClass jobClass = 
 			{
 				&self_type::__initialize,
 

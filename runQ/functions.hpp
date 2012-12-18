@@ -32,12 +32,12 @@ namespace lemon{ namespace runQ{
 		errorCode.check_throw();
 	}
 
-	void close_job(LemonRunQ s,lemon_job_id id)
+	inline void close_job(LemonRunQ s,lemon_job_id id)
 	{
 		LemonCloseJob(s,id);
 	}
 
-	void start_timer(LemonRunQ s, lemon_job_id id,size_t milliseconds)
+	inline void start_timer(LemonRunQ s, lemon_job_id id,size_t milliseconds)
 	{
 		error_info errorCode;
 
@@ -46,19 +46,24 @@ namespace lemon{ namespace runQ{
 		errorCode.check_throw();
 	}
 
-	void stop_timer(LemonRunQ s, lemon_job_id id)
+	inline void stop_timer(LemonRunQ s, lemon_job_id id)
 	{
 		LemonRunQTimerStop(s,id);
 	}
 
-	void send_timeout(LemonRunQ s, lemon_job_id id)
+	inline void send_timeout(LemonRunQ s, lemon_job_id id)
 	{
 		LemonJobTimeout(s,id);
 	}
 
-	size_t jobs(LemonRunQ s)
+	inline size_t jobs(LemonRunQ s)
 	{
 		return LemonRunQJobs(s);
+	}
+
+	inline void bind_proxy(LemonRunQ s, lemon_job_id proxy)
+	{
+		LemonCreateProxyJob(s,proxy);
 	}
 
 }}
