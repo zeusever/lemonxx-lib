@@ -141,6 +141,26 @@ namespace lemon{namespace runQ{
 			runQ::send_timeout(Q,job);
 		}
 
+		job_id create_group()
+		{
+			return runQ::create_group(Q);
+		}
+
+		void close_group(job_id group)
+		{
+			runQ::close_group(Q,group);
+		}
+
+		void entry_group(job_id group)
+		{
+			runQ::entry_group(Q,group,_id);
+		}
+
+		void leave_group(job_id group)
+		{
+			runQ::leave_group(Q,group,_id);
+		}
+
 	private:
 
 		static void* __initialize(LemonRunQ Q,void * param,lemon_job_id id,LemonErrorInfo* errorCode)

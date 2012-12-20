@@ -66,6 +66,36 @@ namespace lemon{ namespace runQ{
 		LemonCreateProxyJob(s,proxy);
 	}
 
+	inline lemon_job_id create_group(LemonRunQ s)
+	{
+		error_info errorCode;
+
+		lemon_job_id id = LemonRunQCreateMultCastGroup(s,errorCode);
+
+		errorCode.check_throw();
+
+		return id;
+	}
+
+	inline void close_group(LemonRunQ s, lemon_job_id group)
+	{
+		LemonRunQCloseMultiCastGroup(s,group);
+	}
+
+	inline void entry_group(LemonRunQ s, lemon_job_id group,lemon_job_id id)
+	{
+		error_info errorCode;
+
+		LemonRunQEntryMultiCastGroup(s,group,id,&errorCode);
+
+		errorCode.check_throw();
+	}
+
+	inline void leave_group(LemonRunQ s, lemon_job_id group,lemon_job_id id)
+	{
+		LemonRunQLeaveMultiCastGroup(s,group,id);
+	}
+
 }}
 
 #endif //LEMONXX_RUNQ_FUNCTIONS_HPP
