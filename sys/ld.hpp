@@ -53,12 +53,12 @@ namespace lemon{
 
 			errorCode.check_throw();
 		}
-
+#ifdef WIN32
 		void load(const std::string & path)
 		{
 			load(from_locale(path));
 		}
-
+#endif //WIN32
 		void load(const String & path)
 		{
 			load(path.c_str());

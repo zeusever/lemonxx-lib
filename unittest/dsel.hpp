@@ -92,7 +92,7 @@ namespace lemon{namespace unittest{namespace cxx{
 	{
 	protected:
 		TestCase(const char * name):_name(name){}
-		~TestCase(){}
+		virtual ~TestCase(){}
 	public:
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,6 +217,7 @@ namespace lemon{namespace unittest{namespace cxx{
 
 			return package;
 		}
+
 
 		const TestSuites & Children() {return _suites;}
 

@@ -206,6 +206,8 @@ namespace lemon{namespace runQ{
 
 			job->uninitialize();
 
+			job->~job_type();
+
 			runQ::free(job->Q,buf((byte_t*)userdata,sizeof(job_type)));
 		}
 
