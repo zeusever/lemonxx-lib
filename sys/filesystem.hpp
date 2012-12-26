@@ -366,16 +366,29 @@ namespace lemon{namespace fs{
 
 		bool empty() const {return _root.empty() && _nodes.empty(); }
 
-		path & operator / (const lemon::char_t * node)
+		path operator / (const lemon::char_t * node)
 		{
-			_nodes.push_back(node);
+			path tmp(*this);
 
-			return *this;
+			tmp._nodes.push_back(node);
+
+			return tmp;
 		}
 
-		path & operator / (const path & rhs)
+		path operator / (const lemon::String node)
 		{
-			_nodes.insert(_nodes.end(),rhs.begin(),rhs.end());
+			path tmp(*this);
+
+			tmp._nodes.push_back(node);
+
+			return tmp;
+		}
+
+		path operator / (const path & rhs)
+		{
+			path tmp(*this);
+
+			tmp._nodes.insert(tmp._nodes.end(),rhs.begin(),rhs.end());;
 
 			return *this;
 		}

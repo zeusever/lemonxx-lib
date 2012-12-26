@@ -90,7 +90,7 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		template<typename ConstBuffer, typename Handle>
 		void async_sendto(ConstBuffer buffer, const net::endpoint & remote, Handle handle)
 		{
-			async_sendto(buffer.Data,buffer.Length,remote,handle);
+			async_sendto(buffer.Data,buffer.Length,0,remote,handle);
 		}
 		template<typename Handle>
 		void async_sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote, Handle handle)
@@ -120,7 +120,7 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		template<typename ConstBuffer, typename Handle>
 		void async_sendto(ConstBuffer buffer, const net::endpoint & remote, Handle handle,error_info & errorCode)
 		{
-			async_sendto(buffer.Data,buffer.Length,remote,handle,errorCode);
+			async_sendto(buffer.Data,buffer.Length,0,remote,handle,errorCode);
 		}
 		template<typename Handle>
 		void async_sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote, Handle handle,error_info & errorCode)

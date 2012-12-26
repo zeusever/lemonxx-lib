@@ -86,7 +86,11 @@ namespace lemon{namespace runQ{
 
 		job_id self() const { return _id; }
 
-		LemonRunQ service() const { return Q; }
+		void self(job_id id) {_id = id; }
+
+		LemonRunQ runQ() const { return Q; }
+
+		void runQ(LemonRunQ val) { Q = val;}
 
 		void close()
 		{
@@ -161,7 +165,7 @@ namespace lemon{namespace runQ{
 			runQ::leave_group(Q,group,_id);
 		}
 
-	private:
+	protected:
 
 		static void* __initialize(LemonRunQ Q,void * param,lemon_job_id id,LemonErrorInfo* errorCode)
 		{
@@ -208,14 +212,14 @@ namespace lemon{namespace runQ{
 
 			job->~job_type();
 
-			runQ::free(job->Q,buf((byte_t*)userdata,sizeof(job_type)));
+			runQ::free(job->runQ(),buf((byte_t*)userdata,sizeof(job_type)));
 		}
 
 		static void __recv(void * userdata, lemon_job_id source,lemon_job_id target, LemonBuffer buff)
 		{
 			job_type* job = (job_type*)userdata;
 
-			if(job->_id == target)
+			if(job->self() == target)
 			{
 				job->recv(source,buff);
 			}
