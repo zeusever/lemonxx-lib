@@ -66,7 +66,7 @@ namespace lemon{namespace io{namespace ip{namespace udp{
 		template<typename ConstBuffer>
 		size_t sendto(ConstBuffer buffer, const net::endpoint & remote,error_info & errorCode)
 		{
-			return sendto(buffer.Data,buffer.Length,remote,errorCode);
+			return sendto(buffer.Data,buffer.Length,0,remote,errorCode);
 		}
 
 		size_t sendto(const byte_t * buffer, size_t bufferSize, const net::endpoint & remote,error_info & errorCode)

@@ -390,7 +390,7 @@ namespace lemon{namespace fs{
 
 			tmp._nodes.insert(tmp._nodes.end(),rhs.begin(),rhs.end());;
 
-			return *this;
+			return tmp;
 		}
 
 		bool operator == (const fs::path & rhs) const
@@ -453,7 +453,7 @@ namespace lemon{namespace fs{
 
 		fs::path::const_iterator iter1 = lhs.begin(),iter2 = rhs.begin(),end1 = lhs.end(),end2 = rhs.end();
 
-		for(;iter1 != end1 && iter2 != end2; ++ iter1,++ iter2) if(*iter1 != *iter2) break;
+		for(;iter1 != end1 && iter2 != end2; ++ iter1,++ iter2) { if(*iter1 != *iter2) break; }
 		
 		size_t counter = std::distance(iter1,end1);
 
@@ -465,7 +465,7 @@ namespace lemon{namespace fs{
 
 			-- counter;
 
-			for(size_t i = 0 ; i < counter ; ++ i) result / LEMON_TEXT("..");
+			for(size_t i = 0 ; i < counter ; ++ i) result = result / LEMON_TEXT("..");
 		}
 		else
 		{

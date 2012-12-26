@@ -614,6 +614,11 @@ namespace lemon{namespace net{
 			increment();
 		}
 
+		~resolver_iterator()
+		{
+			close();
+		}
+
 		bool equal(const resolver_iterator & rhs) const
 		{
 			return _resolver == rhs._resolver;

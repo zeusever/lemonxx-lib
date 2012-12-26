@@ -34,11 +34,17 @@ namespace lemon{namespace memory{namespace smallobject{
 		{
 			return LemonSmallObjAlloc(_allocator,N);
 		}
-
+#ifdef free
+#define free_crt free
+#undef free
+#endif //free
 		void free(void * block,size_t N)
 		{
 			LemonSmallObjFree(_allocator,block,N);
 		}
+#ifdef free_crt
+#define free free_crt
+#endif //
 
 	private:
 		LemonSmallObjAllocator _allocator;

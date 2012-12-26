@@ -108,13 +108,19 @@ namespace lemon{namespace runQ{
 		{
 			return runQ::alloc(Q,block);
 		}
-
+#ifdef free
+#define free_crt free
+#undef free
+#endif //free	
 		template<typename Buffer>
 		void free(Buffer buffer)
 		{
 			runQ::free(Q,buffer);
 		}
-
+#ifdef free
+#define free_crt free
+#undef free
+#endif //free
 		void start_timer(job_id job,size_t milliseconds)
 		{
 			runQ::start_timer(Q,job,milliseconds);

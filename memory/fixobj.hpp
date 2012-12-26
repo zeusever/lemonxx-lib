@@ -82,12 +82,17 @@ namespace lemon{namespace memory{namespace fixed{
 		///
 		/// @param [in,out]	block	If non-null, the block. 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
-
+#ifdef free
+#define free_crt free
+#undef free
+#endif //free	
 		void free(void * block)
 		{
 			LemonFixObjectFree(_allocator,block);
 		}
-
+#ifdef free_crt
+#define free free_crt
+#endif //	
 	private:
 		LemonFixObjectAllocator _allocator;
 	};

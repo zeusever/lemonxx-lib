@@ -16,12 +16,18 @@ namespace lemon{ namespace runQ{
 	{
 		return LemonRunQAlloc(s,size);
 	}
-	
+#ifdef free
+#define free_crt free
+#undef free
+#endif //free	
 	template<typename Buffer>
 	inline void free(LemonRunQ s,Buffer buffer)
 	{
 		return LemonRunQFree(s,mutable_buffer_cast(buffer));
 	}
+#ifdef free_crt
+#define free free_crt
+#endif //
 
 	inline void send(LemonRunQ s,lemon_job_id self,lemon_job_id target, mutable_buffer buffer)
 	{
