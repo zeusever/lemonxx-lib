@@ -259,9 +259,17 @@ namespace lemon{
 
 		static void Proc(void * data)
 		{
-			proc_type cb = reinterpret_cast<proc_type::wrapper_type>(data);
+			try
+			{
+				proc_type cb = reinterpret_cast<proc_type::wrapper_type>(data);
 
-			cb();
+				cb();
+			}
+			catch(const lemon::error_info & e)
+			{
+				std::cout << "catch unhandled exception :\n" << e << std::endl;
+			}
+			
 		}
 
 	private:
